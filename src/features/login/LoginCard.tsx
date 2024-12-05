@@ -9,6 +9,7 @@ import InputField from "@/components/InputField";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 import { useFormik } from "formik";
+import Logo from "@/components/Logo";
 YupPassword(Yup);
 
 const validationSchema = Yup.object({
@@ -38,39 +39,47 @@ const LoginCard = () => {
     <div className="px-2">
       <div className="container mx-auto mt-4 flex w-full justify-center">
         <Card className="w-[450px] p-6">
-          <div className="text-3xl font-bold">LOGO</div>
+          <div className="mb-6 w-auto rounded-md bg-blue-900 px-4 pb-4 pt-8">
+            <Logo />
+          </div>
 
           <form onSubmit={formik.handleSubmit}>
-            <h1>Sign In to TitikTitik</h1>
-            <InputField
-              htmlfor="email"
-              label="email"
-              type="email"
-              id="email"
-              placeholder="email"
-              onChange={formik.handleChange}
-              value={formik.values.email}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.email && formik.errors.email ? (
-              <div>{formik.errors.email}</div>
-            ) : null}
+            <h1 className="mb-6 text-4xl font-extrabold text-slate-600">
+              Sign in to <span className="font-bold text-blue-900">MAKÉT</span>
+            </h1>
+            <div className="mb-4">
+              <InputField
+                htmlfor="email"
+                label="Email"
+                type="email"
+                id="email"
+                placeholder="email"
+                onChange={formik.handleChange}
+                value={formik.values.email}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.email && formik.errors.email ? (
+                <div>{formik.errors.email}</div>
+              ) : null}
+            </div>
 
-            <InputField
-              htmlfor="password"
-              label="password"
-              type="password"
-              id="password"
-              placeholder="password"
-              onChange={formik.handleChange}
-              value={formik.values.password}
-              onBlur={formik.handleBlur}
-            />
-            {formik.touched.password && formik.errors.password ? (
-              <div>{formik.errors.password}</div>
-            ) : null}
+            <div className="mb-4">
+              <InputField
+                htmlfor="password"
+                label="Password"
+                type="password"
+                id="password"
+                placeholder="password"
+                onChange={formik.handleChange}
+                value={formik.values.password}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <div>{formik.errors.password}</div>
+              ) : null}
+            </div>
 
-            <div className="flex justify-between">
+            <div className="mb-6 flex justify-between">
               <div className="flex items-center space-x-2">
                 <Checkbox id="terms" />
                 <label
@@ -81,7 +90,7 @@ const LoginCard = () => {
                 </label>
               </div>
 
-              <div>
+              <div className="">
                 <p>Forgot Password</p>
               </div>
             </div>
@@ -91,11 +100,11 @@ const LoginCard = () => {
             </Button>
           </form>
 
-          <div className="flex w-full justify-center">
+          <div className="my-4 flex w-full justify-center">
             <p>OR</p>
           </div>
 
-          <div className="flex justify-center gap-4 rounded-md border py-2">
+          <div className="mb-4 flex justify-center gap-4 rounded-md border py-2">
             <div>
               <Image
                 src="/images/google-icon.svg"
@@ -107,9 +116,12 @@ const LoginCard = () => {
             <p>Sign in with Google</p>
           </div>
 
-          <div>
+          <div className="font-medium">
             <p>
-              Don't have account? <Link href="">Sign Up</Link>
+              Don't have account?{" "}
+              <Link href="" className="text-blue-700 hover:font-semibold">
+                Sign Up
+              </Link>
             </p>
           </div>
         </Card>
