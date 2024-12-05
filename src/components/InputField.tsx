@@ -24,8 +24,10 @@ const InputField: FC<InputFieldProps> = ({
   onBlur,
 }) => {
   return (
-    <div className="grid w-full items-center gap-1.5">
-      <Label htmlFor={htmlfor}>{label}</Label>
+    <div className="mb-1 grid w-full items-center gap-1.5">
+      <Label htmlFor={htmlfor} className="text-lg">
+        {label}
+      </Label>
       <Input
         type={type}
         id={id}
@@ -33,6 +35,7 @@ const InputField: FC<InputFieldProps> = ({
         onChange={onChange}
         value={value}
         onBlur={onBlur}
+        className="h-12 !text-base placeholder:text-lg"
       />
     </div>
   );
