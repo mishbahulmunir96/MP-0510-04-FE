@@ -6,7 +6,7 @@ interface InputFieldProps {
   htmlfor: string;
   label: string;
   type: string;
-  id: string;
+  name: string;
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
@@ -17,7 +17,7 @@ const InputField: FC<InputFieldProps> = ({
   htmlfor,
   label,
   type,
-  id,
+  name,
   placeholder,
   onChange,
   value,
@@ -30,12 +30,12 @@ const InputField: FC<InputFieldProps> = ({
       </Label>
       <Input
         type={type}
-        id={id}
+        name={name}
         placeholder={placeholder}
         onChange={onChange}
         value={value}
         onBlur={onBlur}
-        className="h-12 !text-base placeholder:text-lg"
+        className="h-12 rounded-xl !text-base placeholder:text-lg"
       />
     </div>
   );
