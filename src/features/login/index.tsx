@@ -86,7 +86,7 @@ const LoginPage = () => {
               </div>
 
               <div className="">
-                <p>Forgot Password</p>
+                <Link href="/forgot-password">Forgot Password</Link>
               </div>
             </div>
 
