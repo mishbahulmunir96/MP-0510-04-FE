@@ -24,6 +24,7 @@ const useRegister = () => {
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data);
+      toast.error(error.response?.data.message);
     },
   });
 };
