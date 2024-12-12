@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { FC } from "react";
 
 interface InputFieldProps {
-  htmlfor: string;
+  htmlFor: string;
   label: string;
   type: string;
   name: string;
@@ -14,7 +14,7 @@ interface InputFieldProps {
 }
 
 const InputField: FC<InputFieldProps> = ({
-  htmlfor,
+  htmlFor,
   label,
   type,
   name,
@@ -25,7 +25,7 @@ const InputField: FC<InputFieldProps> = ({
 }) => {
   return (
     <div className="mb-1 grid w-full items-center gap-1.5">
-      <Label htmlFor={htmlfor} className="text-lg">
+      <Label htmlFor={htmlFor} className="text-lg">
         {label}
       </Label>
       <Input

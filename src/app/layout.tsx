@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/features/landingPage/Navbar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import StoreProvider from "@/providers/StoreProvider";
+import AuthProvider from "@/providers/authProvider";
+import Navbar from "@/components/Navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,12 +34,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactQueryProvider>
-          <Navbar />
-          {children}
-        </ReactQueryProvider>
+        <StoreProvider>
+          <AuthProvider>
+            <ReactQueryProvider>
+              <Navbar />
+              {children}
+            </ReactQueryProvider>
 
-        <ToastContainer />
+            <ToastContainer />
+          </AuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );

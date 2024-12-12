@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { RegisterSchema } from "./schema";
-import useRegister from "@/hooks/api/auth/use.register";
+import useRegister from "@/hooks/api/auth/useRegister";
 
 const RegisterPage = () => {
   const { mutateAsync: register, isPending } = useRegister();
@@ -45,7 +45,7 @@ const RegisterPage = () => {
             <div className="grid grid-cols-2 gap-x-2">
               <div className="mb-2">
                 <InputField
-                  htmlfor="firstName"
+                  htmlFor="firstName"
                   label="First Name"
                   name="firstName"
                   type="text"
@@ -64,7 +64,7 @@ const RegisterPage = () => {
 
               <div className="mb-2">
                 <InputField
-                  htmlfor="lastName"
+                  htmlFor="lastName"
                   label="Last Name"
                   type="text"
                   name="lastName"
@@ -77,7 +77,7 @@ const RegisterPage = () => {
 
               <div className="col-span-2 mb-2">
                 <InputField
-                  htmlfor="email"
+                  htmlFor="email"
                   label="Email"
                   type="email"
                   name="email"
@@ -95,7 +95,7 @@ const RegisterPage = () => {
 
               <div className="col-span-2 mb-2">
                 <InputField
-                  htmlfor="phoneNumber"
+                  htmlFor="phoneNumber"
                   label="Phone Number"
                   type="tel"
                   name="phoneNumber"
@@ -114,7 +114,7 @@ const RegisterPage = () => {
 
               <div className="col-span-2 mb-2">
                 <InputField
-                  htmlfor="password"
+                  htmlFor="password"
                   label="password"
                   type="password"
                   name="password"
@@ -132,7 +132,7 @@ const RegisterPage = () => {
 
               <div className="col-span-2 mb-2">
                 <InputField
-                  htmlfor="confirmPassword"
+                  htmlFor="confirmPassword"
                   label="Confirm Password"
                   type="password"
                   name="confirmPassword"
@@ -152,7 +152,7 @@ const RegisterPage = () => {
 
               <div className="col-span-2 mb-2">
                 <InputField
-                  htmlfor="referralCode"
+                  htmlFor="referralCode"
                   label="Have referral code?"
                   type="text"
                   name="referralCode"

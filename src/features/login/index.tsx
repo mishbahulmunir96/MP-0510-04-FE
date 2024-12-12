@@ -1,38 +1,28 @@
 "use client";
 
+import InputField from "@/components/InputField";
+import Logo from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
+import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
-import InputField from "@/components/InputField";
-import * as Yup from "yup";
-import YupPassword from "yup-password";
-import { useFormik } from "formik";
-import Logo from "@/components/Logo";
-YupPassword(Yup);
+import { LoginSchema } from "./schema";
+import useLogin from "@/hooks/api/auth/useLogin";
 
-const validationSchema = Yup.object({
-  email: Yup.string().required("Email is required").email(),
-  password: Yup.string()
-    .required("Password is required")
-    .min(8)
-    .minLowercase(1)
-    .minUppercase(1)
-    .minNumbers(1)
-    .minSymbols(1),
-});
+const LoginPage = () => {
+  const { mutateAsync: login, isPending } = useLogin();
 
-const LoginCard = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    validationSchema,
+    validationSchema: LoginSchema,
     //
-    onSubmit: (value) => {
-      alert(JSON.stringify(value));
+    onSubmit: async (values) => {
+      await login(values);
     },
   });
   return (
@@ -49,33 +39,38 @@ const LoginCard = () => {
             </h1>
             <div className="mb-4">
               <InputField
-                htmlfor="email"
+                htmlFor="email"
                 label="Email"
                 type="email"
-                id="email"
+                name="email"
                 placeholder="email"
                 onChange={formik.handleChange}
                 value={formik.values.email}
                 onBlur={formik.handleBlur}
               />
               {formik.touched.email && formik.errors.email ? (
-                <div>{formik.errors.email}</div>
+                <div className="text-sm text-red-600">
+                  {formik.errors.email}
+                </div>
               ) : null}
             </div>
 
             <div className="mb-4">
               <InputField
-                htmlfor="password"
+                htmlFor="password"
                 label="Password"
                 type="password"
-                id="password"
+                name="password"
                 placeholder="password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
                 onBlur={formik.handleBlur}
               />
+
               {formik.touched.password && formik.errors.password ? (
-                <div>{formik.errors.password}</div>
+                <div className="text-sm text-red-600">
+                  {formik.errors.password}
+                </div>
               ) : null}
             </div>
 
@@ -95,8 +90,8 @@ const LoginCard = () => {
               </div>
             </div>
 
-            <Button type="submit" className="w-full">
-              Sign In
+            <Button type="submit" className="mt-4 w-full" disabled={isPending}>
+              {isPending ? "Loading..." : "Login"}
             </Button>
           </form>
 
@@ -119,7 +114,10 @@ const LoginCard = () => {
           <div className="font-medium">
             <p>
               Don't have account?{" "}
-              <Link href="" className="text-blue-700 hover:font-semibold">
+              <Link
+                href="/register"
+                className="text-blue-700 hover:font-semibold"
+              >
                 Sign Up
               </Link>
             </p>
@@ -130,4 +128,4 @@ const LoginCard = () => {
   );
 };
 
-export default LoginCard;
+export default LoginPage;

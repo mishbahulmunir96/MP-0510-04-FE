@@ -1,12 +1,11 @@
-import LoginCard from "@/features/login/LoginCard";
-import React from "react";
+import LoginPage from "@/features/login";
 
-const LoginPage = () => {
+const Login = () => {
   return (
     <>
-      <LoginCard />
+      <LoginPage />
     </>
   );
 };
 
-export default LoginPage;
+export default Login;
