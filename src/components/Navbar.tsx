@@ -22,10 +22,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between bg-blue-900 p-4 shadow-lg">
+    <nav className="flex items-center justify-between bg-blue-500 p-4 shadow-lg">
       <div className="flex items-center">
         <Link href="/">
-          <p className="animate-bounce text-4xl font-extrabold text-white hover:text-blue-400">
+          <p className="text-3xl font-extrabold text-white">
             MAKÉT
           </p>
         </Link>
@@ -57,12 +57,12 @@ const Navbar = () => {
       {!user.id && (
         <div className="flex items-center space-x-4 text-white">
           <Link href="/register">
-            <p className="rounded-md border border-white px-5 py-2 transition-colors duration-300 hover:bg-white hover:text-blue-900">
+            <p className="transition duration-300 hover:text-gray-300">
               Register
             </p>
           </Link>
           <Link href="/login">
-            <p className="rounded-md border border-white bg-blue-700 px-6 py-2 transition-colors duration-300 hover:bg-blue-600">
+            <p className="transition duration-300 hover:text-gray-300">
               Login
             </p>
           </Link>
@@ -71,7 +71,7 @@ const Navbar = () => {
 
       {!!user.id && (
         <Link href="/login" onClick={logout}>
-          <p className="rounded-md border border-white bg-blue-700 px-6 py-2 transition-colors duration-300 hover:bg-blue-600">
+          <p className="transition duration-300 hover:text-gray-300">
             Logout
           </p>
         </Link>
