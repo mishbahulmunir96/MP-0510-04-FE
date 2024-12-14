@@ -3,10 +3,7 @@ import YupPassword from "yup-password";
 
 YupPassword(Yup);
 
-export const RegisterSchema = Yup.object().shape({
-  firstName: Yup.string().required("First name is required"),
-  phoneNumber: Yup.string().required("Phone Number is required"),
-  email: Yup.string().required("Email is required").email(),
+export const ResetPasswordSchema = Yup.object().shape({
   password: Yup.string()
     .required("Password is required")
     .min(6)
