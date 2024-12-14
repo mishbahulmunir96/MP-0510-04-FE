@@ -7,6 +7,7 @@ import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import StoreProvider from "@/providers/StoreProvider";
 import AuthProvider from "@/providers/authProvider";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,7 +41,7 @@ export default function RootLayout({
               <Navbar />
               {children}
             </ReactQueryProvider>
-
+            <Footer />
             <ToastContainer />
           </AuthProvider>
         </StoreProvider>

@@ -1,9 +1,9 @@
-import HeroSection from "@/features/landingPage/HeroSection";
+import HomePage from "@/features/home";
 
 export default function Home() {
   return (
     <main>
-      <HeroSection />
+      <HomePage />
     </main>
   );
 }
