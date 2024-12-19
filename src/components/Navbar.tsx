@@ -23,6 +23,7 @@ const Navbar = () => {
 
   return (
     <nav className="fixed flex h-[68px] w-full items-center justify-between bg-blue-500 p-4 shadow-lg">
+
       <div className="flex items-center">
         <Link href="/">
           <p className="text-3xl font-extrabold text-white">MAKÉT</p>
