@@ -2,35 +2,39 @@
 
 import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { BirthDateInput } from "./BirthDateInput";
-import { Textarea } from "@/components/ui/textarea";
-import GenderRadioGroup from "./GenderRadioGroup";
-import { useFormik } from "formik";
-import { updateProfileSchema } from "../schema";
-import useUpdateUser from "@/hooks/api/user/useUpdateUser";
-import { ChangeEvent, useRef, useState } from "react";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import useUpdateUser from "@/hooks/api/user/useUpdateUser";
+import { useFormik } from "formik";
+import Image from "next/image";
+import { ChangeEvent, useRef, useState } from "react";
+import { updateProfileSchema } from "../schema";
+import { BirthDateInput } from "./BirthDateInput";
+import GenderRadioGroup from "./GenderRadioGroup";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const GeneralProfile = () => {
+  const user = useSelector((state: RootState) => state.user);
+  const userId = user.id;
+
   const { mutateAsync: updateUser, isPending } = useUpdateUser();
-  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(user.profilePicture || "");
   const profilePictureRef = useRef<HTMLInputElement>(null);
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      gender: "",
-      birthDate: undefined,
-      address: "",
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      email: user.email || "",
+      phoneNumber: user.phoneNumber || "",
+      gender: user.gender || "",
+      birthDate: user.birthDate || "",
+      address: user.address || "",
       profilePicture: null,
     },
     validationSchema: updateProfileSchema,
     onSubmit: async (values) => {
-      const userId = 1;
       await updateUser({ id: userId, payload: values });
     },
   });
@@ -57,13 +61,10 @@ const GeneralProfile = () => {
         <div>
           <div className="relative h-32 w-32 rounded-full border-2 border-red-400">
             <Image
-              src={
-                selectedImage ||
-                "https://purwadhika.com/dashboard/static/icons/ic_profile.svg"
-              }
+              src={selectedImage}
               alt="profile picture"
               fill
-              objectFit="cover"
+              className="object-cover"
             />
           </div>
 
