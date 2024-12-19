@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/popover";
 
 interface BirthDateInputProps {
-  value?: string; // Menerima value sebagai props
-  onChange?: (date: string | undefined) => void; // Callback untuk mengubah tanggal
+  value?: string;
+  onChange?: (date: string | undefined) => void;
 }
 
 const formatDateToString = (date: Date): string => {
