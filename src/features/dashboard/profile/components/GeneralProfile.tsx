@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 const GeneralProfile = () => {
   const { mutateAsync: updateUser, isPending } = useUpdateUser();
   const [selectedImage, setSelectedImage] = useState("");
-  const profilePictureRef = useRef<HTMLInputElement>(null); // Referensi untuk input file
+  const profilePictureRef = useRef<HTMLInputElement>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -26,11 +26,11 @@ const GeneralProfile = () => {
       gender: "",
       birthDate: undefined,
       address: "",
-      profilePicture: null, // Untuk menyimpan file gambar
+      profilePicture: null,
     },
     validationSchema: updateProfileSchema,
     onSubmit: async (values) => {
-      const userId = 1; // Gantilah dengan ID pengguna yang relevan
+      const userId = 1;
       await updateUser({ id: userId, payload: values });
     },
   });
@@ -39,7 +39,7 @@ const GeneralProfile = () => {
     const files = e.target.files;
     if (files && files.length) {
       formik.setFieldValue("profilePicture", files[0]);
-      setSelectedImage(URL.createObjectURL(files[0])); // Menunjukkan gambar sebagai pratinjau
+      setSelectedImage(URL.createObjectURL(files[0]));
     }
   };
 
