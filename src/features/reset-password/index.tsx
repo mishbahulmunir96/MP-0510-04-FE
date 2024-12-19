@@ -1,7 +1,6 @@
 "use client";
 
 import InputField from "@/components/InputField";
-import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import useResetPassword from "@/hooks/api/auth/useResetPassword";
@@ -39,7 +38,6 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
                 htmlFor="password"
                 label="Password"
                 type="password"
-                name="password"
                 placeholder="password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
@@ -57,7 +55,6 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
                 htmlFor="confirmPassword"
                 label="Confirm Password"
                 type="password"
-                name="confirmPassword"
                 placeholder="email"
                 onChange={formik.handleChange}
                 value={formik.values.confirmPassword}
