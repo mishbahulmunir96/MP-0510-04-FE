@@ -22,12 +22,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between bg-blue-500 p-4 shadow-lg">
+    <nav className="fixed flex h-[68px] w-full items-center justify-between bg-blue-500 p-4 shadow-lg">
       <div className="flex items-center">
         <Link href="/">
-          <p className="text-3xl font-extrabold text-white">
-            MAKÉT
-          </p>
+          <p className="text-3xl font-extrabold text-white">MAKÉT</p>
         </Link>
       </div>
 
@@ -62,18 +60,14 @@ const Navbar = () => {
             </p>
           </Link>
           <Link href="/login">
-            <p className="transition duration-300 hover:text-gray-300">
-              Login
-            </p>
+            <p className="transition duration-300 hover:text-gray-300">Login</p>
           </Link>
         </div>
       )}
 
       {!!user.id && (
         <Link href="/login" onClick={logout}>
-          <p className="transition duration-300 hover:text-gray-300">
-            Logout
-          </p>
+          <p className="transition duration-300 hover:text-gray-300">Logout</p>
         </Link>
       )}
     </nav>

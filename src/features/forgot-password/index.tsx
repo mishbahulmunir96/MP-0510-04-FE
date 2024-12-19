@@ -1,7 +1,6 @@
 "use client";
 
 import InputField from "@/components/InputField";
-import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import useForgotPassword from "@/hooks/api/auth/useForgotPassword";
@@ -34,7 +33,6 @@ const ForgotPasswordPage = () => {
                 htmlFor="email"
                 label="Email"
                 type="email"
-                name="email"
                 placeholder="email"
                 onChange={formik.handleChange}
                 value={formik.values.email}

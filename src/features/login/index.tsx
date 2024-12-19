@@ -1,15 +1,14 @@
 "use client";
 
 import InputField from "@/components/InputField";
-import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import useLogin from "@/hooks/api/auth/useLogin";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { LoginSchema } from "./schema";
-import useLogin from "@/hooks/api/auth/useLogin";
 
 const LoginPage = () => {
   const { mutateAsync: login, isPending } = useLogin();
@@ -38,7 +37,6 @@ const LoginPage = () => {
                 htmlFor="email"
                 label="Email"
                 type="email"
-                name="email"
                 placeholder="email"
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -56,7 +54,6 @@ const LoginPage = () => {
                 htmlFor="password"
                 label="Password"
                 type="password"
-                name="password"
                 placeholder="password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
