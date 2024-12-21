@@ -5,11 +5,11 @@ export interface UserState {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string; // Tambahkan ini
-  gender: string; // Tambahkan ini
-  birthDate: string; // Tambahkan ini
-  address: string; // Tambahkan ini
-  profilePicture: string; // Tambahkan ini
+  phoneNumber: string;
+  gender: string;
+  birthDate: string;
+  address: string;
+  profilePicture: string;
   token: string;
 }
 
@@ -18,11 +18,11 @@ const initialState: UserState = {
   firstName: "",
   lastName: "",
   email: "",
-  phoneNumber: "", // Inisialisasi dengan nilai default
-  gender: "", // Inisialisasi dengan nilai default
-  birthDate: "", // Inisialisasi dengan nilai default
-  address: "", // Inisialisasi dengan nilai default
-  profilePicture: "", // Inisialisasi dengan nilai default
+  phoneNumber: "",
+  gender: "",
+  birthDate: "",
+  address: "",
+  profilePicture: "",
   token: "",
 };
 
@@ -35,11 +35,11 @@ export const userSlice = createSlice({
       state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
       state.email = action.payload.email;
-      state.phoneNumber = action.payload.phoneNumber; // Tambahkan ini
-      state.gender = action.payload.gender; // Tambahkan ini
-      state.birthDate = action.payload.birthDate; // Tambahkan ini
-      state.address = action.payload.address; // Tambahkan ini
-      state.profilePicture = action.payload.profilePicture; // Tambahkan ini
+      state.phoneNumber = action.payload.phoneNumber;
+      state.gender = action.payload.gender;
+      state.birthDate = action.payload.birthDate;
+      state.address = action.payload.address;
+      state.profilePicture = action.payload.profilePicture;
       state.token = action.payload.token;
     },
     logoutAction: (state) => {
@@ -47,11 +47,11 @@ export const userSlice = createSlice({
       state.firstName = "";
       state.lastName = "";
       state.email = "";
-      state.phoneNumber = ""; // Reset ini
-      state.gender = ""; // Reset ini
-      state.birthDate = ""; // Reset ini
-      state.address = ""; // Reset ini
-      state.profilePicture = ""; // Reset ini
+      state.phoneNumber = "";
+      state.gender = "";
+      state.birthDate = "";
+      state.address = "";
+      state.profilePicture = "";
       state.token = "";
     },
   },

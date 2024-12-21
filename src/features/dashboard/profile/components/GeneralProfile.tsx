@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { updateProfileSchema } from "../schema";
-import { BirthDateInput } from "./BirthDateInput";
+import { DateInput } from "../../components/DateInput";
 import GenderRadioGroup from "./GenderRadioGroup";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -156,10 +156,16 @@ const GeneralProfile = () => {
 
           <div className="col-span-2 flex flex-col">
             <Label className="text-lg">Date Of Birth</Label>
-            <BirthDateInput
+            <DateInput
               value={formik.values.birthDate}
               onChange={(date) => formik.setFieldValue("birthDate", date)}
             />
+
+            {formik.touched.birthDate && formik.errors.birthDate ? (
+              <div className="text-sm text-red-600">
+                {formik.errors.birthDate}
+              </div>
+            ) : null}
           </div>
 
           <div className="col-span-2">

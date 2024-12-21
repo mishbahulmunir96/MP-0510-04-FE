@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FC, ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef } from "react";
 
 interface InputFieldProps {
   htmlFor: string;
@@ -8,13 +8,12 @@ interface InputFieldProps {
   type: string;
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value?: string;
+  value?: string | number;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   className?: string;
-  accept?: string; // Tambahkan untuk file input
+  accept?: string;
 }
 
-// Menggunakan forwardRef untuk meneruskan referensi
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   (
     {
@@ -36,7 +35,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           {label}
         </Label>
         <Input
-          ref={ref} // Memasukkan ref ke Input
+          ref={ref}
           name={htmlFor}
           type={type}
           placeholder={placeholder}
@@ -44,7 +43,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           value={value}
           onBlur={onBlur}
           className={`h-12 rounded-xl !text-base placeholder:text-lg ${className}`}
-          accept={accept} // Memasukkan accept
+          accept={accept}
         />
       </div>
     );
