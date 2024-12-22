@@ -1,14 +1,13 @@
 "use client";
 
 import InputField from "@/components/InputField";
-import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import useRegister from "@/hooks/api/auth/useRegister";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { RegisterSchema } from "./schema";
-import useRegister from "@/hooks/api/auth/useRegister";
 
 const RegisterPage = () => {
   const { mutateAsync: register, isPending } = useRegister();
@@ -43,7 +42,6 @@ const RegisterPage = () => {
                 <InputField
                   htmlFor="firstName"
                   label="First Name"
-                  name="firstName"
                   type="text"
                   placeholder="First Name"
                   onChange={formik.handleChange}
@@ -63,7 +61,6 @@ const RegisterPage = () => {
                   htmlFor="lastName"
                   label="Last Name"
                   type="text"
-                  name="lastName"
                   placeholder="Last Name"
                   onChange={formik.handleChange}
                   value={formik.values.lastName}
@@ -76,7 +73,6 @@ const RegisterPage = () => {
                   htmlFor="email"
                   label="Email"
                   type="email"
-                  name="email"
                   placeholder="email"
                   onChange={formik.handleChange}
                   value={formik.values.email}
@@ -94,7 +90,6 @@ const RegisterPage = () => {
                   htmlFor="phoneNumber"
                   label="Phone Number"
                   type="tel"
-                  name="phoneNumber"
                   placeholder="081234567890"
                   onChange={formik.handleChange}
                   value={formik.values.phoneNumber}
@@ -113,7 +108,6 @@ const RegisterPage = () => {
                   htmlFor="password"
                   label="password"
                   type="password"
-                  name="password"
                   placeholder="Password"
                   onChange={formik.handleChange}
                   value={formik.values.password}
@@ -131,7 +125,6 @@ const RegisterPage = () => {
                   htmlFor="confirmPassword"
                   label="Confirm Password"
                   type="password"
-                  name="confirmPassword"
                   placeholder="Confirm Password"
                   onChange={formik.handleChange}
                   value={formik.values.confirmPassword}
@@ -151,7 +144,6 @@ const RegisterPage = () => {
                   htmlFor="referralCode"
                   label="Have referral code?"
                   type="text"
-                  name="referralCode"
                   placeholder="Enter Referral Code"
                   onChange={formik.handleChange}
                   value={formik.values.referralCode}

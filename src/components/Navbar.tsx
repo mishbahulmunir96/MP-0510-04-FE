@@ -18,6 +18,7 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 flex w-full items-center justify-between bg-blue-400 p-4 shadow-lg">
+
       <div className="flex items-center">
         <Link href="/">
           <p className="text-3xl font-extrabold text-white">MAKÉT</p>
@@ -60,6 +61,7 @@ const Navbar = () => {
             <p className="text-white transition duration-300 hover:text-gray-300">
               Login
             </p>
+
           </Link>
         </div>
       )}
@@ -69,6 +71,7 @@ const Navbar = () => {
           <p className="text-white transition duration-300 hover:text-gray-300">
             Logout
           </p>
+
         </Link>
       )}
     </nav>

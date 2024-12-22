@@ -27,6 +27,7 @@ const useAxios = () => {
       (err) => {
         if (err?.response.status === 401) {
           localStorage.removeItem("event-storage");
+
           dispatch(logoutAction());
         }
 
