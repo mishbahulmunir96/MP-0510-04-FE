@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FC } from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 interface EventCardProps {
   event: Event;
@@ -11,6 +12,7 @@ interface EventCardProps {
 
 const EventCard: FC<EventCardProps> = ({ event }) => {
   return (
+    <Link href={`/events/${event.id}`}>
     <Card>
       <CardHeader>
         <div className="relative h-[220px] w-full overflow-hidden rounded-lg">
@@ -30,18 +32,26 @@ const EventCard: FC<EventCardProps> = ({ event }) => {
           >
             {event.category}
           </Badge>
-          <Badge
-            variant="outline"
-            className="rounded-sm bg-gray-100 text-gray-600"
-          >
-            {format(event.createdAt, "dd MMM yyyy")}
-          </Badge>
         </div>
 
-        <h2 className="my-2 line-clamp-2 text-lg font-bold">{event.title}</h2>
-        <p className="line-clamp-4">{event.description}</p>
+        <h2 className="my-2 line-clamp-2 text-xl font-bold">{event.title}</h2>
+
+        <div className="my-2">
+          <p className="text-md font-semibold text-gray-400">
+            {format(event.startTime, "dd MMM yyyy")} -{" "}
+            {format(event.endTime, "dd MMM yyyy")}
+          </p>
+        </div>
+
+        <div>
+          <p>Location: {event.address}</p>
+        </div>
+        <div className="my-2">
+          <p className="Text-sm font-semibold">Rp.{event.price}</p>
+        </div>
       </CardContent>
     </Card>
+    </Link>
   );
 };
 

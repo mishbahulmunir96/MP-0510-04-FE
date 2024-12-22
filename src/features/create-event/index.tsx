@@ -1,14 +1,30 @@
 "use client";
 
-import RichTextEditor from "@/components/RichTextEditor";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import useCreateEvent from "@/hooks/api/event/useCreateEvent";
 import { useFormik } from "formik";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
+import { CreateEventSchema } from "./schema";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import AuthGuard from "@/hoc/AuthGuard";
+import { cn } from "@/lib/utils";
+
+const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), {
+  ssr: false,
+});
 
 const CreateEventPage = () => {
   const { mutateAsync: createEvent, isPending } = useCreateEvent();
@@ -16,26 +32,21 @@ const CreateEventPage = () => {
   const formik = useFormik({
     initialValues: {
       title: "",
+
       category: "",
       description: "",
       content: "",
       thumbnail: null,
       address: "",
-      price: "",
-      availableSeat: "",
-      startTime: "",
-      endTime: "",
+      price: 0,
+      availableSeat: 0,
+      startTime: undefined,
+      endTime: undefined,
     },
+    validationSchema: CreateEventSchema,
     onSubmit: async (values) => {
-      const payload = {
-        ...values,
-        startTime: new Date(values.startTime), 
-        endTime: new Date(values.endTime),    
-        price: parseFloat(values.price),       
-        availableSeat: parseInt(values.availableSeat, 10),
-      };
+      await createEvent(values);
 
-      await createEvent(payload);
     },
   });
 
@@ -60,8 +71,9 @@ const CreateEventPage = () => {
   };
 
   return (
-    <main className="container mx-auto max-w-5xl border px-4">
-      <form className="mt-10 space-y-2" onSubmit={formik.handleSubmit}>
+    <main className="container mx-auto my-4 max-w-5xl border px-4">
+      <form className="mt-10 space-y-4" onSubmit={formik.handleSubmit}>
+
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="title">Title</Label>
           <Input
@@ -78,6 +90,20 @@ const CreateEventPage = () => {
         </div>
 
         <div className="flex flex-col space-y-1.5">
+          <Label htmlFor="name">Name</Label>
+          <Input
+            name="name"
+            type="text"
+            placeholder="Your Name/Organizer"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {!!formik.touched.name && !!formik.errors.name ? (
+            <p className="text-xs text-red-500">{formik.errors.name}</p>
+          ) : null}
+        </div>
+
           <Label htmlFor="category">Category</Label>
           <Input
             name="category"
@@ -160,45 +186,76 @@ const CreateEventPage = () => {
           ) : null}
         </div>
 
-        <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="price">Price</Label>
-          <Input
-            name="price"
-            type="text"
-            placeholder="Price"
-            value={formik.values.price}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {!!formik.touched.price && !!formik.errors.price ? (
-            <p className="text-xs text-red-500">{formik.errors.price}</p>
-          ) : null}
-        </div>
+        <div className="flex justify-items-start gap-4">
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="availableSeat">Available Seat</Label>
+            <Input
+              name="availableSeat"
+              type="text"
+              placeholder="Available Seat"
+              value={formik.values.availableSeat!}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-40"
+            />
+            {!!formik.touched.availableSeat && !!formik.errors.availableSeat ? (
+              <p className="text-xs text-red-500">
+                {formik.errors.availableSeat}
+              </p>
+            ) : null}
+          </div>
 
-        <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="availableSeat">Available Seat</Label>
-          <Input
-            name="availableSeat"
-            type="text"
-            placeholder="Available Seat"
-            value={formik.values.availableSeat}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {!!formik.touched.availableSeat && !!formik.errors.availableSeat ? (
-            <p className="text-xs text-red-500">{formik.errors.availableSeat}</p>
-          ) : null}
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="price">Price</Label>
+            <Input
+              name="price"
+              type="text"
+              placeholder="Price"
+              value={formik.values.price}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-60"
+            />
+            {formik.touched.price && formik.errors.price && (
+              <p className="text-xs text-red-500">
+                {isNaN(Number(formik.errors.price))
+                  ? formik.errors.price
+                  : Number(formik.errors.price).toFixed(3)}
+              </p>
+            )}
+          </div>
+
         </div>
 
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="startTime">Start Time</Label>
-          <Input
-            name="startTime"
-            type="datetime-local"
-            value={formik.values.startTime}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] justify-start text-left font-normal",
+                  !formik.values.startTime && "text-muted-foreground",
+                )}
+              >
+                <CalendarIcon />
+                {formik.values.startTime ? (
+                  format(formik.values.startTime, "PPP")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={formik.values.startTime}
+                onSelect={(date) => formik.setFieldValue("startTime", date)}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+
           {!!formik.touched.startTime && !!formik.errors.startTime && (
             <p className="text-xs text-red-500">{formik.errors.startTime}</p>
           )}
@@ -206,18 +263,37 @@ const CreateEventPage = () => {
 
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="endTime">End Time</Label>
-          <Input
-            name="endTime"
-            type="datetime-local"
-            value={formik.values.endTime}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[240px] justify-start text-left font-normal",
+                  !formik.values.endTime && "text-muted-foreground",
+                )}
+              >
+                <CalendarIcon />
+                {formik.values.endTime ? (
+                  format(formik.values.endTime, "PPP")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={formik.values.endTime}
+                onSelect={(date) => formik.setFieldValue("endTime", date)}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+
           {!!formik.touched.endTime && !!formik.errors.endTime && (
             <p className="text-xs text-red-500">{formik.errors.endTime}</p>
           )}
         </div>
-
 
         <div className="flex justify-end">
           <Button type="submit" className="my-10" disabled={isPending}>
@@ -229,4 +305,4 @@ const CreateEventPage = () => {
   );
 };
 
-export default CreateEventPage;
+export default AuthGuard(CreateEventPage);
