@@ -7,10 +7,10 @@ interface GetEventsQuery extends PaginationQueries {}
 
 const useGetEvents = (queries: GetEventsQuery) => {
   return useQuery({
-    queryKey: ["events", queries],
+    queryKey: ["event-storage", queries],
     queryFn: async () => {
       const { data } = await axiosInstance.get<PageableResponse<Event>>(
-        "/blogs",
+        "/events",
         { params: queries },
       );
 

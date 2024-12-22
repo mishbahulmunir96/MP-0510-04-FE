@@ -1,22 +1,23 @@
 "use client";
 
 import useAxios from "@/hooks/useAxios";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 interface CreateEventPayload {
   title: string;
+  name: string;
   category: string;
   description: string;
   content: string;
   thumbnail: File | null;
-  startTime: Date;
-  endTime: Date;
+  startTime?: Date;
+  endTime?: Date | null;
   address: string;
   price: number;
-  availableSeat: number
+  availableSeat: number;
 
 }
 
@@ -30,22 +31,23 @@ const useCreateEvent = () => {
       const createEventForm = new FormData();
 
       createEventForm.append("title", payload.title);
+      createEventForm.append("name", payload.name);
       createEventForm.append("category", payload.category);
       createEventForm.append("description", payload.description);
       createEventForm.append("content", payload.content);
       createEventForm.append("thumbnail", payload.thumbnail!);
-      createEventForm.append("startTime", payload.startTime.toDateString());
-      createEventForm.append("endTime", payload.endTime.toDateString());
+      createEventForm.append("startTime", payload.startTime!.toString());
+      createEventForm.append("endTime", payload.endTime!.toString());
       createEventForm.append("address", payload.address);
       createEventForm.append("price", payload.price.toString());
       createEventForm.append("availableSeat", payload.availableSeat.toString());
 
-      const { data } = await axiosInstance.post("/blogs", createEventForm);
+      const { data } = await axiosInstance.post("/events/create-event", createEventForm);
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Create Event success");
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      await queryClient.invalidateQueries({ queryKey: ["event-storage"] });
       router.push("/");
     },
     onError: (error: AxiosError<any>) => {
