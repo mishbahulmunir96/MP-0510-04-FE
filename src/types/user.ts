@@ -3,8 +3,8 @@ export interface User {
   lastName: string;
   email: string;
   phoneNumber: string;
-  gender?: string; 
-  birthDate?: Date; 
-  address?: string; // jika ada
-  profilePicture?: string; // jika ada
+  gender?: string;
+  birthDate?: Date;
+  address?: string;
+  profilePicture?: string;
 }

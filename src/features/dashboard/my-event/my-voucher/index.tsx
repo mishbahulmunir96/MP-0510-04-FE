@@ -1,3 +1,6 @@
+"use client";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -8,42 +11,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import useGetVouchers from "@/hooks/api/voucher/useGetVouchers";
 import Link from "next/link";
 
-// Mock data for vouchers
-const vouchers = [
-  {
-    id: 1,
-    code: "SUMMER2023",
-    eventName: "Summer Music Festival",
-    quantity: 100,
-    claimed: 45,
-    amount: 10,
-    expiredDate: new Date("2023-08-31"),
-  },
-  {
-    id: 2,
-    code: "TECHCONF50",
-    eventName: "Tech Conference 2023",
-    quantity: 50,
-    claimed: 20,
-    amount: 50,
-    expiredDate: new Date("2023-09-05"),
-  },
-  {
-    id: 3,
-    code: "ARTEXPO25",
-    eventName: "International Art Expo",
-    quantity: 200,
-    claimed: 75,
-    amount: 25,
-    expiredDate: new Date("2023-10-15"),
-  },
-  // Add more mock vouchers as needed
-];
-
 const MyVouchersPage = () => {
+  const { data, isLoading, error } = useGetVouchers();
+
+  if (isLoading) return <div>Loading...</div>;
+
+  if (error) return <div>Error fetching vouchers: {error.message}</div>;
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between">
@@ -58,33 +35,31 @@ const MyVouchersPage = () => {
           <TableRow>
             <TableHead className="w-[100px]">ID</TableHead>
             <TableHead>Voucher Code</TableHead>
-            <TableHead>Event Name</TableHead>
-            <TableHead>Quantity/Quota</TableHead>
+            <TableHead>Quantity</TableHead>
             <TableHead>Claimed</TableHead>
-            <TableHead>Amount</TableHead>
+            <TableHead>Value</TableHead>
             <TableHead>Expired Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {vouchers.map((voucher) => (
+          {(data || []).map((voucher) => (
             <TableRow key={voucher.id}>
               <TableCell className="font-medium">{voucher.id}</TableCell>
               <TableCell>
-                <Badge variant="outline">{voucher.code}</Badge>
+                <Badge variant="outline">{voucher.voucherCode}</Badge>
               </TableCell>
-              <TableCell>{voucher.eventName}</TableCell>
-              <TableCell>{voucher.quantity}</TableCell>
-              <TableCell>{voucher.claimed}</TableCell>
-              <TableCell>${voucher.amount.toFixed(2)}</TableCell>
+              <TableCell>{voucher.qty}</TableCell>
+              <TableCell>{voucher.usedQty}</TableCell>
+              <TableCell>Rp. {voucher.value.toFixed(0)}</TableCell>
               <TableCell>
                 <span
                   className={
-                    voucher.expiredDate < new Date()
+                    new Date(voucher.expDate) < new Date()
                       ? "text-red-500"
                       : "text-green-500"
                   }
                 >
-                  {voucher.expiredDate.toLocaleDateString()}
+                  {new Date(voucher.expDate).toLocaleDateString()}
                 </span>
               </TableCell>
             </TableRow>
