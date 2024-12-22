@@ -24,8 +24,8 @@ const useLogin = () => {
     },
     onSuccess: (data) => {
       toast.success("Login success");
-      dispatch(loginAction(data)); // memasukkan data ke global state
-      localStorage.setItem("user-storage", JSON.stringify(data)); // memasukkan data ke localstrg
+      dispatch(loginAction(data));
+      localStorage.setItem("user-storage", JSON.stringify(data));
       router.replace("/");
     },
     onError: (error: AxiosError<any>) => {

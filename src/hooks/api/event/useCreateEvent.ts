@@ -16,8 +16,7 @@ interface CreateEventPayload {
   endTime: Date;
   address: string;
   price: number;
-  availableSeat: number
-
+  availableSeat: number;
 }
 
 const useCreateEvent = () => {
@@ -40,7 +39,7 @@ const useCreateEvent = () => {
       createEventForm.append("price", payload.price.toString());
       createEventForm.append("availableSeat", payload.availableSeat.toString());
 
-      const { data } = await axiosInstance.post("/blogs", createEventForm);
+      const { data } = await axiosInstance.post("/events", createEventForm);
       return data;
     },
     onSuccess: () => {

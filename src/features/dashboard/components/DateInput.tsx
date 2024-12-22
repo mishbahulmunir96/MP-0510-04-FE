@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-interface BirthDateInputProps {
+interface DateInputProps {
   value?: string;
   onChange?: (date: string | undefined) => void;
 }
@@ -22,7 +22,7 @@ const formatDateToString = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-export function BirthDateInput({ value, onChange }: BirthDateInputProps) {
+export function DateInput({ value, onChange }: DateInputProps) {
   const [date, setDate] = React.useState<Date | undefined>(
     value ? new Date(value) : undefined,
   );
