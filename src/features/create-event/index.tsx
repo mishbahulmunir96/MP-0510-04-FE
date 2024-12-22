@@ -1,11 +1,9 @@
 "use client";
 
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import useCreateEvent from "@/hooks/api/event/useCreateEvent";
 import { useFormik } from "formik";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -21,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import AuthGuard from "@/hoc/AuthGuard";
 import { cn } from "@/lib/utils";
+import useCreateEvent from "@/hooks/api/event/useCreateEvent";
 
 const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), {
   ssr: false,
@@ -32,7 +31,7 @@ const CreateEventPage = () => {
   const formik = useFormik({
     initialValues: {
       title: "",
-
+      name: "",
       category: "",
       description: "",
       content: "",
@@ -46,7 +45,6 @@ const CreateEventPage = () => {
     validationSchema: CreateEventSchema,
     onSubmit: async (values) => {
       await createEvent(values);
-
     },
   });
 
@@ -73,7 +71,6 @@ const CreateEventPage = () => {
   return (
     <main className="container mx-auto my-4 max-w-5xl border px-4">
       <form className="mt-10 space-y-4" onSubmit={formik.handleSubmit}>
-
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="title">Title</Label>
           <Input
@@ -104,6 +101,7 @@ const CreateEventPage = () => {
           ) : null}
         </div>
 
+        <div className="flex flex-col space-y-1.5">
           <Label htmlFor="category">Category</Label>
           <Input
             name="category"
@@ -224,7 +222,6 @@ const CreateEventPage = () => {
               </p>
             )}
           </div>
-
         </div>
 
         <div className="flex flex-col space-y-1.5">
@@ -289,7 +286,6 @@ const CreateEventPage = () => {
               />
             </PopoverContent>
           </Popover>
-
           {!!formik.touched.endTime && !!formik.errors.endTime && (
             <p className="text-xs text-red-500">{formik.errors.endTime}</p>
           )}
