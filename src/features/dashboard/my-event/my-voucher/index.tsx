@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useGetVouchers from "@/hooks/api/voucher/useGetVouchers";
+import { format } from "date-fns";
 import Link from "next/link";
 
 const MyVouchersPage = () => {
@@ -63,7 +64,7 @@ const MyVouchersPage = () => {
                       : "text-green-500"
                   }
                 >
-                  {new Date(voucher.expDate).toLocaleDateString()}
+                  {format(new Date(voucher.expDate), "dd MMM yyy")}
                 </span>
               </TableCell>
             </TableRow>
