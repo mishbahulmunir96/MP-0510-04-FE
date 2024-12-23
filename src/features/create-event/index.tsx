@@ -120,7 +120,7 @@ const CreateEventPage = () => {
           <Label htmlFor="description">Description</Label>
           <Textarea
             name="description"
-            placeholder="Description"
+            placeholder="Description For Homepage"
             value={formik.values.description}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}

@@ -13,7 +13,7 @@ interface EventCardProps {
 const EventCard: FC<EventCardProps> = ({ event }) => {
   return (
     <Link href={`/events/${event.id}`}>
-    <Card>
+    <Card className=" h-full">
       <CardHeader>
         <div className="relative h-[220px] w-full overflow-hidden rounded-lg">
           <Image
