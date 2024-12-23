@@ -5,4 +5,8 @@ export interface Voucher {
   usedQty: number;
   value: number;
   expDate: Date;
+  event: {
+    id: number;
+    title: string; // Atau atribut lain sesuai model Event
+  };
 }

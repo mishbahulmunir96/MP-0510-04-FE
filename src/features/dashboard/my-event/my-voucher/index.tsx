@@ -31,16 +31,19 @@ const MyVouchersPage = () => {
       </div>
       <Table>
         <TableCaption>A list of active vouchers</TableCaption>
+
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">ID</TableHead>
             <TableHead>Voucher Code</TableHead>
+            <TableHead>Event Name</TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Claimed</TableHead>
             <TableHead>Value</TableHead>
             <TableHead>Expired Date</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {(data || []).map((voucher) => (
             <TableRow key={voucher.id}>
@@ -48,6 +51,7 @@ const MyVouchersPage = () => {
               <TableCell>
                 <Badge variant="outline">{voucher.voucherCode}</Badge>
               </TableCell>
+              <TableCell>{voucher.event?.title}</TableCell>
               <TableCell>{voucher.qty}</TableCell>
               <TableCell>{voucher.usedQty}</TableCell>
               <TableCell>Rp. {voucher.value.toFixed(0)}</TableCell>
