@@ -2,6 +2,16 @@
 import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import useGetEventsByUser from "@/hooks/api/event/useGetEventsByUser";
 import useCreateVoucher from "@/hooks/api/voucher/useCreateVoucher";
 import { useFormik } from "formik";
 import { DateInput } from "../../components/DateInput";
@@ -9,17 +19,23 @@ import { createVoucherSchema } from "./schema";
 
 const CreateVoucherPage = () => {
   const { mutateAsync: createVoucher, isPending } = useCreateVoucher();
+  const { data: events } = useGetEventsByUser();
 
   const formik = useFormik({
     initialValues: {
       voucherCode: "",
-      qty: 0, // Pastikan ini tipe number
-      value: 0, // Pastikan ini tipe number
+      qty: 0,
+      value: 0,
       expDate: "",
+      eventId: "",
     },
     validationSchema: createVoucherSchema,
     onSubmit: async (values) => {
-      await createVoucher(values);
+      const payload = {
+        ...values,
+        eventId: Number(values.eventId), // Mengonversi eventId ke number saat membuat payload
+      };
+      await createVoucher(payload); // Menggunakan payload yang telah disiapkan
     },
   });
 
@@ -84,6 +100,30 @@ const CreateVoucherPage = () => {
 
           {formik.touched.expDate && formik.errors.expDate ? (
             <div className="text-sm text-red-600">{formik.errors.expDate}</div>
+          ) : null}
+        </div>
+
+        <div>
+          <Label htmlFor="eventId">Select Event</Label>
+          <Select
+            onValueChange={(value) => formik.setFieldValue("eventId", value)} // Update eventId in formik
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select an event" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Events</SelectLabel>
+                {events?.map((event) => (
+                  <SelectItem key={event.id} value={String(event.id)}>
+                    {event.title} {/* Tampilkan judul event */}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          {formik.touched.eventId && formik.errors.eventId ? (
+            <div className="text-sm text-red-600">{formik.errors.eventId}</div>
           ) : null}
         </div>
 

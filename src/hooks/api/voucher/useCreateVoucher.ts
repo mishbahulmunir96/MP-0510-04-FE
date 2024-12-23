@@ -11,6 +11,7 @@ interface useCreateVoucherPayload {
   qty: number;
   value: number;
   expDate: string;
+  eventId: number;
 }
 
 const useCreateVoucher = () => {
