@@ -15,4 +15,5 @@ export const createVoucherSchema = Yup.object().shape({
     .nullable()
     .required("Expired date is required")
     .min(new Date(), "Expired date must be in the future"),
+  eventId: Yup.string().required("Event must be selected"),
 });
