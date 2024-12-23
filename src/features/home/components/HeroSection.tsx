@@ -65,7 +65,6 @@ const HeroSection = () => {
             />
           </Carousel>
 
-          {/* Pagination Dots */}
           <div className="flex justify-center gap-2">
             {images.map((_, index) => (
               <button
