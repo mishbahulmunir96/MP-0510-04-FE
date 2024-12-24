@@ -31,7 +31,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ) => {
     return (
       <div className="mb-1 grid w-full items-center gap-1.5">
-        <Label htmlFor={htmlFor} className="text-lg">
+        <Label htmlFor={htmlFor} className="text-base text-slate-700">
           {label}
         </Label>
         <Input
@@ -42,7 +42,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           onChange={onChange}
           value={value}
           onBlur={onBlur}
-          className={`h-12 rounded-xl !text-base placeholder:text-lg ${className}`}
+          className={`h-10 rounded-xl !text-base text-slate-700 placeholder:text-sm ${className}`}
           accept={accept}
         />
       </div>

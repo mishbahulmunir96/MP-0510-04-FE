@@ -8,10 +8,17 @@ import { GrCart } from "react-icons/gr";
 import { IoRocketSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
+  const pathname = usePathname();
+
+  // mengumpetkan navbar di ragisterpage dan loginpage
+  const shouldHideNavbar = pathname === "/register" || pathname === "/login";
+
+  if (shouldHideNavbar) return null;
 
   const logout = () => {
     localStorage.removeItem("user-storage");
@@ -22,24 +29,21 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-blue-400 shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <Link 
-            href="/" 
-            className="group flex items-center space-x-2"
-          >
+          <Link href="/" className="group flex items-center space-x-2">
             <div className="relative">
-              <p className="text-2xl font-extrabold text-white tracking-tight">
+              <p className="text-2xl font-extrabold tracking-tight text-white">
                 MAKÉT
               </p>
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full" />
+              <div className="absolute -bottom-1 left-0 h-0.5 w-0 bg-white transition-all duration-300 group-hover:w-full" />
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden items-center space-x-6 md:flex">
             {!!user.id && (
               <Link href="/create-event">
-                <Button 
-                  variant="ghost" 
-                  className="text-white hover:text-white hover:bg-white/10"
+                <Button
+                  variant="ghost"
+                  className="text-white hover:bg-white/10 hover:text-white"
                 >
                   <BsCalendar2Event className="mr-2 h-4 w-4" />
                   Create Event
@@ -48,9 +52,9 @@ const Navbar = () => {
             )}
 
             <Link href="/my-ticket">
-              <Button 
-                variant="ghost" 
-                className="text-white hover:text-white hover:bg-white/10"
+              <Button
+                variant="ghost"
+                className="text-white hover:bg-white/10 hover:text-white"
               >
                 <GrCart className="mr-2 h-4 w-4" />
                 My Tickets
@@ -58,9 +62,9 @@ const Navbar = () => {
             </Link>
 
             <Link href="/explore-event">
-              <Button 
-                variant="ghost" 
-                className="text-white hover:text-white hover:bg-white/10"
+              <Button
+                variant="ghost"
+                className="text-white hover:bg-white/10 hover:text-white"
               >
                 <IoRocketSharp className="mr-2 h-4 w-4" />
                 Explore
@@ -72,16 +76,16 @@ const Navbar = () => {
             {!user.id ? (
               <>
                 <Link href="/register">
-                  <Button 
-                    variant="ghost" 
-                    className="text-white hover:text-white hover:bg-white/10"
+                  <Button
+                    variant="ghost"
+                    className="text-white hover:bg-white/10 hover:text-white"
                   >
                     <User className="mr-2 h-4 w-4" />
                     Register
                   </Button>
                 </Link>
                 <Link href="/login">
-                  <Button 
+                  <Button
                     variant="secondary"
                     className="bg-white text-blue-600 hover:bg-white/90"
                   >
@@ -91,9 +95,9 @@ const Navbar = () => {
               </>
             ) : (
               <Link href="/login" onClick={logout}>
-                <Button 
-                  variant="ghost" 
-                  className="text-white hover:text-white hover:bg-white/10"
+                <Button
+                  variant="ghost"
+                  className="text-white hover:bg-white/10 hover:text-white"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   Logout
@@ -104,33 +108,33 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="md:hidden border-t border-white/10">
+      <div className="border-t border-white/10 md:hidden">
         <div className="flex justify-around p-2">
           {!!user.id && (
             <Link href="/create-event">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
-                className="text-white hover:text-white hover:bg-white/10"
+                className="text-white hover:bg-white/10 hover:text-white"
               >
                 <BsCalendar2Event className="h-4 w-4" />
               </Button>
             </Link>
           )}
           <Link href="/my-ticket">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
-              className="text-white hover:text-white hover:bg-white/10"
+              className="text-white hover:bg-white/10 hover:text-white"
             >
               <GrCart className="h-4 w-4" />
             </Button>
           </Link>
           <Link href="/explore-event">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
-              className="text-white hover:text-white hover:bg-white/10"
+              className="text-white hover:bg-white/10 hover:text-white"
             >
               <IoRocketSharp className="h-4 w-4" />
             </Button>
