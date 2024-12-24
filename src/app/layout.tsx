@@ -8,17 +8,8 @@ import StoreProvider from "@/providers/StoreProvider";
 import AuthProvider from "@/providers/authProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import TokenProvider from "@/providers/TokenProvider";
+import { poppins } from "./utils/font";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,17 +23,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${poppins.className} antialiased`}>
         <StoreProvider>
           <AuthProvider>
-            <ReactQueryProvider>
-              <Navbar />
-              {children}
-            </ReactQueryProvider>
-            <Footer />
-            <ToastContainer />
+            <TokenProvider>
+              <ReactQueryProvider>
+                <Navbar />
+                {children}
+              </ReactQueryProvider>
+              <Footer />
+              <ToastContainer />
+            </TokenProvider>
           </AuthProvider>
         </StoreProvider>
       </body>

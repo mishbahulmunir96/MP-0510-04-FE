@@ -1,16 +1,21 @@
 "use client";
 
 import InputField from "@/components/InputField";
+import SignPrompt from "@/components/SignPrompt";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import useAuth from "@/hooks/api/auth/useAuth";
 import useLogin from "@/hooks/api/auth/useLogin";
 import { useFormik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { LoginSchema } from "./schema";
+import SignSideElement from "@/components/SignSideElement";
+import SignTitle from "@/components/SignTitle";
 
 const LoginPage = () => {
+  useAuth();
   const { mutateAsync: login, isPending } = useLogin();
 
   const formik = useFormik({
@@ -25,13 +30,14 @@ const LoginPage = () => {
     },
   });
   return (
-    <div className="px-2">
-      <div className="container mx-auto mt-4 flex w-full justify-center">
-        <Card className="w-[450px] p-6">
+    <main className="h-screen w-full py-4 md:py-0">
+      <div className="mx-auto flex h-full w-full">
+        <SignSideElement className="w-[62%]" />
+
+        <Card className="w-full items-center rounded-none border-none p-6 shadow-none md:my-auto md:w-[38%]">
           <form onSubmit={formik.handleSubmit}>
-            <h1 className="mb-6 text-4xl font-extrabold text-slate-600">
-              Sign in to <span className="font-bold text-blue-900">MAKÉT</span>
-            </h1>
+            <SignTitle title="Hello Again!" subTitle="Wellcome back" />
+
             <div className="mb-4">
               <InputField
                 htmlFor="email"
@@ -78,12 +84,16 @@ const LoginPage = () => {
                 </label>
               </div>
 
-              <div className="">
+              <div className="text-base font-medium text-slate-700 hover:text-slate-900">
                 <Link href="/forgot-password">Forgot Password</Link>
               </div>
             </div>
 
-            <Button type="submit" className="mt-4 w-full" disabled={isPending}>
+            <Button
+              type="submit"
+              className="mt-4 w-full bg-blue-500 font-medium hover:bg-blue-600"
+              disabled={isPending}
+            >
               {isPending ? "Loading..." : "Login"}
             </Button>
           </form>
@@ -104,20 +114,14 @@ const LoginPage = () => {
             <p>Sign in with Google</p>
           </div>
 
-          <div className="font-medium">
-            <p>
-              Don't have account?{" "}
-              <Link
-                href="/register"
-                className="text-blue-700 hover:font-semibold"
-              >
-                Sign Up
-              </Link>
-            </p>
-          </div>
+          <SignPrompt
+            message="Don't have account?"
+            href="/register"
+            text="Sign Up"
+          />
         </Card>
       </div>
-    </div>
+    </main>
   );
 };
 

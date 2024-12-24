@@ -55,7 +55,12 @@ const EventListPage = () => {
                 />
               </TableCell>
               <TableCell>{event.title}</TableCell>
-              <TableCell>${event.price.toFixed(2)}</TableCell>
+              <TableCell>
+                {event.price.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                })}
+              </TableCell>
               <TableCell>{event.availableSeat}</TableCell>
               <TableCell>
                 {format(new Date(event.startTime), "dd MMM yyyy")}

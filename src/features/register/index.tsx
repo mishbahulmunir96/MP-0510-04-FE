@@ -1,15 +1,20 @@
 "use client";
 
 import InputField from "@/components/InputField";
+import SignPrompt from "@/components/SignPrompt";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import useAuth from "@/hooks/api/auth/useAuth";
 import useRegister from "@/hooks/api/auth/useRegister";
 import { useFormik } from "formik";
 import Image from "next/image";
-import Link from "next/link";
 import { RegisterSchema } from "./schema";
+import SignSideElement from "@/components/SignSideElement";
+import SignTitle from "@/components/SignTitle";
 
 const RegisterPage = () => {
+  useAuth();
+
   const { mutateAsync: register, isPending } = useRegister();
 
   const formik = useFormik({
@@ -29,13 +34,15 @@ const RegisterPage = () => {
   });
 
   return (
-    <main className="px-2">
-      <div className="container mx-auto mt-4 flex w-full justify-center">
-        <Card className="w-[450px] p-6">
+    <main className="w-full py-4 md:py-0">
+      <div className="mx-auto flex h-full w-full">
+        <div className="relative hidden h-screen md:block md:w-[62%]">
+          <SignSideElement className="fixed w-[62%]" />
+        </div>
+
+        <Card className="w-full rounded-none border-none p-6 md:relative md:w-[38%]">
           <form onSubmit={formik.handleSubmit}>
-            <h1 className="mb-6 text-4xl font-extrabold text-slate-600">
-              Sign up to <span className="font-bold text-blue-900">MAKÉT</span>
-            </h1>
+            <SignTitle title="Hello!" subTitle="Sign up to get started" />
 
             <div className="grid grid-cols-2 gap-x-2">
               <div className="mb-2">
@@ -106,7 +113,7 @@ const RegisterPage = () => {
               <div className="col-span-2 mb-2">
                 <InputField
                   htmlFor="password"
-                  label="password"
+                  label="Password"
                   type="password"
                   placeholder="Password"
                   onChange={formik.handleChange}
@@ -152,7 +159,11 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            <Button type="submit" className="mt-4 w-full" disabled={isPending}>
+            <Button
+              type="submit"
+              className="mt-4 w-full bg-blue-500 font-medium hover:bg-blue-600"
+              disabled={isPending}
+            >
               {isPending ? "Loading..." : "Register"}
             </Button>
           </form>
@@ -173,14 +184,7 @@ const RegisterPage = () => {
             <p>Sign up with Google</p>
           </div>
 
-          <div className="font-medium">
-            <p>
-              Have account?{" "}
-              <Link href="/login" className="text-blue-700 hover:font-semibold">
-                Sign In
-              </Link>
-            </p>
-          </div>
+          <SignPrompt message="Have an account?" href="/login" text="Sign In" />
         </Card>
       </div>
     </main>
