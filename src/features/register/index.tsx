@@ -13,7 +13,7 @@ import SignSideElement from "@/components/SignSideElement";
 import SignTitle from "@/components/SignTitle";
 
 const RegisterPage = () => {
-  useAuth();
+  // useAuth();
 
   const { mutateAsync: register, isPending } = useRegister();
 
@@ -54,6 +54,7 @@ const RegisterPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.firstName}
                   onBlur={formik.handleBlur}
+                  className={`${formik.values.firstName ? "bg-blue-50" : "bg-white"}`}
                 />
 
                 {formik.touched.firstName && formik.errors.firstName ? (
@@ -72,6 +73,7 @@ const RegisterPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.lastName}
                   onBlur={formik.handleBlur}
+                  className={`${formik.values.lastName ? "bg-blue-50" : "bg-white"}`}
                 />
               </div>
 
@@ -84,6 +86,7 @@ const RegisterPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.email}
                   onBlur={formik.handleBlur}
+                  className={`${formik.values.email ? "bg-blue-50" : "bg-white"}`}
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="text-sm text-red-600">
@@ -101,6 +104,7 @@ const RegisterPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.phoneNumber}
                   onBlur={formik.handleBlur}
+                  className={`${formik.values.phoneNumber ? "bg-blue-50" : "bg-white"}`}
                 />
 
                 {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
@@ -119,6 +123,7 @@ const RegisterPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.password}
                   onBlur={formik.handleBlur}
+                  className={`${formik.values.password ? "bg-blue-50" : "bg-white"}`}
                 />
                 {formik.touched.password && formik.errors.password ? (
                   <div className="text-sm text-red-600">
@@ -136,6 +141,7 @@ const RegisterPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.confirmPassword}
                   onBlur={formik.handleBlur}
+                  className={`${formik.values.confirmPassword ? "bg-blue-50" : "bg-white"}`}
                 />
 
                 {formik.touched.confirmPassword &&
@@ -155,6 +161,7 @@ const RegisterPage = () => {
                   onChange={formik.handleChange}
                   value={formik.values.referralCode}
                   onBlur={formik.handleBlur}
+                  className={`${formik.values.referralCode ? "bg-blue-50" : "bg-white"}`}
                 />
               </div>
             </div>

@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import { changePasswordSchema } from "../changePasswordSchema";
 import useChangePassword from "@/hooks/api/auth/useChangePassword";
+import { useState } from "react";
+import ModalConfirmation from "@/components/ModalConfirmation";
 
 const PasswordProfile = () => {
   const { mutateAsync: changePassword, isPending } = useChangePassword();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [error, setError] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -17,14 +21,26 @@ const PasswordProfile = () => {
     },
     validationSchema: changePasswordSchema,
     onSubmit: async (values) => {
-      await changePassword(values);
+      try {
+        await changePassword(values);
+        setIsDialogOpen(false);
+        setError("");
+      } catch (error) {
+        setError("Failed to update profile. Please try again.");
+      }
     },
   });
   return (
     <main>
       <div>
+        <div>
+          <h1 className="my-4 text-xl font-semibold text-slate-800">
+            Password
+          </h1>
+        </div>
+
         <form onSubmit={formik.handleSubmit}>
-          <div>
+          <div className="mb-4 md:w-1/2">
             <InputField
               htmlFor="currentPassword"
               label="Current Password"
@@ -33,6 +49,7 @@ const PasswordProfile = () => {
               onChange={formik.handleChange}
               value={formik.values.currentPassword}
               onBlur={formik.handleBlur}
+              className={`font-medium text-black ${formik.values.currentPassword ? "bg-blue-50" : "bg-white"}`}
             />
 
             {formik.touched.currentPassword && formik.errors.currentPassword ? (
@@ -41,8 +58,7 @@ const PasswordProfile = () => {
               </div>
             ) : null}
           </div>
-
-          <div>
+          <div className="mb-4 md:w-1/2">
             <InputField
               htmlFor="newPassword"
               label="New Password"
@@ -51,6 +67,7 @@ const PasswordProfile = () => {
               onChange={formik.handleChange}
               value={formik.values.newPassword}
               onBlur={formik.handleBlur}
+              className={`font-medium text-black ${formik.values.newPassword ? "bg-blue-50" : "bg-white"}`}
             />
 
             {formik.touched.newPassword && formik.errors.newPassword ? (
@@ -59,8 +76,7 @@ const PasswordProfile = () => {
               </div>
             ) : null}
           </div>
-
-          <div>
+          <div className="mb-4 md:w-1/2">
             <InputField
               htmlFor="confirmNewPassword"
               label="Confirm New Password"
@@ -69,6 +85,7 @@ const PasswordProfile = () => {
               onChange={formik.handleChange}
               value={formik.values.confirmNewPassword}
               onBlur={formik.handleBlur}
+              className={`font-medium text-black ${formik.values.confirmNewPassword ? "bg-blue-50" : "bg-white"}`}
             />
 
             {formik.touched.confirmNewPassword &&
@@ -78,9 +95,25 @@ const PasswordProfile = () => {
               </div>
             ) : null}
           </div>
-          <Button type="submit" disabled={isPending}>
+          {error && <div className="text-sm text-red-600">{error}</div>}{" "}
+          {/* Display error message */}
+          <Button
+            type="button"
+            disabled={isPending}
+            onClick={() => setIsDialogOpen(true)}
+            className="bg-blue-500 font-medium hover:bg-blue-600"
+          >
             {isPending ? "Loading..." : "Save Change"}
           </Button>
+          <ModalConfirmation
+            isOpen={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            title="Are you absolutely sure?"
+            description="This action will save all changes made to your password."
+            onConfirm={formik.handleSubmit}
+            confirmText="Yes"
+            cancelText="Cancel"
+          />
         </form>
       </div>
     </main>

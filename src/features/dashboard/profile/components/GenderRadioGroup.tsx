@@ -9,18 +9,18 @@ interface GenderRadioGroupProps {
 
 const GenderRadioGroup: FC<GenderRadioGroupProps> = ({ value, onChange }) => {
   return (
-    <RadioGroup value={value} onValueChange={onChange} className="flex gap-8">
+    <RadioGroup
+      value={value}
+      onValueChange={onChange}
+      className="mt-2 flex gap-8 text-slate-900"
+    >
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="Male" id="gender-male" />
-        <Label htmlFor="gender-male" className="text-lg">
-          Male
-        </Label>
+        <Label htmlFor="gender-male">Male</Label>
       </div>
       <div className="flex items-center space-x-2">
         <RadioGroupItem value="Female" id="gender-female" />
-        <Label htmlFor="gender-female" className="text-lg">
-          Female
-        </Label>
+        <Label htmlFor="gender-female">Female</Label>
       </div>
     </RadioGroup>
   );

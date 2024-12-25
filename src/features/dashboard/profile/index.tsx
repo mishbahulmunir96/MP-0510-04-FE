@@ -6,10 +6,10 @@ const ProfilePage = () => {
   return (
     <main className="w-full">
       <div className="w-full">
-        <h1 className="text-xl font-semibold text-slate-800">Your Profile</h1>
+        <h1 className="text-2xl font-semibold text-slate-600">Your Profile</h1>
       </div>
 
-      <Tabs defaultValue="general" className="w-full">
+      <Tabs defaultValue="general" className="my-2 w-full">
         <TabsList>
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="password">Security</TabsTrigger>
