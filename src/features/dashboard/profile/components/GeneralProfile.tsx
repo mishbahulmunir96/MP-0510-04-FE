@@ -14,6 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { DateInput } from "../../components/DateInput";
 import { updateProfileSchema } from "../schema";
 import GenderRadioGroup from "./GenderRadioGroup";
+import { updateUserAction } from "@/redux/slices/userSlices";
+import { Loader2 } from "lucide-react";
 
 const GeneralProfile = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -24,6 +26,7 @@ const GeneralProfile = () => {
   const profilePictureRef = useRef<HTMLInputElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -39,7 +42,8 @@ const GeneralProfile = () => {
     validationSchema: updateProfileSchema,
     onSubmit: async (values) => {
       try {
-        await updateUser({ id: userId, payload: values });
+        const updatedUser = await updateUser({ id: userId, payload: values });
+        dispatch(updateUserAction(updatedUser));
         setIsDialogOpen(false);
         setError("");
       } catch (error) {
@@ -211,7 +215,14 @@ const GeneralProfile = () => {
           onClick={() => setIsDialogOpen(true)}
           className="bg-blue-500 font-medium hover:bg-blue-600"
         >
-          {isPending ? "Loading..." : "Save Change"}
+          {isPending ? (
+            <>
+              <Loader2 className="animate-spin" />
+              <span className="ml-2">Please wait</span>
+            </>
+          ) : (
+            "Save Change"
+          )}
         </Button>
         <ModalConfirmation
           isOpen={isDialogOpen}

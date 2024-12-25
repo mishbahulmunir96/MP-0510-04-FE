@@ -11,6 +11,7 @@ import Image from "next/image";
 import { RegisterSchema } from "./schema";
 import SignSideElement from "@/components/SignSideElement";
 import SignTitle from "@/components/SignTitle";
+import { Loader2 } from "lucide-react";
 
 const RegisterPage = () => {
   // useAuth();
@@ -171,7 +172,14 @@ const RegisterPage = () => {
               className="mt-4 w-full bg-blue-500 font-medium hover:bg-blue-600"
               disabled={isPending}
             >
-              {isPending ? "Loading..." : "Register"}
+              {isPending ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  <span className="ml-2">Please wait</span>
+                </>
+              ) : (
+                "Register"
+              )}
             </Button>
           </form>
 

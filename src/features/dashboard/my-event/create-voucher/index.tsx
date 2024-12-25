@@ -16,6 +16,7 @@ import useCreateVoucher from "@/hooks/api/voucher/useCreateVoucher";
 import { useFormik } from "formik";
 import { DateInput } from "../../components/DateInput";
 import { createVoucherSchema } from "./schema";
+import { Loader2 } from "lucide-react";
 
 const CreateVoucherPage = () => {
   const { mutateAsync: createVoucher, isPending } = useCreateVoucher();
@@ -128,7 +129,14 @@ const CreateVoucherPage = () => {
         </div>
 
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Loading..." : "Create Voucher"}
+          {isPending ? (
+            <>
+              <Loader2 className="animate-spin" />
+              <span className="ml-2">Please wait</span>
+            </>
+          ) : (
+            "Create Voucher"
+          )}
         </Button>
       </form>
     </div>

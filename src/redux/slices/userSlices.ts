@@ -10,6 +10,7 @@ export interface UserState {
   birthDate: string;
   address: string;
   profilePicture: string;
+  role: string;
   token: string;
 }
 
@@ -23,6 +24,7 @@ const initialState: UserState = {
   birthDate: "",
   address: "",
   profilePicture: "",
+  role: "",
   token: "",
 };
 
@@ -40,6 +42,7 @@ export const userSlice = createSlice({
       state.birthDate = action.payload.birthDate;
       state.address = action.payload.address;
       state.profilePicture = action.payload.profilePicture;
+      state.role = action.payload.role;
       state.token = action.payload.token;
     },
     logoutAction: (state) => {
@@ -52,10 +55,36 @@ export const userSlice = createSlice({
       state.birthDate = "";
       state.address = "";
       state.profilePicture = "";
-      state.token = "";
+      (state.role = ""), (state.token = "");
+    },
+    updateUserAction: (state, action: PayloadAction<Partial<UserState>>) => {
+      // Memperbarui hanya field yang ada dalam payload
+      const {
+        id,
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        gender,
+        birthDate,
+        address,
+        profilePicture,
+        role,
+      } = action.payload;
+      if (id !== undefined) state.id = id;
+      if (firstName !== undefined) state.firstName = firstName;
+      if (lastName !== undefined) state.lastName = lastName;
+      if (email !== undefined) state.email = email;
+      if (phoneNumber !== undefined) state.phoneNumber = phoneNumber;
+      if (gender !== undefined) state.gender = gender;
+      if (birthDate !== undefined) state.birthDate = birthDate;
+      if (address !== undefined) state.address = address;
+      if (profilePicture !== undefined) state.profilePicture = profilePicture;
+      if (role !== undefined) state.role = role;
     },
   },
 });
 
-export const { loginAction, logoutAction } = userSlice.actions;
+export const { loginAction, logoutAction, updateUserAction } =
+  userSlice.actions;
 export default userSlice.reducer;
