@@ -9,9 +9,9 @@ import { IoRocketSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { LogOut, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import AccountDropdown from "./AccountDropdown";
 
 const Navbar = () => {
-  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const pathname = usePathname();
 
@@ -20,14 +20,9 @@ const Navbar = () => {
 
   if (shouldHideNavbar) return null;
 
-  const logout = () => {
-    localStorage.removeItem("user-storage");
-    dispatch(logoutAction());
-  };
-
   return (
     <nav className="sticky top-0 z-50 bg-blue-400 shadow-lg">
-      <div className="container mx-auto px-4">
+      <div className="px-4 md:mx-6">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="group flex items-center space-x-2">
             <div className="relative">
@@ -94,15 +89,7 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <Link href="/login" onClick={logout}>
-                <Button
-                  variant="ghost"
-                  className="text-white hover:bg-white/10 hover:text-white"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Logout
-                </Button>
-              </Link>
+              <AccountDropdown />
             )}
           </div>
         </div>
