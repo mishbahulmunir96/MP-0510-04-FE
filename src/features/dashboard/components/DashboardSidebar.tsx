@@ -56,11 +56,12 @@ const items = [
 ];
 const DashboardSidebar = () => {
   return (
-    <Sidebar className="mt-[68px]">
+    <Sidebar className="mt-16" collapsible="icon">
       <SidebarContent>
         <SidebarHeader>
           <Link href="/dashboard">Dashboard</Link>
         </SidebarHeader>
+
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>

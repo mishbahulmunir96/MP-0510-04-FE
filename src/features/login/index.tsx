@@ -47,6 +47,7 @@ const LoginPage = () => {
                 onChange={formik.handleChange}
                 value={formik.values.email}
                 onBlur={formik.handleBlur}
+                className={`${formik.values.email ? "bg-blue-50" : "bg-white"}`}
               />
               {formik.touched.email && formik.errors.email ? (
                 <div className="text-sm text-red-600">
@@ -64,6 +65,7 @@ const LoginPage = () => {
                 onChange={formik.handleChange}
                 value={formik.values.password}
                 onBlur={formik.handleBlur}
+                className={`${formik.values.password ? "bg-blue-50" : "bg-white"}`}
               />
 
               {formik.touched.password && formik.errors.password ? (
