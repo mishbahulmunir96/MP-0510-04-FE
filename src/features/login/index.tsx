@@ -15,7 +15,7 @@ import SignSideElement from "@/components/SignSideElement";
 import SignTitle from "@/components/SignTitle";
 
 const LoginPage = () => {
-  useAuth();
+  // useAuth();
   const { mutateAsync: login, isPending } = useLogin();
 
   const formik = useFormik({

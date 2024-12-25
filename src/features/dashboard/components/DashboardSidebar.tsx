@@ -1,7 +1,10 @@
+"use client";
 import {
   Calendar,
   CalendarRange,
+  ChevronRight,
   CircleUserRound,
+  CreditCard,
   Search,
   Settings,
 } from "lucide-react";
@@ -11,10 +14,13 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
   Accordion,
@@ -23,6 +29,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import Link from "next/link";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { useState } from "react";
 
 const items = [
   {
@@ -39,9 +51,9 @@ const items = [
     ],
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Transactions",
+    url: "/dashboard/transactions",
+    icon: CreditCard,
   },
   {
     title: "Search",
@@ -55,52 +67,77 @@ const items = [
   },
 ];
 const DashboardSidebar = () => {
+  const [openItem, setOpenItem] = useState<string | null>(null);
   return (
     <Sidebar className="mt-16" collapsible="icon">
       <SidebarContent>
-        <SidebarHeader>
-          <Link href="/dashboard">Dashboard</Link>
-        </SidebarHeader>
+        <SidebarGroupLabel>
+          <Link
+            href="/dashboard"
+            className="text-base font-medium text-slate-500"
+          >
+            Dashboard
+          </Link>
+        </SidebarGroupLabel>
 
         <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  {item.submenu ? (
-                    <Accordion type="single" collapsible>
-                      <AccordionItem value={item.title}>
-                        <AccordionTrigger>
-                          <div className="flex items-center">
-                            <item.icon />
-                            <span className="ml-2">{item.title}</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
+          <SidebarMenu>
+            {items.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                {item.submenu ? (
+                  <Collapsible
+                    defaultOpen
+                    className="group/collapsible"
+                    open={openItem === item.title} // Menentukan apakah collapsible terbuka
+                    onOpenChange={() =>
+                      setOpenItem(openItem === item.title ? null : item.title)
+                    }
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton className="flex items-center">
+                          <item.icon
+                            style={{
+                              height: "20px",
+                              width: "20px",
+                            }}
+                          />
+                          <span className="text-base font-medium text-slate-500">
+                            {item.title}
+                          </span>
+                          <ChevronRight
+                            className={`ml-auto transition-transform duration-200 ${openItem === item.title ? "rotate-90" : ""}`}
+                          />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
                           {item.submenu.map((subitem) => (
-                            <SidebarMenuItem key={subitem.title}>
-                              <SidebarMenuButton asChild>
-                                <Link href={subitem.url}>
-                                  <span>{subitem.title}</span>
-                                </Link>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
+                            <SidebarMenuSubItem key={subitem.title}>
+                              <Link href={subitem.url}>
+                                <span className="text-sm font-medium text-slate-500">
+                                  {subitem.title}
+                                </span>
+                              </Link>
+                            </SidebarMenuSubItem>
                           ))}
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  ) : (
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  )}
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuButton asChild>
+                    <Link href={item.url}>
+                      <item.icon style={{ height: "20px", width: "20px" }} />
+                      <span className="text-base font-medium text-slate-500">
+                        {item.title}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                )}
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
