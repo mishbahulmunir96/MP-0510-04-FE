@@ -7,6 +7,7 @@ import { changePasswordSchema } from "../changePasswordSchema";
 import useChangePassword from "@/hooks/api/auth/useChangePassword";
 import { useState } from "react";
 import ModalConfirmation from "@/components/ModalConfirmation";
+import { Loader2 } from "lucide-react";
 
 const PasswordProfile = () => {
   const { mutateAsync: changePassword, isPending } = useChangePassword();
@@ -103,7 +104,14 @@ const PasswordProfile = () => {
             onClick={() => setIsDialogOpen(true)}
             className="bg-blue-500 font-medium hover:bg-blue-600"
           >
-            {isPending ? "Loading..." : "Save Change"}
+            {isPending ? (
+              <>
+                <Loader2 className="animate-spin" />
+                <span className="ml-2">Please wait</span>
+              </>
+            ) : (
+              "Save Change"
+            )}
           </Button>
           <ModalConfirmation
             isOpen={isDialogOpen}

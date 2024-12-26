@@ -12,6 +12,7 @@ import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { updateEventSchema } from "./schema";
+import { Loader2 } from "lucide-react";
 
 interface UpdateEventPageProps {
   eventId: number;
@@ -268,7 +269,14 @@ const UpdateEventPage: React.FC<UpdateEventPageProps> = ({ eventId }) => {
         </div>
 
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Loading..." : "Update Event"}
+          {isPending ? (
+            <>
+              <Loader2 className="animate-spin" />
+              <span className="ml-2">Please wait</span>
+            </>
+          ) : (
+            "Update Event"
+          )}
         </Button>
       </form>
     </div>
