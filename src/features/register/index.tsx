@@ -12,9 +12,19 @@ import { RegisterSchema } from "./schema";
 import SignSideElement from "@/components/SignSideElement";
 import SignTitle from "@/components/SignTitle";
 import { Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 const RegisterPage = () => {
-  // useAuth();
+  useAuth();
 
   const { mutateAsync: register, isPending } = useRegister();
 
@@ -26,6 +36,7 @@ const RegisterPage = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      role: "",
       referralCode: "",
     },
     validationSchema: RegisterSchema,
@@ -149,6 +160,31 @@ const RegisterPage = () => {
                 formik.errors.confirmPassword ? (
                   <div className="text-sm text-red-600">
                     {formik.errors.confirmPassword}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="col-span-2 mb-2">
+                <Label className="mb-2 text-base text-slate-700">
+                  Register as?
+                </Label>
+                <Select
+                  onValueChange={(value) => formik.setFieldValue("role", value)}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select User Role</SelectLabel>
+                      <SelectItem value="USER">CUSTOMER</SelectItem>
+                      <SelectItem value="ORGANIZER">ORGANIZER</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {formik.touched.role && formik.errors.role ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.role}
                   </div>
                 ) : null}
               </div>

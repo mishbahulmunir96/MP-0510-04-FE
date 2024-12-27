@@ -3,17 +3,18 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function AuthGuard(Component: any) {
+export default function RoleGuard(Component: any) {
   return function IsAuth(props: any) {
-    const { id } = useAppSelector((state) => state.user);
+    const { id, role } = useAppSelector((state) => state.user);
     const router = useRouter();
-    useEffect(() => {
-      if (!id) {
-        router.push("/login");
-      }
-    }, [id, router]);
 
-    if (!id) {
+    useEffect(() => {
+      if (!id || role !== "ORGANIZER") {
+        router.push("/");
+      }
+    }, [id, role, router]);
+
+    if (!id || role !== "ORGANIZER") {
       return <Loader2 />;
     }
 

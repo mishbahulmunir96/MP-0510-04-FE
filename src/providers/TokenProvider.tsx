@@ -18,16 +18,16 @@ const TokenProvider: FC<PropsWithChildren> = ({ children }) => {
           const tokenExpiry = fromUnixTime(decodeToken.exp!);
 
           if (isAfter(new Date(), tokenExpiry)) {
-            localStorage.removeItem("blog-storage");
+            localStorage.removeItem("user-storage");
             dispatch(logoutAction());
           }
         } catch (error) {
-          localStorage.removeItem("blog-storage");
+          localStorage.removeItem("user-storage");
           dispatch(logoutAction());
         }
       }
     };
-    const interval = setInterval(checkTokenValidity, 15000); //15 sec
+    const interval = setInterval(checkTokenValidity, 1500);
 
     return () => clearInterval(interval);
   }, [token, dispatch]);

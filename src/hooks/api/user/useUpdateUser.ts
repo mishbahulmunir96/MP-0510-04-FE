@@ -15,7 +15,6 @@ interface UpdateUserPayload {
   birthDate?: string;
   address?: string;
   profilePicture?: File | null;
-  role?: string;
 }
 
 const useUpdateUser = () => {
@@ -45,7 +44,6 @@ const useUpdateUser = () => {
       if (payload.address) updateUserForm.append("address", payload.address);
       if (payload.profilePicture)
         updateUserForm.append("profilePicture", payload.profilePicture);
-      if (payload.role) updateUserForm.append("role", payload.role);
 
       const { data } = await axiosInstance.patch(
         `/users/${id}`,
@@ -53,14 +51,8 @@ const useUpdateUser = () => {
       );
       return data;
     },
-    onSuccess: async (data, variables) => {
-      const { payload } = variables;
-
-      if (payload.role) {
-        toast.success("Switch Account Successfully");
-      } else {
-        toast.success("User updated successfully");
-      }
+    onSuccess: async (data) => {
+      toast.success("User updated successfully");
       await queryClient.invalidateQueries({ queryKey: ["users"] });
       router.push("/");
     },

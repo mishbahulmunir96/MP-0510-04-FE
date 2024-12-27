@@ -1,5 +1,7 @@
+"use client";
 import DashboardPage from "@/features/dashboard";
 import DashboardLayout from "@/features/dashboard/DashboardLayout";
+import AuthGuard from "@/hoc/AuthGuard";
 
 const Dashboard = () => {
   return (
@@ -9,4 +11,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AuthGuard(Dashboard);
