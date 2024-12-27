@@ -16,7 +16,7 @@ import SignTitle from "@/components/SignTitle";
 import { Loader2 } from "lucide-react";
 
 const LoginPage = () => {
-  // useAuth();
+  useAuth();
   const { mutateAsync: login, isPending } = useLogin();
 
   const formik = useFormik({

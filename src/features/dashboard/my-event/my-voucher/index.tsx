@@ -49,29 +49,37 @@ const MyVouchersPage = () => {
             </TableHeader>
 
             <TableBody>
-              {(data || []).map((voucher) => (
-                <TableRow key={voucher.id}>
-                  <TableCell className="font-medium">{voucher.id}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{voucher.voucherCode}</Badge>
-                  </TableCell>
-                  <TableCell>{voucher.event?.title}</TableCell>
-                  <TableCell>{voucher.qty}</TableCell>
-                  <TableCell>{voucher.usedQty}</TableCell>
-                  <TableCell>Rp. {voucher.value.toFixed(0)}</TableCell>
-                  <TableCell>
-                    <span
-                      className={
-                        new Date(voucher.expDate) < new Date()
-                          ? "text-red-500"
-                          : "text-green-500"
-                      }
-                    >
-                      {format(new Date(voucher.expDate), "dd MMM yyy")}
-                    </span>
+              {data && data.length > 0 ? ( // Check if data exists and has length
+                data.map((voucher) => (
+                  <TableRow key={voucher.id}>
+                    <TableCell className="font-medium">{voucher.id}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{voucher.voucherCode}</Badge>
+                    </TableCell>
+                    <TableCell>{voucher.event?.title}</TableCell>
+                    <TableCell>{voucher.qty}</TableCell>
+                    <TableCell>{voucher.usedQty}</TableCell>
+                    <TableCell>Rp. {voucher.value.toFixed(0)}</TableCell>
+                    <TableCell>
+                      <span
+                        className={
+                          new Date(voucher.expDate) < new Date()
+                            ? "text-red-500"
+                            : "text-green-500"
+                        }
+                      >
+                        {format(new Date(voucher.expDate), "dd MMM yyy")}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center text-gray-500">
+                    No vouchers available
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>

@@ -1,14 +1,5 @@
+import { CornerUpLeft, LayoutDashboard, LogOut, User } from "lucide-react";
 
-import {
-  CornerUpLeft,
-  LayoutDashboard,
-  Loader2,
-  LogOut,
-  User,
-} from "lucide-react";
-
-
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,19 +10,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAppDispatch } from "@/redux/hooks";
-import { logoutAction, updateUserAction } from "@/redux/slices/userSlices";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useSelector } from "react-redux";
+import { logoutAction } from "@/redux/slices/userSlices";
 import { RootState } from "@/redux/store";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import useUpdateUser from "@/hooks/api/user/useUpdateUser";
+import { useSelector } from "react-redux";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const AccountDropdown = () => {
+  const router = useRouter();
   const user = useSelector((state: RootState) => state.user);
-  const [currentRole, setCurrentRole] = useState(user.role);
-  const updateUserMutation = useUpdateUser();
-  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedImage, setSelectedImage] = useState(user.profilePicture || "");
 
@@ -40,23 +29,7 @@ const AccountDropdown = () => {
   const logout = () => {
     localStorage.removeItem("user-storage");
     dispatch(logoutAction());
-  };
-
-  const handleRoleSwitch = async (newRole: "USER" | "ORGANIZER") => {
-    const payload = { role: newRole };
-    setIsLoading(true);
-    try {
-      const updatedUser = await updateUserMutation.mutateAsync({
-        id: user.id,
-        payload,
-      });
-      setCurrentRole(newRole);
-      dispatch(updateUserAction(updatedUser));
-    } catch (error) {
-      console.error("Failed to update role:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    router.push("/login");
   };
 
   return (
@@ -77,40 +50,7 @@ const AccountDropdown = () => {
           </DropdownMenuLabel>
         </Link>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-center">
-            Switch Account
-          </DropdownMenuLabel>
-          <div className="flex justify-between">
-            <Button
-              variant={user.role === "USER" ? "default" : "outline"}
-              onClick={() => handleRoleSwitch("USER")}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="animate-spin" />
-                  Loading
-                </>
-              ) : (
-                "CUSTOMER"
-              )}
-            </Button>
-            <Button
-              variant={user.role === "ORGANIZER" ? "default" : "outline"}
-              onClick={() => handleRoleSwitch("ORGANIZER")}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="animate-spin" />
-                  Loading
-                </>
-              ) : (
-                "ORGANIZER"
-              )}
-            </Button>
-          </div>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+
         <DropdownMenuGroup>
           <Link href="/dashboard/profile">
             <DropdownMenuItem>
@@ -132,12 +72,10 @@ const AccountDropdown = () => {
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <Link href="/login" onClick={logout}>
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </DropdownMenuItem>
-        </Link>
+        <DropdownMenuItem onClick={logout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

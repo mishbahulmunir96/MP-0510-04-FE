@@ -1,5 +1,8 @@
+"use client";
+
 import DashboardLayout from "@/features/dashboard/DashboardLayout";
 import CreateVoucherPage from "@/features/dashboard/my-event/create-voucher";
+import RoleGuard from "@/hoc/RoleGuard";
 import React from "react";
 
 const CreateVouchers = () => {
@@ -10,4 +13,4 @@ const CreateVouchers = () => {
   );
 };
 
-export default CreateVouchers;
+export default RoleGuard(CreateVouchers);

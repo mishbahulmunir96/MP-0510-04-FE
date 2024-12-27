@@ -26,7 +26,6 @@ const EventListPage = () => {
     <div className="container mx-auto py-10">
       <h1 className="mb-5 text-2xl font-bold">Event List</h1>
 
-      {events?.length === 0 && <p>No events available.</p>}
       <Table>
         <TableCaption>A list of upcoming events</TableCaption>
         <TableHeader>
@@ -42,45 +41,53 @@ const EventListPage = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {events?.map((event) => (
-            <TableRow key={event.id}>
-              <TableCell className="font-medium">{event.id}</TableCell>
-              <TableCell>
-                <Image
-                  src={event.thumbnail}
-                  alt={event.title}
-                  width={50}
-                  height={50}
-                  className="rounded-md object-cover"
-                />
-              </TableCell>
-              <TableCell>{event.title}</TableCell>
-              <TableCell>
-                {event.price.toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                })}
-              </TableCell>
-              <TableCell>{event.availableSeat}</TableCell>
-              <TableCell>
-                {format(new Date(event.startTime), "dd MMM yyyy")}
-              </TableCell>
-              <TableCell>
-                {format(new Date(event.endTime), "dd MMM yyyy")}
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    router.push(`/dashboard/update-event/${event.id}`)
-                  }
-                >
-                  Edit
-                </Button>
+          {events && events.length > 0 ? (
+            events.map((event) => (
+              <TableRow key={event.id}>
+                <TableCell className="font-medium">{event.id}</TableCell>
+                <TableCell>
+                  <Image
+                    src={event.thumbnail || "/path/to/placeholder.jpg"}
+                    alt={event.title}
+                    width={50}
+                    height={50}
+                    className="rounded-md object-cover"
+                  />
+                </TableCell>
+                <TableCell>{event.title}</TableCell>
+                <TableCell>
+                  {event.price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  })}
+                </TableCell>
+                <TableCell>{event.availableSeat}</TableCell>
+                <TableCell>
+                  {format(new Date(event.startTime), "dd MMM yyyy")}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(event.endTime), "dd MMM yyyy")}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      router.push(`/dashboard/update-event/${event.id}`)
+                    }
+                  >
+                    Edit
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={8} className="text-center text-gray-500">
+                No events available.
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>

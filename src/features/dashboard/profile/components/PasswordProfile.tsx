@@ -4,10 +4,10 @@ import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import { changePasswordSchema } from "../changePasswordSchema";
-import useChangePassword from "@/hooks/api/auth/useChangePassword";
 import { useState } from "react";
 import ModalConfirmation from "@/components/ModalConfirmation";
 import { Loader2 } from "lucide-react";
+import useChangePassword from "@/hooks/api/auth/useChangePassword";
 
 const PasswordProfile = () => {
   const { mutateAsync: changePassword, isPending } = useChangePassword();
