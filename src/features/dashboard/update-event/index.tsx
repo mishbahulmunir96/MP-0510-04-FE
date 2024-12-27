@@ -13,6 +13,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { updateEventSchema } from "./schema";
 import { Loader2 } from "lucide-react";
+import RichTextEditor from "@/components/RichTextEditor";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
+import ModalConfirmation from "@/components/ModalConfirmation";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface UpdateEventPageProps {
   eventId: number;
@@ -26,6 +41,8 @@ const UpdateEventPage: React.FC<UpdateEventPageProps> = ({ eventId }) => {
   const [selectedImage, setSelectedImage] = useState<string>(
     event?.thumbnail || "",
   );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const thumbnailReff = useRef<HTMLInputElement>(null);
 
   const onChangeThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,9 +65,7 @@ const UpdateEventPage: React.FC<UpdateEventPageProps> = ({ eventId }) => {
   const formik = useFormik({
     initialValues: {
       title: "",
-      name: "",
       category: "",
-      description: "",
       content: "",
       thumbnail: null,
       address: "",
@@ -70,9 +85,7 @@ const UpdateEventPage: React.FC<UpdateEventPageProps> = ({ eventId }) => {
     if (event) {
       formik.setValues({
         title: event.title,
-        name: event.name,
         category: event.category,
-        description: event.description,
         content: event.content,
         thumbnail: null,
         address: event.address,
@@ -84,202 +97,254 @@ const UpdateEventPage: React.FC<UpdateEventPageProps> = ({ eventId }) => {
     }
   }, [event]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="pt-20">
-      <form onSubmit={formik.handleSubmit}>
-        <div>
-          <InputField
-            htmlFor="title"
-            label="Event Title"
-            type="text"
-            placeholder="Event Title"
-            onChange={formik.handleChange}
-            value={formik.values.title}
-          />
+    <main className="container mx-auto my-8 max-w-4xl">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Update Event</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={formik.handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <InputField
+                  htmlFor="title"
+                  label="Event Title"
+                  type="text"
+                  placeholder="Event Title"
+                  onChange={formik.handleChange}
+                  value={formik.values.title}
+                />
 
-          {formik.touched.title && formik.errors.title ? (
-            <div className="text-sm text-red-600">{formik.errors.title}</div>
-          ) : null}
-        </div>
+                {formik.touched.title && formik.errors.title ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.title}
+                  </div>
+                ) : null}
+              </div>
 
-        <div>
-          <InputField
-            htmlFor="name"
-            label="Name"
-            type="text"
-            placeholder="Name of Organizer"
-            onChange={formik.handleChange}
-            value={formik.values.name}
-          />
+              <div className="space-y-2">
+                <Label className="text-base text-slate-700">Category</Label>
+                <select
+                  id="category"
+                  name="category"
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="w-full rounded-lg border p-2"
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  <option value="music">Music</option>
+                  <option value="sport">Sport</option>
+                  <option value="nightlife">Nightlife</option>
+                </select>
 
-          {formik.touched.name && formik.errors.name ? (
-            <div className="text-sm text-red-600">{formik.errors.name}</div>
-          ) : null}
-        </div>
+                {formik.touched.category && formik.errors.category ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.category}
+                  </div>
+                ) : null}
+              </div>
 
-        <div>
-          <InputField
-            htmlFor="category"
-            label="Category"
-            type="text"
-            placeholder="Category"
-            onChange={formik.handleChange}
-            value={formik.values.category}
-          />
+              <div className="col-span-2 space-y-2">
+                <RichTextEditor
+                  label="Description"
+                  value={formik.values.content}
+                  onChange={(value: string) =>
+                    formik.setFieldValue("content", value)
+                  }
+                  isError={!!formik.errors.content}
+                />
 
-          {formik.touched.category && formik.errors.category ? (
-            <div className="text-sm text-red-600">{formik.errors.category}</div>
-          ) : null}
-        </div>
+                {formik.touched.content && formik.errors.content ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.content}
+                  </div>
+                ) : null}
+              </div>
 
-        <div>
-          <InputField
-            htmlFor="description"
-            label="Description"
-            type="text"
-            placeholder="Description"
-            onChange={formik.handleChange}
-            value={formik.values.description}
-          />
-          {formik.touched.description && formik.errors.description ? (
-            <div className="text-sm text-red-600">
-              {formik.errors.description}
-            </div>
-          ) : null}
-        </div>
+              <div className="col-span-2 space-y-2">
+                <div className="relative h-32 w-32 border-2 border-red-400">
+                  <Image
+                    src={selectedImage}
+                    alt="thumbnail"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
 
-        <div>
-          <label htmlFor="content">Content</label>
-          <Textarea
-            id="content"
-            placeholder="Content"
-            onChange={formik.handleChange}
-            value={formik.values.content}
-          />
+                <InputField
+                  htmlFor="thumbnail"
+                  label="Thumbnail"
+                  type="file"
+                  ref={thumbnailReff}
+                  accept="image/*"
+                  onChange={onChangeThumbnail}
+                />
+                {selectedImage && (
+                  <>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={removeThumbnail}
+                    >
+                      Remove
+                    </Button>
+                  </>
+                )}
+              </div>
 
-          {formik.touched.content && formik.errors.content ? (
-            <div className="text-sm text-red-600">{formik.errors.content}</div>
-          ) : null}
-        </div>
+              <div className="col-span-2 space-y-2">
+                <InputField
+                  htmlFor="address"
+                  label="Address"
+                  type="text"
+                  placeholder="Address"
+                  onChange={formik.handleChange}
+                  value={formik.values.address}
+                />
 
-        <div>
-          <InputField
-            htmlFor="address"
-            label="Address"
-            type="text"
-            placeholder="Address"
-            onChange={formik.handleChange}
-            value={formik.values.address}
-          />
+                {formik.touched.address && formik.errors.address ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.address}
+                  </div>
+                ) : null}
+              </div>
 
-          {formik.touched.address && formik.errors.address ? (
-            <div className="text-sm text-red-600">{formik.errors.address}</div>
-          ) : null}
-        </div>
+              <div className="space-y-2">
+                <InputField
+                  htmlFor="availableSeat"
+                  label="Available Seats"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.availableSeat}
+                />
 
-        <div>
-          {/* starttime */}
-          <Label>Start Time</Label>
-          <DateInput
-            value={formik.values.startTime}
-            onChange={(date) => formik.setFieldValue("startTime", date)}
-          />
+                {formik.touched.availableSeat && formik.errors.availableSeat ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.availableSeat}
+                  </div>
+                ) : null}
+              </div>
 
-          {formik.touched.startTime && formik.errors.endTime ? (
-            <div className="text-sm text-red-600">
-              {formik.errors.startTime}
-            </div>
-          ) : null}
-        </div>
+              <div className="space-y-2">
+                <InputField
+                  htmlFor="price"
+                  label="Price"
+                  type="number"
+                  onChange={formik.handleChange}
+                  value={formik.values.price}
+                />
 
-        <div>
-          {/* endtime */}
-          <Label>End Time</Label>
-          <DateInput
-            value={formik.values.endTime}
-            onChange={(date) => formik.setFieldValue("endTime", date)}
-          />
+                {formik.touched.price && formik.errors.price ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.price}
+                  </div>
+                ) : null}
+              </div>
 
-          {formik.touched.endTime && formik.errors.endTime ? (
-            <div className="text-sm text-red-600">{formik.errors.endTime}</div>
-          ) : null}
-        </div>
+              <div className="space-y-2">
+                <Label className="text-base text-slate-700">Start Time</Label>
 
-        <div>
-          <InputField
-            htmlFor="availableSeat"
-            label="Available Seats"
-            type="number"
-            onChange={formik.handleChange}
-            value={formik.values.availableSeat}
-          />
+                <div className="flex space-x-2">
+                  <DateInput
+                    value={formik.values.startTime}
+                    onChange={(date) => formik.setFieldValue("startTime", date)}
+                  />
 
-          {formik.touched.availableSeat && formik.errors.availableSeat ? (
-            <div className="text-sm text-red-600">
-              {formik.errors.availableSeat}
-            </div>
-          ) : null}
-        </div>
+                  <Input
+                    type="time"
+                    value={
+                      formik.values.startTime
+                        ? format(formik.values.startTime, "HH:mm")
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const [hours, minutes] = e.target.value.split(":");
+                      const newDate = formik.values.startTime
+                        ? new Date(formik.values.startTime)
+                        : new Date();
+                      newDate.setHours(parseInt(hours), parseInt(minutes));
+                      formik.setFieldValue("startTime", newDate);
+                    }}
+                  />
+                </div>
 
-        <div>
-          <InputField
-            htmlFor="price"
-            label="Price"
-            type="number"
-            onChange={formik.handleChange}
-            value={formik.values.price}
-          />
+                {formik.touched.startTime && formik.errors.endTime ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.startTime}
+                  </div>
+                ) : null}
+              </div>
 
-          {formik.touched.price && formik.errors.price ? (
-            <div className="text-sm text-red-600">{formik.errors.price}</div>
-          ) : null}
-        </div>
+              <div className="space-y-2">
+                <Label className="text-base text-slate-700">End Time</Label>
 
-        <div>
-          <div className="relative h-32 w-32 border-2 border-red-400">
-            <Image
-              src={selectedImage}
-              alt="thumbnail"
-              fill
-              className="object-cover"
-            />
-          </div>
+                <div className="flex space-x-2">
+                  <DateInput
+                    value={formik.values.endTime}
+                    onChange={(date) => formik.setFieldValue("endTime", date)}
+                  />
 
-          <InputField
-            htmlFor="thumbnail"
-            label="Thumbnail"
-            type="file"
-            ref={thumbnailReff}
-            accept="image/*"
-            onChange={onChangeThumbnail}
-          />
-          {selectedImage && (
-            <>
+                  <Input
+                    type="time"
+                    value={
+                      formik.values.endTime
+                        ? format(formik.values.endTime, "HH:mm")
+                        : ""
+                    }
+                    onChange={(e) => {
+                      const [hours, minutes] = e.target.value.split(":");
+                      const newDate = formik.values.endTime
+                        ? new Date(formik.values.endTime)
+                        : new Date();
+                      newDate.setHours(parseInt(hours), parseInt(minutes));
+                      formik.setFieldValue("endTime", newDate);
+                    }}
+                  />
+                </div>
+
+                {formik.touched.endTime && formik.errors.endTime ? (
+                  <div className="text-sm text-red-600">
+                    {formik.errors.endTime}
+                  </div>
+                ) : null}
+              </div>
+
               <Button
                 type="button"
-                variant="destructive"
-                onClick={removeThumbnail}
+                disabled={isPending}
+                onClick={() => setIsDialogOpen(true)}
+                className="col-span-2 bg-blue-500 font-medium hover:bg-blue-600"
               >
-                Remove
+                {isPending ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    <span className="ml-2">Please wait</span>
+                  </>
+                ) : (
+                  "Update Event"
+                )}
               </Button>
-            </>
-          )}
-        </div>
 
-        <Button type="submit" disabled={isPending}>
-          {isPending ? (
-            <>
-              <Loader2 className="animate-spin" />
-              <span className="ml-2">Please wait</span>
-            </>
-          ) : (
-            "Update Event"
-          )}
-        </Button>
-      </form>
-    </div>
+              <ModalConfirmation
+                isOpen={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                title="Are you sure to update this event?"
+                description="Please review all details before confirming."
+                onConfirm={formik.handleSubmit}
+                confirmText="Yes"
+                cancelText="Cancel"
+              />
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </main>
   );
 };
 
