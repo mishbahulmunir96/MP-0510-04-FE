@@ -1,5 +1,5 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { useAppSelector } from "@/redux/hooks";
-import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,7 +15,7 @@ export default function RoleGuard(Component: any) {
     }, [id, role, router]);
 
     if (!id || role !== "ORGANIZER") {
-      return <Loader2 />;
+      return <LoadingSpinner />;
     }
 
     return <Component {...props} />;

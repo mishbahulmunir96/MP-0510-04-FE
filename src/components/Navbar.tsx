@@ -7,7 +7,7 @@ import { BsCalendar2Event } from "react-icons/bs";
 import { GrCart } from "react-icons/gr";
 import { IoRocketSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import AccountDropdown from "./AccountDropdown";
 
@@ -37,17 +37,19 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden items-center space-x-6 md:flex">
-            {!!user.id && !shouldHideCreateEvent && (
-              <Link href="/create-event">
-                <Button
-                  variant="ghost"
-                  className="text-white hover:bg-white/10 hover:text-white"
-                >
-                  <BsCalendar2Event className="mr-2 h-4 w-4" />
-                  Create Event
-                </Button>
-              </Link>
-            )}
+            {!!user.id &&
+              !shouldHideCreateEvent &&
+              user.role === "ORGANIZER" && (
+                <Link href="/create-event">
+                  <Button
+                    variant="ghost"
+                    className="text-white hover:bg-white/10 hover:text-white"
+                  >
+                    <BsCalendar2Event className="mr-2 h-4 w-4" />
+                    Create Event
+                  </Button>
+                </Link>
+              )}
 
             <Link href="/my-ticket">
               <Button
@@ -136,4 +138,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
