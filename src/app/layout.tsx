@@ -1,14 +1,13 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import StoreProvider from "@/providers/StoreProvider";
-import AuthProvider from "@/providers/authProvider";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import TokenProvider from "@/providers/TokenProvider";
+import AuthProvider from "@/providers/authProvider";
+import type { Metadata } from "next";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./globals.css";
 import { poppins } from "./utils/font";
 
 export const metadata: Metadata = {
