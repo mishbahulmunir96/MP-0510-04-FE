@@ -36,27 +36,37 @@ const AccountDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar>
-          <AvatarImage src={selectedImage} alt="@shadcn" />
-          <AvatarFallback>
-            <Image
-              src="https://purwadhika.com/dashboard/static/icons/ic_profile.svg"
-              alt="fallback"
-              fill
-              className="object-cover"
-            />
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex gap-1">
+          <Link href="/dashboard/profile">
+            <DropdownMenuLabel>
+              <h1 className="text-base font-semibold text-slate-900 first-letter:uppercase">
+                {user.firstName} {user.lastName}
+              </h1>
+              <p className="text-xs font-light text-slate-100">{user.email}</p>
+            </DropdownMenuLabel>
+          </Link>
+          <Avatar>
+            <AvatarImage src={selectedImage} alt="@shadcn" />
+            <AvatarFallback>
+              <Image
+                src="https://purwadhika.com/dashboard/static/icons/ic_profile.svg"
+                alt="fallback"
+                fill
+                className="object-cover"
+              />
+            </AvatarFallback>
+          </Avatar>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mr-4 w-60 md:mr-16 md:mt-2">
-        <Link href="/dashboard/profile">
-          <DropdownMenuLabel>
-            <h1 className="text-base font-semibold uppercase text-slate-900">
-              {user.firstName} {user.lastName}
-            </h1>
-            <p className="text-xs font-light text-slate-600">{user.email}</p>
-          </DropdownMenuLabel>
-        </Link>
+        <DropdownMenuLabel>
+          <h1 className="text-sm font-medium text-slate-600">
+            You registered as
+          </h1>
+          <p className="text-blue-700">
+            {user.role === "USER" ? "CUSTOMER" : user.role}
+          </p>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
