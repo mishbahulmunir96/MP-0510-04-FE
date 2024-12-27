@@ -55,7 +55,8 @@ export const userSlice = createSlice({
       state.birthDate = "";
       state.address = "";
       state.profilePicture = "";
-      (state.role = ""), (state.token = "");
+      state.role = "";
+      state.token = "";
     },
     updateUserAction: (state, action: PayloadAction<Partial<UserState>>) => {
       // Memperbarui hanya field yang ada dalam payload
@@ -69,7 +70,6 @@ export const userSlice = createSlice({
         birthDate,
         address,
         profilePicture,
-        role,
       } = action.payload;
       if (id !== undefined) state.id = id;
       if (firstName !== undefined) state.firstName = firstName;
@@ -80,7 +80,6 @@ export const userSlice = createSlice({
       if (birthDate !== undefined) state.birthDate = birthDate;
       if (address !== undefined) state.address = address;
       if (profilePicture !== undefined) state.profilePicture = profilePicture;
-      if (role !== undefined) state.role = role;
     },
   },
 });

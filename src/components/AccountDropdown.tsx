@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import Image from "next/image";
 
 const AccountDropdown = () => {
   const router = useRouter();
@@ -37,7 +38,14 @@ const AccountDropdown = () => {
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarImage src={selectedImage} alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>
+            <Image
+              src="https://purwadhika.com/dashboard/static/icons/ic_profile.svg"
+              alt="fallback"
+              fill
+              className="object-cover"
+            />
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mr-4 w-60 md:mr-16 md:mt-2">

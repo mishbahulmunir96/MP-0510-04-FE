@@ -9,13 +9,14 @@ import useUpdateUser from "@/hooks/api/user/useUpdateUser";
 import { RootState } from "@/redux/store";
 import { useFormik } from "formik";
 import Image from "next/image";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DateInput } from "../../components/DateInput";
 import { updateProfileSchema } from "../schema";
 import GenderRadioGroup from "./GenderRadioGroup";
 import { updateUserAction } from "@/redux/slices/userSlices";
 import { Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const GeneralProfile = () => {
   const user = useSelector((state: RootState) => state.user);
@@ -27,6 +28,13 @@ const GeneralProfile = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user-storage");
+    if (storedUser) {
+      dispatch(updateUserAction(JSON.parse(storedUser)));
+    }
+  }, [dispatch]);
 
   const formik = useFormik({
     initialValues: {
@@ -44,6 +52,7 @@ const GeneralProfile = () => {
       try {
         const updatedUser = await updateUser({ id: userId, payload: values });
         dispatch(updateUserAction(updatedUser));
+        localStorage.setItem("user-storage", JSON.stringify(updatedUser));
         setIsDialogOpen(false);
         setError("");
       } catch (error) {
@@ -77,13 +86,22 @@ const GeneralProfile = () => {
       </div>
       <form onSubmit={formik.handleSubmit}>
         <div className="mb-4">
-          <div className="relative my-4 h-32 w-32 overflow-hidden rounded-full border-2 border-red-400">
-            <Image
-              src={selectedImage}
-              alt="profile picture"
-              fill
-              className="object-cover"
-            />
+          <div className="my-4 flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-2 border-red-400">
+            <Avatar className="h-32 w-32">
+              <AvatarImage
+                src={selectedImage}
+                alt="Profile Picture"
+                className="h-32 w-32"
+              />
+              <AvatarFallback>
+                <Image
+                  src="https://purwadhika.com/dashboard/static/icons/ic_profile.svg"
+                  alt="fallback"
+                  fill
+                  className="object-cover"
+                />
+              </AvatarFallback>
+            </Avatar>
           </div>
 
           <div className="flex w-[340px] items-end">
@@ -208,7 +226,6 @@ const GeneralProfile = () => {
           </div>
         </div>
         {error && <div className="text-sm text-red-600">{error}</div>}{" "}
-        {/* Display error message */}
         <Button
           type="button"
           disabled={isPending}

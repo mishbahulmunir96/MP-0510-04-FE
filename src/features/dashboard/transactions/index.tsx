@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,13 +13,14 @@ import {
 } from "@/components/ui/table";
 import useGetEventsByUser from "@/hooks/api/event/useGetEventsByUser";
 import { format } from "date-fns";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const TransactionsPage = () => {
   const { data: events, isLoading, error } = useGetEventsByUser();
   const router = useRouter();
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
