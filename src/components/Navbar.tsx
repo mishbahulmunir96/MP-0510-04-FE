@@ -7,7 +7,7 @@ import { BsCalendar2Event } from "react-icons/bs";
 import { GrCart } from "react-icons/gr";
 import { IoRocketSharp } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User } from 'lucide-react';
 import { usePathname, useRouter } from "next/navigation";
 import AccountDropdown from "./AccountDropdown";
 
@@ -15,8 +15,11 @@ const Navbar = () => {
   const user = useAppSelector((state) => state.user);
   const pathname = usePathname();
 
-  // mengumpetkan navbar di ragisterpage dan loginpage
+  // mengumpetkan navbar saat berada di register dan login
   const shouldHideNavbar = pathname === "/register" || pathname === "/login";
+
+  // mengumpetkan navbar saat di create event page
+  const shouldHideCreateEvent = pathname === "/create-event";
 
   if (shouldHideNavbar) return null;
 
@@ -34,7 +37,7 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden items-center space-x-6 md:flex">
-            {!!user.id && (
+            {!!user.id && !shouldHideCreateEvent && (
               <Link href="/create-event">
                 <Button
                   variant="ghost"
@@ -97,7 +100,7 @@ const Navbar = () => {
 
       <div className="border-t border-white/10 md:hidden">
         <div className="flex justify-around p-2">
-          {!!user.id && (
+          {!!user.id && !shouldHideCreateEvent && (
             <Link href="/create-event">
               <Button
                 variant="ghost"
@@ -133,3 +136,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

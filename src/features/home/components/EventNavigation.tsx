@@ -12,6 +12,7 @@ import {
   Coffee,
 } from "lucide-react";
 import { useState } from "react";
+import EventFilter from "./EventFilter";
 
 interface CategoryItem {
   icon: React.ReactNode;
@@ -128,6 +129,7 @@ export function EventsNavigation() {
           </div>
         </div>
       </div>
+      <EventFilter/>
     </div>
   );
 }

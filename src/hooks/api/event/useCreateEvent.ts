@@ -8,13 +8,11 @@ import { toast } from "react-toastify";
 
 interface CreateEventPayload {
   title: string;
-  name: string;
   category: string;
-  description: string;
   content: string;
   thumbnail: File | null;
   startTime?: Date;
-  endTime?: Date | null;
+  endTime?: Date ;
   address: string;
   price: number;
   availableSeat: number;
@@ -30,9 +28,7 @@ const useCreateEvent = () => {
       const createEventForm = new FormData();
 
       createEventForm.append("title", payload.title);
-      createEventForm.append("name", payload.name);
       createEventForm.append("category", payload.category);
-      createEventForm.append("description", payload.description);
       createEventForm.append("content", payload.content);
       createEventForm.append("thumbnail", payload.thumbnail!);
       createEventForm.append("startTime", payload.startTime!.toString());
