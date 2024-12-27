@@ -10,7 +10,7 @@ export default function RoleGuard(Component: any) {
 
     useEffect(() => {
       if (!id || role !== "ORGANIZER") {
-        router.push("/");
+        router.push("/dashboard");
       }
     }, [id, role, router]);
 

@@ -27,7 +27,7 @@ const MyVouchersPage = () => {
     <main className="container mx-auto py-10">
       <div className="flex justify-between">
         <h1 className="mb-5 text-2xl font-bold">Voucher List</h1>
-        <Button>
+        <Button className="bg-blue-500 font-medium hover:bg-blue-600">
           <Link href="/dashboard/my-event/create-voucher">Create Voucher</Link>
         </Button>
       </div>

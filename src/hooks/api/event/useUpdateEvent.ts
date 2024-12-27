@@ -4,12 +4,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import useAxios from "../../useAxios"; // Pastikan path ini sesuai dengan proyek Anda
+import useAxios from "../../useAxios";
 
 interface UpdateEventPayload {
   title?: string;
-  name?: string;
-  description?: string;
   content?: string;
   category?: string;
   address?: string;
@@ -17,7 +15,7 @@ interface UpdateEventPayload {
   endTime?: string;
   availableSeat?: number;
   price?: number;
-  thumbnail?: File | null; // Mengizinkan untuk mengupload file gambar
+  thumbnail?: File | null;
 }
 
 const useUpdateEvent = () => {
@@ -36,9 +34,6 @@ const useUpdateEvent = () => {
       const updateEventForm = new FormData();
 
       if (payload.title) updateEventForm.append("title", payload.title);
-      if (payload.name) updateEventForm.append("name", payload.name);
-      if (payload.description)
-        updateEventForm.append("description", payload.description);
       if (payload.content) updateEventForm.append("content", payload.content);
       if (payload.category)
         updateEventForm.append("category", payload.category);
