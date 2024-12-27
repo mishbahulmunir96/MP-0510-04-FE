@@ -7,7 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useGetEvent from "@/hooks/api/event/useGetEvent";
 import Image from "next/image";
 import { FC } from "react";
-import SkeletonEvent from "./compoents/SkeletonEvent";
+import { CalendarIcon, ClockIcon, MapPinIcon } from 'lucide-react';
+import { format } from "date-fns";
+import { motion } from "framer-motion";
 
 interface EventDetailProps {
   eventId: number;
@@ -17,88 +19,118 @@ const EventDetailPage: FC<EventDetailProps> = ({ eventId }) => {
   const { data, isPending } = useGetEvent(eventId);
 
   if (isPending) {
-    return <SkeletonEvent />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   if (!data) {
-    return <h1 className="text-center">No data</h1>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-2xl font-semibold text-gray-600">No data available</h1>
+      </div>
+    );
   }
+
   return (
-    <main className="container mx-auto mt-8 px-12">
-      <section className="mb-4 space-y-2">
-        <div className="grid grid-cols-3 gap-8">
-          <div className="relative col-span-2 h-[400px]">
-            <Image
-              src={data.thumbnail}
-              alt="thumbnail"
-              fill
-              className="rounded-xl object-cover"
-            />
-          </div>
+    <main className="container mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-4 space-y-6"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="lg:col-span-2"
+          >
+            <div className="relative h-[300px] sm:h-[400px] rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src={data.thumbnail}
+                alt="Event Thumbnail"
+                fill
+                className="object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          </motion.div>
 
-          <div>
-            <Card className="md:sticky md:top-6 md:h-[400px]">
-              <CardContent className="space-y-4">
-                <div className="mb-4">
-                  <h1 className="mt-4 text-3xl font-semibold">{data.title}</h1>
-                </div>
-                <div>
-                  <p className="text-sm"> {data.address}</p>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <Card className="md:sticky md:top-6 shadow-lg">
+              <CardContent className="space-y-6 p-6">
+                <h1 className="text-3xl font-bold text-gray-800">{data.title}</h1>
+                <div className="space-y-3 text-sm text-gray-600">
+                  <div className="flex items-center gap-3">
+                    <CalendarIcon className="h-5 w-5 text-blue-500" />
+                    <p>
+                      {format(new Date(data.startTime), "dd MMM yyyy")} -{" "}
+                      {format(new Date(data.endTime), "dd MMM yyyy")}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <ClockIcon className="h-5 w-5 text-blue-500" />
+                    <p>
+                      {format(new Date(data.startTime), "HH:mm")} -{" "}
+                      {format(new Date(data.endTime), "HH:mm")}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <MapPinIcon className="h-5 w-5 text-blue-500" />
+                    <p className="line-clamp-1">{data.address}</p>
+                  </div>
                 </div>
 
-                <div className="mt-28">
-                  <p className="text-2xl font-bold">Rp.{data.price}</p>
-                  <Button className="bg-blue-400 hover:bg-blue-500 w-full" size="lg">
+                <div className="mt-6">
+                  <p className="text-3xl font-bold text-blue-600">Rp.{data.price.toLocaleString()}</p>
+                </div>
+
+                <div className="mt-6">
+                  <Button 
+                    className="w-full bg-blue-500 hover:bg-blue-600 transition-colors duration-300" 
+                    size="lg"
+                  >
                     Buy Now
                   </Button>
-                  <p className="text-sm text-muted-foreground">
-                    Present by: {data.name}
-                  </p>
                 </div>
               </CardContent>
-            </Card>-
-          </div>
+            </Card>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-3 gap-8 pt-10">
-          <div className="col-span-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-10"
+        >
+          <div className="lg:col-span-3">
             <Tabs defaultValue="description" className="w-full">
-              <TabsList className="flex h-16 items-center justify-between bg-blue-400 px-32">
-                <TabsTrigger className="text-md font-bold" value="description">
+              <TabsList className="flex h-16 items-center justify-center bg-blue-500 px-8 rounded-t-lg">
+                <TabsTrigger 
+                  className="text-lg font-semibold text-white hover:bg-blue-600 transition-colors duration-300 px-6 py-2 rounded-md" 
+                  value="description"
+                >
                   DESCRIPTION
                 </TabsTrigger>
-                <TabsTrigger className="text-md font-bold" value="ticket">
-                  TICKET
-                </TabsTrigger>
               </TabsList>
-              <TabsContent value="description" className="space-y-4">
-                <Markdown content={data.description} />
-              </TabsContent>
-              <TabsContent value="ticket">
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-muted-foreground">
-                          Start From
-                        </p>
-                        <p className="text-2xl font-bold">{data.price}</p>
-                      </div>
-                      <Button className="bg-blue-400 hover:bg-blue-500" size="lg">Buy now</Button>
-                    </div>
-                  </CardContent>
-                </Card>
+              <TabsContent value="description" className="space-y-4 bg-white p-6 rounded-b-lg shadow-md">
+                <Markdown content={data.content} />
               </TabsContent>
             </Tabs>
           </div>
-
-          <div>
-           
-          </div>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
     </main>
   );
 };
 
 export default EventDetailPage;
+

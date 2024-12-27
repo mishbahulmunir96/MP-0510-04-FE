@@ -20,14 +20,11 @@ const EventList = () => {
   }
 
   if (!data) {
-    return <h1 className="text-center">No Data</h1>;
+    return <h1 className="text-center">No event available</h1>;
   }
 
   return (
     <section className="px-4 relative">
-
-      <EventFilter/>
-
       {isPending && (
         <div className="flex h-[30vh] items-center justify-center">
           <h1 className="text-center">Loading...</h1>
@@ -37,7 +34,7 @@ const EventList = () => {
       {!data?.data.length ? (
         <div className="flex h-[30vh] items-center justify-center">
           <FileMinus2 />
-          <h1 className="text-center">Empty</h1>
+          <h1 className="text-center">No data event available</h1>
         </div>
       ) : (
         <>
