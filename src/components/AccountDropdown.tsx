@@ -37,14 +37,12 @@ const AccountDropdown = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex gap-1">
-          <Link href="/dashboard/profile">
-            <DropdownMenuLabel>
-              <h1 className="text-base font-semibold text-slate-900 first-letter:uppercase">
-                {user.firstName} {user.lastName}
-              </h1>
-              <p className="text-xs font-light text-slate-100">{user.email}</p>
-            </DropdownMenuLabel>
-          </Link>
+          <DropdownMenuLabel>
+            <h1 className="text-base font-semibold text-slate-900 first-letter:uppercase">
+              {user.firstName} {user.lastName}
+            </h1>
+            <p className="text-xs font-light text-slate-100">{user.email}</p>
+          </DropdownMenuLabel>
           <Avatar>
             <AvatarImage src={selectedImage} alt="@shadcn" />
             <AvatarFallback>
@@ -76,7 +74,7 @@ const AccountDropdown = () => {
               <span>My Account</span>
             </DropdownMenuItem>
           </Link>
-          <Link href="/dashboard">
+          <Link href="/dashboard/profile">
             <DropdownMenuItem>
               <LayoutDashboard />
               <span>Dashboard</span>

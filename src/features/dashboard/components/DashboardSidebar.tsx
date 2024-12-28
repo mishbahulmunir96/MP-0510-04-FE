@@ -1,43 +1,34 @@
 "use client";
 import {
-  Calendar,
   CalendarRange,
   ChevronRight,
   CircleUserRound,
   CreditCard,
   Search,
   Settings,
+  Ticket,
 } from "lucide-react";
 
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import Link from "next/link";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { FC, useState } from "react";
-import { User } from "@/types/user";
-import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import Link from "next/link";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const items = [
   {
@@ -51,6 +42,15 @@ const items = [
     submenu: [
       { title: "Event List", url: "/dashboard/my-event/event-list" },
       { title: "My Voucher", url: "/dashboard/my-event/my-vouchers" },
+      { title: "Attendance", url: "/dashboard/my-event/attendance" },
+      { title: "Statistics", url: "/dashboard/my-event/statistics" },
+    ],
+  },
+  {
+    title: "My Ticket",
+    icon: Ticket,
+    submenu: [
+      { title: "Purchases History", url: "/dashboard/my-ticket/purchases" },
     ],
   },
   {
@@ -77,14 +77,7 @@ const DashboardSidebar = () => {
   return (
     <Sidebar className="mt-16" collapsible="icon">
       <SidebarContent>
-        <SidebarGroupLabel>
-          <Link
-            href="/dashboard"
-            className="text-base font-medium text-slate-500"
-          >
-            Dashboard
-          </Link>
-        </SidebarGroupLabel>
+        <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
 
         <SidebarGroup>
           <SidebarMenu>
