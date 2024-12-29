@@ -16,7 +16,11 @@ const Navbar = () => {
   const pathname = usePathname();
 
   // mengumpetkan navbar saat berada di register dan login
-  const shouldHideNavbar = pathname === "/register" || pathname === "/login";
+  const shouldHideNavbar =
+    pathname === "/register" ||
+    pathname === "/login" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password";
 
   // mengumpetkan navbar saat di create event page
   const shouldHideCreateEvent = pathname === "/create-event";

@@ -47,7 +47,7 @@ export function DateInput({ value, onChange }: DateInputProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
+            "justify-start text-left font-normal md:w-[280px]",
             !date && "text-muted-foreground",
           )}
         >

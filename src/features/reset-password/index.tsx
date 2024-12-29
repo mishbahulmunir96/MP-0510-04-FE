@@ -7,6 +7,7 @@ import useResetPassword from "@/hooks/api/auth/useResetPassword";
 import { useFormik } from "formik";
 import { FC } from "react";
 import { ResetPasswordSchema } from "./schema";
+import SignTitle from "@/components/SignTitle";
 
 interface ResetPasswordPageProps {
   token: string;
@@ -30,9 +31,7 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
       <div className="container mx-auto mt-4 flex w-full justify-center">
         <Card className="w-[500px] p-6">
           <form onSubmit={formik.handleSubmit}>
-            <h1 className="mb-6 text-4xl font-extrabold text-slate-600">
-              Reset Your Password
-            </h1>
+            <SignTitle title="Reset Your Password" />
             <div className="mb-4">
               <InputField
                 htmlFor="password"
@@ -68,7 +67,11 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
               ) : null}
             </div>
 
-            <Button type="submit" className="mt-4 w-full" disabled={isPending}>
+            <Button
+              type="submit"
+              className="mt-4 w-full bg-blue-500 font-medium hover:bg-blue-600"
+              disabled={isPending}
+            >
               {isPending ? "Loading..." : "save"}
             </Button>
           </form>

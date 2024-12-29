@@ -6,6 +6,9 @@ import { Card } from "@/components/ui/card";
 import useForgotPassword from "@/hooks/api/auth/useForgotPassword";
 import { useFormik } from "formik";
 import { ForgotPasswordSchema } from "./schema";
+import SignTitle from "@/components/SignTitle";
+import Link from "next/link";
+import LinkHome from "@/components/LinkHome";
 
 const ForgotPasswordPage = () => {
   const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
@@ -22,12 +25,11 @@ const ForgotPasswordPage = () => {
   });
   return (
     <div className="px-2">
-      <div className="container mx-auto mt-4 flex w-full justify-center">
+      <LinkHome className="text-blue-600 hover:text-blue-700" />
+      <div className="container mx-auto mt-20 flex w-full justify-center">
         <Card className="w-[450px] p-6">
           <form onSubmit={formik.handleSubmit}>
-            <h1 className="mb-6 text-4xl font-extrabold text-slate-600">
-              Enter your Email to reset your password
-            </h1>
+            <SignTitle title="Enter your email to reset password" />
             <div className="mb-4">
               <InputField
                 htmlFor="email"
@@ -45,8 +47,12 @@ const ForgotPasswordPage = () => {
               ) : null}
             </div>
 
-            <Button type="submit" className="mt-4 w-full" disabled={isPending}>
-              {isPending ? "Loading..." : "Login"}
+            <Button
+              type="submit"
+              className="mt-4 w-full bg-blue-500 font-medium hover:bg-blue-600"
+              disabled={isPending}
+            >
+              {isPending ? "Loading..." : "Send Email"}
             </Button>
           </form>
         </Card>
