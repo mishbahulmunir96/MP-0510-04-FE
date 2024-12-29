@@ -8,7 +8,7 @@ import Link from "next/link";
 import { CalendarIcon, ClockIcon, MapPinIcon } from 'lucide-react';
 
 interface EventCardProps {
-  event: Event;
+event: Event;
 }
 
 const EventCard: FC<EventCardProps> = ({ event }) => {

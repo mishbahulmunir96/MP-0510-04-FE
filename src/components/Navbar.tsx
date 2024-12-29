@@ -59,7 +59,7 @@ const Navbar = () => {
               </Button>
             </Link>
 
-            <Link href="/explore-event">
+            <Link href="/explore">
               <Button
                 variant="ghost"
                 className="text-white hover:bg-white/10 hover:text-white"
