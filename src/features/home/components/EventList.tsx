@@ -1,11 +1,10 @@
 "use client";
 
-import EventCard from "./EventCard";
-import { useState } from "react";
 import PaginationSection from "@/components/PaginationSection";
 import useGetEvents from "@/hooks/api/event/useGetEvents";
 import { FileMinus2 } from "lucide-react";
-import EventFilter from "./EventFilter";
+import { useState } from "react";
+import EventCard from "./EventCard";
 
 const EventList = () => {
   const [page, setPage] = useState<number>(1);

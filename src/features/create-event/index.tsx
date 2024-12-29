@@ -268,7 +268,7 @@ const CreateEventPage = () => {
                       const newDate = formik.values.startTime ? new Date(formik.values.startTime) : new Date();
                       newDate.setHours(parseInt(hours), parseInt(minutes));
                       formik.setFieldValue("startTime", newDate);
-                    }}
+                     }}
                   />
                 </div>
                 {!!formik.touched.startTime && !!formik.errors.startTime && (

@@ -10,6 +10,7 @@ import { FC } from "react";
 import { CalendarIcon, ClockIcon, MapPinIcon } from 'lucide-react';
 import { format } from "date-fns";
 import { motion } from "framer-motion";
+import TransactionModal from "./compoents/TrasnsactionModal";
 
 interface EventDetailProps {
   eventId: number;
@@ -93,12 +94,9 @@ const EventDetailPage: FC<EventDetailProps> = ({ eventId }) => {
                 </div>
 
                 <div className="mt-6">
-                  <Button 
-                    className="w-full bg-blue-500 hover:bg-blue-600 transition-colors duration-300" 
-                    size="lg"
-                  >
-                    Buy Now
-                  </Button>
+                  <TransactionModal 
+                  />
+                    
                 </div>
               </CardContent>
             </Card>
@@ -133,4 +131,3 @@ const EventDetailPage: FC<EventDetailProps> = ({ eventId }) => {
 };
 
 export default EventDetailPage;
-
