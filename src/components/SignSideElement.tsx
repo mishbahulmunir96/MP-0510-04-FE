@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React, { FC } from "react";
+import LinkHome from "./LinkHome";
 
 interface SignSideElementProps {
   className?: string;
@@ -10,9 +11,7 @@ const SignSideElement: FC<SignSideElementProps> = ({ className }) => {
     <div
       className={`${className} hidden h-full flex-col justify-center bg-blue-500 pl-32 text-white md:flex`}
     >
-      <div className="absolute left-6 top-4 text-lg transition-all duration-300 hover:font-semibold hover:underline">
-        <Link href="/">Home</Link>
-      </div>
+      <LinkHome />
 
       <div>
         <div className="">

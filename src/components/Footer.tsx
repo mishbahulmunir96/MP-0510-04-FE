@@ -7,9 +7,17 @@ const Footer = () => {
   const pathname = usePathname();
 
   // mengumpetkan navbar di ragisterpage dan loginpage
-  const hiddenPages = ["/register", "/login", "/dashboard"];
+  const hiddenPages = [
+    "/register",
+    "/login",
+    "/dashboard",
+    "/forgot-password",
+    "/reset-password",
+  ];
   const shouldHideFooter =
-    hiddenPages.includes(pathname) || pathname.startsWith("/dashboard/");
+    hiddenPages.includes(pathname) ||
+    pathname.startsWith("/dashboard/") ||
+    pathname.startsWith("/reset-password/");
 
   if (shouldHideFooter) return null;
   return (

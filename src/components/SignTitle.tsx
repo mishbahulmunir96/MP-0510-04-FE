@@ -2,7 +2,7 @@ import React, { FC } from "react";
 
 interface SignTitleProps {
   title: string;
-  subTitle: string;
+  subTitle?: string;
 }
 
 const SignTitle: FC<SignTitleProps> = ({ title, subTitle }) => {

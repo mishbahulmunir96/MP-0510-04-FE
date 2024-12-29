@@ -250,7 +250,7 @@ const UpdateEventPage: React.FC<UpdateEventPageProps> = ({ eventId }) => {
               <div className="space-y-2">
                 <Label className="text-base text-slate-700">Start Time</Label>
 
-                <div className="flex space-x-2">
+                <div className="space-x-2 md:flex">
                   <DateInput
                     value={formik.values.startTime}
                     onChange={(date) => formik.setFieldValue("startTime", date)}
@@ -284,7 +284,7 @@ const UpdateEventPage: React.FC<UpdateEventPageProps> = ({ eventId }) => {
               <div className="space-y-2">
                 <Label className="text-base text-slate-700">End Time</Label>
 
-                <div className="flex space-x-2">
+                <div className="space-x-2 md:flex">
                   <DateInput
                     value={formik.values.endTime}
                     onChange={(date) => formik.setFieldValue("endTime", date)}
