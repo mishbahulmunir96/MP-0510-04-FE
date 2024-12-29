@@ -3,6 +3,7 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -24,19 +25,20 @@ const MyVouchersPage = () => {
   if (error) return <div>Error fetching vouchers: {error.message}</div>;
 
   return (
-    <main className="container mx-auto py-10">
-      <div className="flex justify-between">
-        <h1 className="mb-5 text-2xl font-bold">Voucher List</h1>
-        <Button className="bg-blue-500 font-medium hover:bg-blue-600">
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mb-6 flex flex-col items-start justify-between sm:flex-row sm:items-center">
+        <h1 className="mb-4 text-2xl font-bold sm:mb-0">Voucher List</h1>
+        <Button className="w-full bg-blue-500 font-medium hover:bg-blue-600 sm:w-auto">
           <Link href="/dashboard/my-event/create-voucher">Create Voucher</Link>
         </Button>
       </div>
 
-      <div className="overflow-x-auto">
-        <div className="min-w-full">
+      <div className="hidden md:block">
+        {" "}
+        {/* Table view for medium screens and up */}
+        <div className="overflow-x-auto">
           <Table>
             <TableCaption>A list of active vouchers</TableCaption>
-
             <TableHeader>
               <TableRow>
                 <TableHead>ID</TableHead>
@@ -48,9 +50,8 @@ const MyVouchersPage = () => {
                 <TableHead>Expired Date</TableHead>
               </TableRow>
             </TableHeader>
-
             <TableBody>
-              {data && data.length > 0 ? ( // Check if data exists and has length
+              {data && data.length > 0 ? (
                 data.map((voucher) => (
                   <TableRow key={voucher.id}>
                     <TableCell className="font-medium">{voucher.id}</TableCell>
@@ -69,7 +70,7 @@ const MyVouchersPage = () => {
                             : "text-green-500"
                         }
                       >
-                        {format(new Date(voucher.expDate), "dd MMM yyy")}
+                        {format(new Date(voucher.expDate), "dd MMM yyyy")}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -85,7 +86,62 @@ const MyVouchersPage = () => {
           </Table>
         </div>
       </div>
-    </main>
+
+      <div className="space-y-4 md:hidden">
+        {" "}
+        {/* Card view for small screens */}
+        {data && data.length > 0 ? (
+          data.map((voucher) => (
+            <Card key={voucher.id}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <Badge variant="outline">{voucher.voucherCode}</Badge>
+                  <span className="text-sm font-normal">ID: {voucher.id}</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <dl className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <dt className="font-medium">Event Name</dt>
+                    <dd>{voucher.event?.title}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium">Quantity</dt>
+                    <dd>{voucher.qty}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium">Claimed</dt>
+                    <dd>{voucher.usedQty}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium">Value</dt>
+                    <dd>Rp. {voucher.value.toFixed(0)}</dd>
+                  </div>
+                  <div className="col-span-2">
+                    <dt className="font-medium">Expired Date</dt>
+                    <dd
+                      className={
+                        new Date(voucher.expDate) < new Date()
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }
+                    >
+                      {format(new Date(voucher.expDate), "dd MMM yyyy")}
+                    </dd>
+                  </div>
+                </dl>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Card>
+            <CardContent className="py-6 text-center text-gray-500">
+              No vouchers available
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </div>
   );
 };
 
