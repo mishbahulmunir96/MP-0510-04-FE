@@ -1,12 +1,31 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import TransactionForm from './TransactionForm'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import TransactionForm from "./TransactionForm";
 
-export default function TransactionModal() {
-  const [isOpen, setIsOpen] = useState(false)
+interface TransactionModalProps {
+  eventId: number; // Menerima eventId dari parent
+  userId: number; // Menerima userId dari parent
+  ticketPrice: number; // Menerima harga tiket dari parent
+  onComplete: () => void; // Menerima onComplete dari parent
+}
+
+export default function TransactionModal({
+  eventId,
+  userId,
+  ticketPrice,
+  onComplete,
+}: TransactionModalProps) {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -16,10 +35,17 @@ export default function TransactionModal() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Purchase Tickets</DialogTitle>
-          <DialogDescription>Enter your transaction details below</DialogDescription>
+          <DialogDescription>
+            Enter your transaction details below
+          </DialogDescription>
         </DialogHeader>
-        <TransactionForm onComplete={() => setIsOpen(false)} />
+        <TransactionForm
+          eventId={eventId}
+          userId={userId}
+          ticketPrice={ticketPrice} // Meneruskan ticketPrice ke TransactionForm
+          onComplete={onComplete}
+        />
       </DialogContent>
-    </Dialog>
-  )
+    </Dialog>
+  );
 }
