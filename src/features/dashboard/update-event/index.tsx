@@ -1,33 +1,23 @@
 "use client";
 
 import InputField from "@/components/InputField";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import ModalConfirmation from "@/components/ModalConfirmation";
+import RichTextEditor from "@/components/RichTextEditor";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import useGetEvent from "@/hooks/api/event/useGetEvent";
 import useUpdateEvent from "@/hooks/api/event/useUpdateEvent";
+import { format } from "date-fns";
 import { useFormik } from "formik";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { DateInput } from "../components/DateInput";
-import Image from "next/image";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { updateEventSchema } from "./schema";
-import { Loader2 } from "lucide-react";
-import RichTextEditor from "@/components/RichTextEditor";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { format } from "date-fns";
-import ModalConfirmation from "@/components/ModalConfirmation";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface UpdateEventPageProps {
   eventId: number;

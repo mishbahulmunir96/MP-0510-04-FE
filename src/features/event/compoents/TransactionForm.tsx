@@ -1,115 +1,156 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from 'next/navigation';
-
-const TICKET_PRICE = 10; // Price per ticket in dollars
-const COUPON_DISCOUNT = 0.1; // 10% discount for valid coupon
-const POINTS_DISCOUNT_RATE = 0.01; // $0.01 discount per point
+import useCreateTransaction from "@/hooks/api/transaction/useCreateTransaction";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useEffect, useState } from "react";
 
 interface TransactionFormProps {
-  onComplete: () => void;
+  eventId: number; // ID event yang sedang dibuka
+  userId: number; // ID pengguna yang login
+  onComplete: () => void; // Callback yang dipanggil setelah sukses
+  ticketPrice: number; // Harga per tiket
 }
 
-export default function TransactionForm({ onComplete }: TransactionFormProps) {
-  const [tickets, setTickets] = useState('');
-  const [voucherCode, setVoucherCode] = useState('');
-  const [points, setPoints] = useState('');
-  const [couponCode, setCouponCode] = useState('');
+const TransactionForm: React.FC<TransactionFormProps> = ({
+  eventId,
+  userId,
+  onComplete,
+  ticketPrice,
+}) => {
+  const { mutateAsync: createTransaction } = useCreateTransaction();
+  const [tickets, setTickets] = useState("");
+  const [voucherId, setVoucherId] = useState<number | null>(null);
+  const [points, setPoints] = useState("");
+  const [couponId, setCouponId] = useState<number | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
-  const router = useRouter();
 
+  const validationSchema = Yup.object().shape({
+    tickets: Yup.number()
+      .required("Number of tickets is required")
+      .min(1, "At least 1 ticket is required")
+      .typeError("Must be a number"),
+    voucher: Yup.number().nullable().typeError("Voucher ID must be a number"), // Mengizinkan voucherID menjadi number
+    points: Yup.number()
+      .nullable()
+      .min(0, "Points cannot be negative")
+      .typeError("Must be a number"),
+    coupon: Yup.number().nullable().typeError("Coupon ID must be a number"), // Mengizinkan couponID menjadi number
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      tickets: "",
+      voucher: "",
+      points: "",
+      coupon: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      const transactionData = {
+        userId,
+        eventId,
+        ticketCount: parseInt(values.tickets),
+        voucherId: voucherId || null,
+        pointsToUse: Number(points),
+        couponId: couponId || null,
+        status: "waitingPayment", // Status yang diinginkan
+        amount: totalPrice, // Menggunakan total price yang sudah dihitung
+      };
+
+      try {
+        await createTransaction(transactionData);
+        toast.success("Transaction Created Successfully!");
+        onComplete(); // Menutup modal setelah berhasil
+      } catch (error) {
+        toast.error("Failed to create transaction");
+      }
+    },
+  });
+
+  // Menghitung total harga tiket
   useEffect(() => {
-    calculateTotalPrice();
-  }, [tickets, couponCode, points]);
-
-  const calculateTotalPrice = () => {
-    const numberOfTickets = parseInt(tickets) || 0;
-    const pointsUsed = parseInt(points) || 0;
-    let price = numberOfTickets * TICKET_PRICE;
-
-    // Apply coupon discount
-    if (couponCode.toLowerCase() === 'discount') {
-      price = price * (1 - COUPON_DISCOUNT);
-    }
-
-    // Apply points discount
-    const pointsDiscount = pointsUsed * POINTS_DISCOUNT_RATE;
-    price = Math.max(price - pointsDiscount, 0); // Ensure price doesn't go negative
-
-    setTotalPrice(price);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const transactionId = Math.random().toString(36).substr(2, 9); // Generate a random ID for demo purposes
-
-    if (!tickets || parseInt(tickets) <= 0) {
-      toast.error("Please enter a valid number of tickets.");
-      return;
-    }
-
-    toast.info("Transaction Initiated. Redirecting to payment details...");
-    onComplete();
-    router.push(
-      `/transaction/${transactionId}?tickets=${tickets}&total=${totalPrice.toFixed(2)}&voucher=${voucherCode}&points=${points}`
-    );
-  };
+    const numberOfTickets = parseInt(formik.values.tickets) || 0; // Mengambil jumlah tiket
+    setTotalPrice(numberOfTickets * ticketPrice); // Menghitung total harga berdasarkan tiket
+  }, [formik.values.tickets, ticketPrice]); // Perbarui ketika tiket atau harga berubah
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={formik.handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="tickets">Number of Tickets</Label>
         <Input
           id="tickets"
+          name="tickets"
           type="number"
           min="1"
           placeholder="Enter number of tickets"
-          value={tickets}
-          onChange={(e) => setTickets(e.target.value)}
+          value={formik.values.tickets}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           required
         />
+        {formik.touched.tickets && formik.errors.tickets ? (
+          <div className="text-red-600">{formik.errors.tickets}</div>
+        ) : null}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="voucher">Voucher Code</Label>
+        <Label htmlFor="voucher">Voucher ID</Label>
         <Input
           id="voucher"
-          type="text"
-          placeholder="Enter voucher code (optional)"
-          value={voucherCode}
-          onChange={(e) => setVoucherCode(e.target.value)}
+          name="voucher"
+          type="number"
+          placeholder="Enter voucher ID (optional)"
+          value={voucherId || ""}
+          onChange={(e) =>
+            setVoucherId(e.target.value ? parseInt(e.target.value) : null)
+          } // Simpan ID sebagai number
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="points">Points</Label>
         <Input
           id="points"
+          name="points"
           type="number"
           min="0"
           placeholder="Enter points to use (optional)"
           value={points}
-          onChange={(e) => setPoints(e.target.value)}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
         />
+        {formik.touched.points && formik.errors.points ? (
+          <div className="text-red-600">{formik.errors.points}</div>
+        ) : null}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="coupon">Coupon Code</Label>
+        <Label htmlFor="coupon">Coupon ID</Label>
         <Input
           id="coupon"
-          type="text"
-          placeholder="Enter coupon code (optional)"
-          value={couponCode}
-          onChange={(e) => setCouponCode(e.target.value)}
+          name="coupon"
+          type="number"
+          placeholder="Enter coupon ID (optional)"
+          value={couponId || ""}
+          onChange={(e) =>
+            setCouponId(e.target.value ? parseInt(e.target.value) : null)
+          } // Simpan ID sebagai number
         />
       </div>
       <div className="pt-4">
-        <p className="text-lg font-semibold">Total Price: ${totalPrice.toFixed(2)}</p>
+        <p className="text-lg font-semibold">
+          Total Price: ${totalPrice.toFixed(2)}
+        </p>
       </div>
-      <Button type="submit" className="w-full">Complete Transaction</Button>
+      <Button type="submit" className="w-full">
+        Complete Transaction
+      </Button>
     </form>
   );
-}
+};
+
+export default TransactionForm;
