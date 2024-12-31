@@ -42,6 +42,10 @@ const items = [
     submenu: [
       { title: "Event List", url: "/dashboard/my-event/event-list" },
       { title: "My Voucher", url: "/dashboard/my-event/my-vouchers" },
+      {
+        title: "Transactions",
+        url: "/dashboard/my-event/transactions",
+      },
       { title: "Attendance", url: "/dashboard/my-event/attendance" },
       { title: "Statistics", url: "/dashboard/my-event/statistics" },
     ],
@@ -53,11 +57,7 @@ const items = [
       { title: "Purchases History", url: "/dashboard/my-ticket/purchases" },
     ],
   },
-  {
-    title: "Transactions",
-    url: "/dashboard/transactions",
-    icon: CreditCard,
-  },
+
   {
     title: "Search",
     url: "#",
