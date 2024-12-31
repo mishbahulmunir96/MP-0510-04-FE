@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"; // Tambahkan import untuk router
 export enum TransactionStatus {
   PENDING = "pending",
   WAITING_PAYMENT = "waitingPayment",
+  WAITING_CONFIRMATION = "waitingConfirmation", // Tambahkan status baru
   COMPLETED = "completed",
   CANCELLED = "cancelled",
 }
@@ -21,6 +22,7 @@ export interface CreateTransactionPayload {
   pointsToUse?: number; // Opsional
   status: TransactionStatus; // Gunakan enum untuk status
   amount: number; // Pastikan amount ada juga
+  paymentProofUploaded?: boolean; // Menunjukkan apakah bukti pembayaran diunggah
 }
 
 const useCreateTransaction = () => {

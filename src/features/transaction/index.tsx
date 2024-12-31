@@ -13,17 +13,19 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
-import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof"; // Import hook untuk upload
+import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof";
 import { AxiosError } from "axios";
 import { format } from "date-fns";
+import { Loader2 } from 'lucide-react';
 
 const TransactionDetailPage: FC = () => {
-  const { id } = useParams(); // Mengambil ID transaksi dari URL
-  const transactionId = Number(id); // Mengonversi ID ke number
-  const { data, isPending, error } = useGetTransaction(transactionId); // Mengambil data transaksi
-  const { mutateAsync: uploadProof } = useUploadPaymentProof(); // Hook untuk upload bukti pembayaran
-  const [proofFile, setProofFile] = useState<File | null>(null); // State untuk menyimpan file bukti
-  const [countdown, setCountdown] = useState<number>(7200); // 2 jam dalam detik
+  const { id } = useParams();
+  const transactionId = Number(id);
+  const { data, isPending, error, refetch } = useGetTransaction(transactionId);
+  const { mutateAsync: uploadProof } = useUploadPaymentProof();
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [countdown, setCountdown] = useState<number>(7200);
+  const [isUploaded, setIsUploaded] = useState<boolean>(false);
 
   useEffect(() => {
     if (error) {
@@ -32,19 +34,25 @@ const TransactionDetailPage: FC = () => {
   }, [error]);
 
   useEffect(() => {
-    // Mengatur interval untuk menghitung mundur
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 0) {
           clearInterval(interval);
-          return 0; // Menghentikan hitungan mundur
+          return 0;
         }
-        return prev - 1; // Mengurangi satu detik
+        return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(interval); // Membersihkan interval saat komponen unmount
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (data && data.paymentProof) {
+      setIsUploaded(true);
+      setCountdown(0);
+    }
+  }, [data]);
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -58,7 +66,7 @@ const TransactionDetailPage: FC = () => {
   if (isPending) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     );
   }
@@ -74,7 +82,7 @@ const TransactionDetailPage: FC = () => {
   }
 
   const handleUploadProof = async (e: React.FormEvent) => {
-    e.preventDefault(); // Mencegah pengiriman form
+    e.preventDefault();
 
     if (!proofFile) {
       toast.error("Please select a file to upload.");
@@ -82,16 +90,17 @@ const TransactionDetailPage: FC = () => {
     }
 
     const proofData = {
-      transactionId: data.id, // ID transaksi
-      paymentProof: proofFile, // File bukti pembayaran
+      transactionId: data.id,
+      paymentProof: proofFile,
     };
 
     try {
-      await uploadProof(proofData); // Memanggil hook untuk mengupload bukti
+      await uploadProof(proofData);
       toast.success("Uploaded payment proof successfully");
-      // Anda mungkin ingin memuat ulang data transaksi untuk melihat perubahan
+      setIsUploaded(true);
+      setCountdown(0);
+      await refetch();
     } catch (error) {
-      // Memeriksa tipe error dan memberikan pesan yang sesuai
       if (error instanceof AxiosError) {
         toast.error(
           error.response?.data?.message || "Failed to upload payment proof"
@@ -104,66 +113,61 @@ const TransactionDetailPage: FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <Card className="mx-auto w-full max-w-lg">
-        <CardHeader>
-          <CardTitle>Transaction Details</CardTitle>
-          <CardDescription>Transaction ID: {data.id}</CardDescription>
+      <Card className="mx-auto w-full max-w-2xl shadow-lg">
+        <CardHeader className="bg-primary text-primary-foreground">
+          <CardTitle className="text-2xl">Transaction Details</CardTitle>
+          <CardDescription className="text-primary-foreground/80">Transaction ID: {data.id}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <p>
-              <strong>User ID:</strong> {data.userId}
-            </p>
-            <p>
-              <strong>Event ID:</strong> {data.eventId}
-            </p>
-            <p>
-              <strong>Number of Tickets:</strong> {data.ticketCount}
-            </p>
-            <p>
-              <strong>Total Amount:</strong> Rp.{data.amount.toLocaleString()}
-            </p>
-            <p>
-              <strong>Payment Status:</strong> {data.status}
-            </p>
-            <p>
-              <strong>Created At:</strong>{" "}
-              {format(new Date(data.createdAt), "dd MMM yyyy HH:mm")}
-            </p>
-            <p>
-              <strong>Payment Proof:</strong>{" "}
-              {data.paymentProof ? (
-                <a href={data.paymentProof} target="_blank" rel="noopener noreferrer">
-                  View Payment Proof
-                </a>
-              ) : (
-                "No Payment Proof"
-              )}
-            </p>
-            <p>
-              <strong>Time Remaining:</strong> {formatTime(countdown)}
-            </p>
+        <CardContent className="space-y-6 p-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <InfoItem label="User ID" value={data.userId} />
+            <InfoItem label="Event ID" value={data.eventId} />
+            <InfoItem label="Number of Tickets" value={data.ticketCount} />
+            <InfoItem label="Total Amount" value={`Rp.${data.amount.toLocaleString()}`} />
+            <InfoItem label="Payment Status" value={data.status} />
+            <InfoItem label="Created At" value={format(new Date(data.createdAt), "dd MMM yyyy HH:mm")} />
+            <InfoItem
+              label="Payment Proof"
+              value={
+                data.paymentProof ? (
+                  <a href={data.paymentProof} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                    View Payment Proof
+                  </a>
+                ) : (
+                  "No Payment Proof"
+                )
+              }
+            />
+            <InfoItem
+              label="Time Remaining"
+              value={isUploaded ? "Your payment under review" : formatTime(countdown)}
+            />
           </div>
-          <form onSubmit={handleUploadProof} className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="proof">Upload Payment Proof</label>
-              <input
-                id="proof"
-                type="file"
-                accept="image/*,application/pdf"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setProofFile(file); // Simpan file yang di-upload
-                  }
-                }}
-                required
-              />
-            </div>
-            <Button type="submit">Upload Proof</Button>
-          </form>
+          {!isUploaded && (
+            <form onSubmit={handleUploadProof} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="proof" className="block text-sm font-medium text-gray-700">
+                  Upload Payment Proof
+                </label>
+                <input
+                  id="proof"
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setProofFile(file);
+                    }
+                  }}
+                  required
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+              <Button type="submit" className="w-full">Upload Proof</Button>
+            </form>
+          )}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="bg-gray-50 p-4">
           <p className="text-sm text-muted-foreground">
             Please upload your payment proof to confirm your transaction.
           </p>
@@ -173,4 +177,12 @@ const TransactionDetailPage: FC = () => {
   );
 };
 
+const InfoItem: FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
+  <div className="space-y-1">
+    <p className="text-sm font-medium text-gray-500">{label}</p>
+    <p className="text-base font-semibold">{value}</p>
+  </div>
+);
+
 export default TransactionDetailPage;
+
