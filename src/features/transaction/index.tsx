@@ -17,18 +17,43 @@ import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof
 import { AxiosError } from "axios";
 import { format } from "date-fns";
 
-const TransactionDetailPage: FC<{ transactionId: number }> = ({
-  transactionId,
-}) => {
+const TransactionDetailPage: FC = () => {
+  const { id } = useParams(); // Mengambil ID transaksi dari URL
+  const transactionId = Number(id); // Mengonversi ID ke number
   const { data, isPending, error } = useGetTransaction(transactionId); // Mengambil data transaksi
   const { mutateAsync: uploadProof } = useUploadPaymentProof(); // Hook untuk upload bukti pembayaran
   const [proofFile, setProofFile] = useState<File | null>(null); // State untuk menyimpan file bukti
+  const [countdown, setCountdown] = useState<number>(7200); // 2 jam dalam detik
 
   useEffect(() => {
     if (error) {
       toast.error("Failed to load transaction details: " + error.message);
     }
   }, [error]);
+
+  useEffect(() => {
+    // Mengatur interval untuk menghitung mundur
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 0) {
+          clearInterval(interval);
+          return 0; // Menghentikan hitungan mundur
+        }
+        return prev - 1; // Mengurangi satu detik
+      });
+    }, 1000);
+
+    return () => clearInterval(interval); // Membersihkan interval saat komponen unmount
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   if (isPending) {
     return (
@@ -69,7 +94,7 @@ const TransactionDetailPage: FC<{ transactionId: number }> = ({
       // Memeriksa tipe error dan memberikan pesan yang sesuai
       if (error instanceof AxiosError) {
         toast.error(
-          error.response?.data?.message || "Failed to upload payment proof",
+          error.response?.data?.message || "Failed to upload payment proof"
         );
       } else {
         toast.error("An unexpected error occurred.");
@@ -107,7 +132,16 @@ const TransactionDetailPage: FC<{ transactionId: number }> = ({
             </p>
             <p>
               <strong>Payment Proof:</strong>{" "}
-              {data.paymentProof ? data.paymentProof : "No Payment Proof"}
+              {data.paymentProof ? (
+                <a href={data.paymentProof} target="_blank" rel="noopener noreferrer">
+                  View Payment Proof
+                </a>
+              ) : (
+                "No Payment Proof"
+              )}
+            </p>
+            <p>
+              <strong>Time Remaining:</strong> {formatTime(countdown)}
             </p>
           </div>
           <form onSubmit={handleUploadProof} className="space-y-4">

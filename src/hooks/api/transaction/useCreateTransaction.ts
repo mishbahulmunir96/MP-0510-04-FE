@@ -4,14 +4,22 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation"; // Tambahkan import untuk router
 
+// Menggunakan enum untuk status
+export enum TransactionStatus {
+  PENDING = "pending",
+  WAITING_PAYMENT = "waitingPayment",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+}
+
 export interface CreateTransactionPayload {
   userId: number;
   eventId: number;
   ticketCount: number;
-  voucherId?: number | null; // Ubah ini menjadi number | null
+  voucherId?: number | null; // Opsional
   couponId?: number | null; // Opsional
   pointsToUse?: number; // Opsional
-  status: string; // Status transaksi
+  status: TransactionStatus; // Gunakan enum untuk status
   amount: number; // Pastikan amount ada juga
 }
 
