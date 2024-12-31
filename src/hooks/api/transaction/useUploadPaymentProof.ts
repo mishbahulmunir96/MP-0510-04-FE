@@ -29,7 +29,7 @@ const useUploadPaymentProof = () => {
     },
     onSuccess: (data) => {
       toast.success("Payment proof uploaded successfully");
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }); // Memperbarui cache transaksi
+      queryClient.invalidateQueries({ queryKey: ["payment-proof"] }); // Memperbarui cache transaksi
       router.push(`/transaction/${data.id}`); // Arahkan ke halaman detail transaksi
     },
     onError: (error: AxiosError<any>) => {

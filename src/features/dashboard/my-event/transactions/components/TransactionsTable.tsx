@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -18,145 +23,58 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  mockTransactions,
-  Transaction,
-  getTransactionsByStatus,
-} from "@/utils/eventData";
+import { Transaction } from "@/types/transaction";
+import Image from "next/image";
+import { useState } from "react";
 
-export default function TransactionManagement() {
-  const [transactions, setTransactions] = useState(mockTransactions);
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
-  const [notes, setNotes] = useState("");
-
-  const handleAccept = (transaction: Transaction) => {
-    const updatedTransactions = transactions.map((t) =>
-      t.id === transaction.id
-        ? { ...t, status: "approved" as const, notes }
-        : t,
-    );
-    setTransactions(updatedTransactions);
-    setNotes("");
-  };
-
-  const handleReject = (transaction: Transaction) => {
-    const updatedTransactions = transactions.map((t) =>
-      t.id === transaction.id
-        ? { ...t, status: "rejected" as const, notes }
-        : t,
-    );
-    setTransactions(updatedTransactions);
-    setNotes("");
-  };
-
-  return (
-    <div className="container mx-auto py-10">
-      <h1 className="mb-5 text-3xl font-bold">Transaction Management</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Payment Transactions</CardTitle>
-          <CardDescription>
-            Manage incoming payment transactions
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="pending">
-            <TabsList>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="approved">Approved</TabsTrigger>
-              <TabsTrigger value="rejected">Rejected</TabsTrigger>
-            </TabsList>
-            <TabsContent value="pending">
-              <TransactionTable
-                transactions={getTransactionsByStatus(transactions, "pending")}
-                onAccept={handleAccept}
-                onReject={handleReject}
-                setSelectedTransaction={setSelectedTransaction}
-                notes={notes}
-                setNotes={setNotes}
-              />
-            </TabsContent>
-            <TabsContent value="approved">
-              <TransactionTable
-                transactions={getTransactionsByStatus(transactions, "approved")}
-                onAccept={handleAccept}
-                onReject={handleReject}
-                setSelectedTransaction={setSelectedTransaction}
-                notes={notes}
-                setNotes={setNotes}
-              />
-            </TabsContent>
-            <TabsContent value="rejected">
-              <TransactionTable
-                transactions={getTransactionsByStatus(transactions, "rejected")}
-                onAccept={handleAccept}
-                onReject={handleReject}
-                setSelectedTransaction={setSelectedTransaction}
-                notes={notes}
-                setNotes={setNotes}
-              />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-      {selectedTransaction && (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="hidden">Open</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Payment Proof</DialogTitle>
-              <DialogDescription>
-                Transaction ID: {selectedTransaction.id}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="mt-4">
-              <Image
-                src={selectedTransaction.paymentProof}
-                alt="Payment Proof"
-                width={400}
-                height={300}
-                className="rounded-md"
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
-  );
-}
-
-interface TransactionTableProps {
+interface TransactionsTableProps {
   transactions: Transaction[];
   onAccept: (transaction: Transaction) => void;
   onReject: (transaction: Transaction) => void;
   setSelectedTransaction: (transaction: Transaction) => void;
   notes: string;
   setNotes: (notes: string) => void;
+  isUpdating: boolean;
 }
 
-function TransactionTable({
+const TransactionsTable = ({
   transactions,
   onAccept,
   onReject,
   setSelectedTransaction,
   notes,
   setNotes,
-}: TransactionTableProps) {
+  isUpdating,
+}: TransactionsTableProps) => {
+  const [acceptTransaction, setAcceptTransaction] =
+    useState<Transaction | null>(null);
+  const [rejectTransaction, setRejectTransaction] =
+    useState<Transaction | null>(null);
+
+  const handleAccept = (transaction: Transaction) => {
+    setAcceptTransaction(transaction);
+  };
+
+  const handleReject = (transaction: Transaction) => {
+    setRejectTransaction(transaction);
+  };
+
+  const confirmAccept = () => {
+    if (acceptTransaction) {
+      onAccept(acceptTransaction);
+      setAcceptTransaction(null);
+      setNotes("");
+    }
+  };
+
+  const confirmReject = () => {
+    if (rejectTransaction) {
+      onReject(rejectTransaction);
+      setRejectTransaction(null);
+      setNotes("");
+    }
+  };
+
   return (
     <>
       {/* Table view for medium screens and up */}
@@ -177,10 +95,19 @@ function TransactionTable({
             {transactions.map((transaction) => (
               <TableRow key={transaction.id}>
                 <TableCell>{transaction.id}</TableCell>
-                <TableCell>{transaction.attendeeName}</TableCell>
-                <TableCell>{transaction.eventName}</TableCell>
-                <TableCell>${transaction.amount.toFixed(2)}</TableCell>
-                <TableCell>{transaction.status}</TableCell>
+                <TableCell>
+                  {transaction.user.firstName} {transaction.user.lastName}
+                </TableCell>
+                <TableCell>{transaction.event.title}</TableCell>
+                <TableCell>
+                  {transaction.amount.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  })}
+                </TableCell>
+                <TableCell>
+                  <Badge>{transaction.status}</Badge>
+                </TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <Dialog>
@@ -202,7 +129,7 @@ function TransactionTable({
                         </DialogHeader>
                         <div className="mt-4">
                           <Image
-                            src={transaction.paymentProof}
+                            src={transaction.paymentProof || ""}
                             alt="Payment Proof"
                             width={400}
                             height={300}
@@ -211,14 +138,19 @@ function TransactionTable({
                         </div>
                       </DialogContent>
                     </Dialog>
-                    {transaction.status === "pending" && (
+                    {transaction.status === "waitingConfirmation" && (
                       <>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="default" size="sm">
+                            <Button
+                              variant="default"
+                              size="sm"
+                              onClick={() => handleAccept(transaction)}
+                            >
                               Accept
                             </Button>
                           </DialogTrigger>
+
                           <DialogContent>
                             <DialogHeader>
                               <DialogTitle>Accept Transaction</DialogTitle>
@@ -237,15 +169,29 @@ function TransactionTable({
                                   placeholder="Add any notes here..."
                                 />
                               </div>
-                              <Button onClick={() => onAccept(transaction)}>
-                                Confirm Accept
+                              <Button
+                                onClick={confirmAccept}
+                                disabled={isUpdating}
+                              >
+                                {isUpdating ? (
+                                  <>
+                                    <LoadingSpinner />
+                                    <p>Please wait</p>
+                                  </>
+                                ) : (
+                                  "Confirm Accept"
+                                )}
                               </Button>
                             </div>
                           </DialogContent>
                         </Dialog>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="destructive" size="sm">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleReject(transaction)}
+                            >
                               Reject
                             </Button>
                           </DialogTrigger>
@@ -272,9 +218,17 @@ function TransactionTable({
                               </div>
                               <Button
                                 variant="destructive"
-                                onClick={() => onReject(transaction)}
+                                onClick={confirmReject}
+                                disabled={isUpdating}
                               >
-                                Confirm Reject
+                                {isUpdating ? (
+                                  <>
+                                    <LoadingSpinner />
+                                    <p>Please wait</p>
+                                  </>
+                                ) : (
+                                  "Confirm Reject"
+                                )}
                               </Button>
                             </div>
                           </DialogContent>
@@ -297,7 +251,7 @@ function TransactionTable({
               <CardTitle className="flex items-center justify-between">
                 <span>ID: {transaction.id}</span>
                 <span className="text-sm font-normal">
-                  {transaction.status}
+                  <Badge>{transaction.status}</Badge>
                 </span>
               </CardTitle>
             </CardHeader>
@@ -305,11 +259,11 @@ function TransactionTable({
               <div className="space-y-2">
                 <p>
                   <span className="font-medium">Attendee:</span>{" "}
-                  {transaction.attendeeName}
+                  {transaction.user.firstName} {transaction.user.lastName}
                 </p>
                 <p>
                   <span className="font-medium">Event:</span>{" "}
-                  {transaction.eventName}
+                  {transaction.event.title}
                 </p>
                 <p>
                   <span className="font-medium">Amount:</span> $
@@ -337,7 +291,7 @@ function TransactionTable({
                     </DialogHeader>
                     <div className="mt-4">
                       <Image
-                        src={transaction.paymentProof}
+                        src={transaction.paymentProof || ""}
                         alt="Payment Proof"
                         width={400}
                         height={300}
@@ -346,11 +300,16 @@ function TransactionTable({
                     </div>
                   </DialogContent>
                 </Dialog>
-                {transaction.status === "pending" && (
+                {transaction.status === "waitingConfirmation" && (
                   <>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="default" size="sm" className="w-full">
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => handleAccept(transaction)}
+                        >
                           Accept
                         </Button>
                       </DialogTrigger>
@@ -371,11 +330,15 @@ function TransactionTable({
                               placeholder="Add any notes here..."
                             />
                           </div>
-                          <Button
-                            onClick={() => onAccept(transaction)}
-                            className="w-full"
-                          >
-                            Confirm Accept
+                          <Button onClick={confirmAccept} className="w-full">
+                            {isUpdating ? (
+                              <>
+                                <LoadingSpinner />
+                                <p>Please wait</p>
+                              </>
+                            ) : (
+                              "Confirm Accept"
+                            )}
                           </Button>
                         </div>
                       </DialogContent>
@@ -386,6 +349,7 @@ function TransactionTable({
                           variant="destructive"
                           size="sm"
                           className="w-full"
+                          onClick={() => handleReject(transaction)}
                         >
                           Reject
                         </Button>
@@ -410,10 +374,18 @@ function TransactionTable({
                           </div>
                           <Button
                             variant="destructive"
-                            onClick={() => onReject(transaction)}
+                            onClick={confirmReject}
                             className="w-full"
+                            disabled={isUpdating}
                           >
-                            Confirm Reject
+                            {isUpdating ? (
+                              <>
+                                <LoadingSpinner />
+                                <p>Please wait</p>
+                              </>
+                            ) : (
+                              "Confirm Reject"
+                            )}
                           </Button>
                         </div>
                       </DialogContent>
@@ -427,4 +399,6 @@ function TransactionTable({
       </div>
     </>
   );
-}
+};
+
+export default TransactionsTable;
