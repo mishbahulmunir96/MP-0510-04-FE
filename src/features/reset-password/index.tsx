@@ -1,13 +1,14 @@
 "use client";
 
 import InputField from "@/components/InputField";
+import SignTitle from "@/components/SignTitle";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import useResetPassword from "@/hooks/api/auth/useResetPassword";
 import { useFormik } from "formik";
+import { Loader2 } from "lucide-react";
 import { FC } from "react";
 import { ResetPasswordSchema } from "./schema";
-import SignTitle from "@/components/SignTitle";
 
 interface ResetPasswordPageProps {
   token: string;
@@ -72,7 +73,15 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
               className="mt-4 w-full bg-blue-500 font-medium hover:bg-blue-600"
               disabled={isPending}
             >
-              {isPending ? "Loading..." : "save"}
+              {isPending ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  <span className="ml-2">Please wait</span>
+                  <p>Please wait</p>
+                </>
+              ) : (
+                "save"
+              )}
             </Button>
           </form>
         </Card>

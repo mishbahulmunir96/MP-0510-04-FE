@@ -24,6 +24,7 @@ import TransactionsTable from "./components/TransactionsTable";
 import { Transaction } from "@/types/transaction";
 import useGetTransactionByOrganizer from "@/hooks/api/transaction/useGetTransactionsByOrganizer";
 import useUpdateTransactionStatus from "@/hooks/api/transaction/useUpdateTransactionstatus";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const TransactionsPage = () => {
   const {
@@ -42,7 +43,7 @@ const TransactionsPage = () => {
     error: updateError,
   } = useUpdateTransactionStatus();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingScreen />;
   if (isError) return <div>Error loading transactions</div>;
 
   const filterTransactionsByStatus = (status: string[]) => {

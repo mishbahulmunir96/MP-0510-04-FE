@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import useAxios from "../../useAxios";
 
 interface UploadPaymentProofPayload {
-  transactionId: number; // ID transaksi yang ingin diupdate
-  paymentProof: File; // File bukti pembayaran
+  transactionId: number;
+  paymentProof: File;
 }
 
 const useUploadPaymentProof = () => {
