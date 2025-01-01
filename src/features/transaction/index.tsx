@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof"; // Import hook untuk upload
 import { AxiosError } from "axios";
 import { format } from "date-fns";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const TransactionDetailPage: FC = () => {
   const { id } = useParams(); // Mengambil ID transaksi dari URL
@@ -50,17 +51,13 @@ const TransactionDetailPage: FC = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes
+    return `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
-      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   if (isPending) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!data) {
@@ -94,7 +91,7 @@ const TransactionDetailPage: FC = () => {
       // Memeriksa tipe error dan memberikan pesan yang sesuai
       if (error instanceof AxiosError) {
         toast.error(
-          error.response?.data?.message || "Failed to upload payment proof"
+          error.response?.data?.message || "Failed to upload payment proof",
         );
       } else {
         toast.error("An unexpected error occurred.");
@@ -133,7 +130,11 @@ const TransactionDetailPage: FC = () => {
             <p>
               <strong>Payment Proof:</strong>{" "}
               {data.paymentProof ? (
-                <a href={data.paymentProof} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={data.paymentProof}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   View Payment Proof
                 </a>
               ) : (

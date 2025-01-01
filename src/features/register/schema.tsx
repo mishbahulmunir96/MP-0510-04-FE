@@ -5,7 +5,6 @@ YupPassword(Yup);
 
 export const RegisterSchema = Yup.object().shape({
   firstName: Yup.string().required("First name is required"),
-  phoneNumber: Yup.string().required("Phone Number is required"),
   email: Yup.string().required("Email is required").email(),
   password: Yup.string()
     .required("Password is required")

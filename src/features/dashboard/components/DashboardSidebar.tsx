@@ -3,10 +3,10 @@ import {
   CalendarRange,
   ChevronRight,
   CircleUserRound,
-  CreditCard,
   Search,
   Settings,
   Ticket,
+  UsersRound,
 } from "lucide-react";
 
 import {
@@ -58,6 +58,11 @@ const items = [
     ],
   },
 
+  {
+    title: "Refferals",
+    url: "/dashboard/refferals",
+    icon: UsersRound,
+  },
   {
     title: "Search",
     url: "#",

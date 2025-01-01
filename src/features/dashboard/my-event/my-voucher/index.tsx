@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingScreen from "@/components/LoadingScreen";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +20,7 @@ import Link from "next/link";
 const MyVouchersPage = () => {
   const { data, isLoading, error } = useGetVouchers();
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <LoadingScreen />;
 
   if (error) return <div>Error fetching vouchers: {error.message}</div>;
 
