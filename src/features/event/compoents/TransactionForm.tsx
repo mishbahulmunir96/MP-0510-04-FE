@@ -60,7 +60,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         voucherId: voucherId || null,
         pointsToUse: Number(points),
         couponId: couponId || null,
-        status: "waitingPayment", // Status yang diinginkan
+        status: "waitingPayment",
         amount: totalPrice, // Menggunakan total price yang sudah dihitung
       };
 
@@ -143,7 +143,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       </div>
       <div className="pt-4">
         <p className="text-lg font-semibold">
-          Total Price: ${totalPrice.toFixed(2)}
+          Total Price: Rp {""}{totalPrice.toFixed(2)}
         </p>
       </div>
       <Button type="submit" className="w-full">
