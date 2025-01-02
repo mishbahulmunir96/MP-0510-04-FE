@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof";
 import { AxiosError } from "axios";
 import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
+import LoadingScreen from "@/components/LoadingScreen";
 
 interface TransactionDetailPageProps {
   transactionId: number;
@@ -67,7 +69,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
   if (isPending) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <LoadingScreen />
       </div>
     );
 
