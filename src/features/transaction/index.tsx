@@ -1,7 +1,6 @@
 "use client";
 
 import { FC, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import useGetTransaction from "@/hooks/api/transaction/useGetTransaction";
 import {
   Card,
@@ -16,11 +15,13 @@ import { toast } from "react-toastify";
 import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof";
 import { AxiosError } from "axios";
 import { format } from "date-fns";
-import LoadingScreen from "@/components/LoadingScreen";
 
-const TransactionDetailPage: FC = () => {
-  const { id } = useParams();
-  const transactionId = Number(id);
+interface TransactionDetailPageProps {
+  transactionId: number;
+}
+
+const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }) => {
+
   const { data, isPending, error, refetch } = useGetTransaction(transactionId);
   const { mutateAsync: uploadProof } = useUploadPaymentProof();
   const [proofFile, setProofFile] = useState<File | null>(null);
@@ -64,7 +65,12 @@ const TransactionDetailPage: FC = () => {
   };
 
   if (isPending) {
-    return <LoadingScreen />;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
+    );
+
   }
 
   if (!data) {
@@ -112,7 +118,10 @@ const TransactionDetailPage: FC = () => {
       <Card className="mx-auto w-full max-w-2xl shadow-lg">
         <CardHeader className="bg-primary text-primary-foreground">
           <CardTitle className="text-2xl">Transaction Details</CardTitle>
-          <CardDescription className="text-primary-foreground/80">Transaction ID: {data.id}</CardDescription>
+          <CardDescription className="text-primary-foreground/80">
+            Transaction ID: {data.id}
+          </CardDescription>
+
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           <div className="grid gap-4 md:grid-cols-2">
@@ -126,7 +135,13 @@ const TransactionDetailPage: FC = () => {
               label="Payment Proof"
               value={
                 data.paymentProof ? (
-                  <a href={data.paymentProof} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                  <a
+                    href={data.paymentProof}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+
                     View Payment Proof
                   </a>
                 ) : (
@@ -136,13 +151,20 @@ const TransactionDetailPage: FC = () => {
             />
             <InfoItem
               label="Time Remaining"
-              value={isUploaded ? "Your payment under review" : formatTime(countdown)}
+              value={
+                isUploaded ? "Your payment under review" : formatTime(countdown)
+              }
+
             />
           </div>
           {!isUploaded && (
             <form onSubmit={handleUploadProof} className="space-y-4">
               <div className="space-y-2">
-                <label htmlFor="proof" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="proof"
+                  className="block text-sm font-medium text-gray-700"
+                >
+
                   Upload Payment Proof
                 </label>
                 <input
@@ -159,7 +181,10 @@ const TransactionDetailPage: FC = () => {
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
-              <Button type="submit" className="w-full">Upload Proof</Button>
+              <Button type="submit" className="w-full">
+                Upload Proof
+              </Button>
+
             </form>
           )}
         </CardContent>
@@ -173,7 +198,11 @@ const TransactionDetailPage: FC = () => {
   );
 };
 
-const InfoItem: FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => (
+const InfoItem: FC<{ label: string; value: React.ReactNode }> = ({
+  label,
+  value,
+}) => (
+
   <div className="space-y-1">
     <p className="text-sm font-medium text-gray-500">{label}</p>
     <p className="text-base font-semibold">{value}</p>
