@@ -1,14 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Line,
-  LineChart,
-} from "recharts";
+// YearlyView.tsx
 import {
   Card,
   CardContent,
@@ -16,41 +6,57 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { aggregateDataByMonth, EventData } from "@/utils/eventData";
+import { EventStatistics } from "@/types/eventStatistic";
+import {
+  Bar,
+  BarChart,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-export function YearlyView({ data }: { data: EventData[] }) {
-  const monthlyData = aggregateDataByMonth(data);
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+interface YearlyViewProps {
+  data: EventStatistics[];
+}
 
-  const chartData = monthlyData.map((month, index) => ({
-    name: monthNames[index],
-    ticketsSold: month.ticketsSold,
-    revenue: month.revenue,
-    attendance: month.attendance,
+export function YearlyView({ data }: YearlyViewProps) {
+  const totalRevenue = data.reduce((acc, event) => acc + event.totalRevenue, 0);
+  const totalTicketsSold = data.reduce(
+    (acc, event) => acc + event.totalTicketsSold,
+    0,
+  );
+  const totalTransactions = data.reduce(
+    (acc, event) => acc + event.totalTransactions,
+    0,
+  );
+
+  const monthlyRevenueData = Array.from({ length: 12 }, (_, i) => ({
+    name: new Date(0, i).toLocaleString("default", { month: "long" }),
+    revenue: data.reduce((acc, event) => {
+      const eventDate = new Date(event.startTime); // Pastikan startTime adalah tanggal
+      return eventDate.getMonth() === i ? acc + event.totalRevenue : acc;
+    }, 0),
   }));
 
-  const totalRevenue = data.reduce((sum, event) => sum + event.revenue, 0);
-  const totalTicketsSold = data.reduce(
-    (sum, event) => sum + event.ticketsSold,
-    0,
-  );
-  const totalAttendance = data.reduce(
-    (sum, event) => sum + event.attendance,
-    0,
-  );
+  const ticketsSoldData = Array.from({ length: 12 }, (_, i) => ({
+    name: new Date(0, i).toLocaleString("default", { month: "long" }),
+    ticketsSold: data.reduce((acc, event) => {
+      const eventDate = new Date(event.startTime); // Pastikan startTime adalah tanggal
+      return eventDate.getMonth() === i ? acc + event.totalTicketsSold : acc;
+    }, 0),
+  }));
+
+  const transactionsData = Array.from({ length: 12 }, (_, i) => ({
+    name: new Date(0, i).toLocaleString("default", { month: "long" }),
+    transactions: data.reduce((acc, event) => {
+      const eventDate = new Date(event.startTime); // Pastikan startTime adalah tanggal
+      return eventDate.getMonth() === i ? acc + event.totalTransactions : acc;
+    }, 0),
+  }));
 
   return (
     <div className="space-y-4">
@@ -61,7 +67,10 @@ export function YearlyView({ data }: { data: EventData[] }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${totalRevenue.toLocaleString()}
+              {totalRevenue.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+              })}
             </div>
           </CardContent>
         </Card>
@@ -80,12 +89,12 @@ export function YearlyView({ data }: { data: EventData[] }) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Attendance
+              Total Transactions
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {totalAttendance.toLocaleString()}
+              {totalTransactions.toLocaleString()}
             </div>
           </CardContent>
         </Card>
@@ -97,32 +106,37 @@ export function YearlyView({ data }: { data: EventData[] }) {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={chartData}>
+            <LineChart data={monthlyRevenueData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="revenue" stroke="#8884d8" />
+              <Line
+                type="monotone"
+                dataKey="revenue"
+                stroke="#8884d8"
+                name="Revenue"
+              />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Tickets Sold vs Attendance</CardTitle>
+          <CardTitle>Tickets Sold vs Transactions</CardTitle>
           <CardDescription>
-            Comparison of tickets sold and actual attendance
+            Comparison of tickets sold and actual transactions
           </CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
+            <BarChart data={ticketsSoldData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="ticketsSold" fill="#8884d8" />
-              <Bar dataKey="attendance" fill="#82ca9d" />
+              <Bar dataKey="ticketsSold" fill="#8884d8" name="Tickets Sold" />
+              <Bar dataKey="transactions" fill="#82ca9d" name="Transactions" />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>

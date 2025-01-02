@@ -1,15 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Pie,
-  PieChart,
-  Cell,
-} from "recharts";
+// MonthlyView.tsx
 import {
   Card,
   CardContent,
@@ -17,7 +6,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { EventData } from "@/utils/eventData";
+import { EventStatistics } from "@/types/eventStatistic";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const COLORS = [
   "#0088FE",
@@ -28,25 +29,29 @@ const COLORS = [
   "#ffc658",
 ];
 
-export function MonthlyView({ data }: { data: EventData[] }) {
-  const totalRevenue = data.reduce((sum, event) => sum + event.revenue, 0);
+interface MonthlyViewProps {
+  data: EventStatistics[]; // Pastikan tipe data yang diterima
+}
+
+export function MonthlyView({ data }: MonthlyViewProps) {
+  const totalRevenue = data.reduce((acc, event) => acc + event.totalRevenue, 0);
   const totalTicketsSold = data.reduce(
-    (sum, event) => sum + event.ticketsSold,
+    (acc, event) => acc + event.totalTicketsSold,
     0,
   );
-  const totalAttendance = data.reduce(
-    (sum, event) => sum + event.attendance,
+  const totalTransactions = data.reduce(
+    (acc, event) => acc + event.totalTransactions,
     0,
   );
 
   const revenueData = data.map((event) => ({
-    name: event.name,
-    value: event.revenue,
+    name: event.title,
+    value: event.totalRevenue,
   }));
 
-  const ticketData = data.map((event) => ({
-    name: event.name,
-    value: event.ticketsSold,
+  const ticketsSoldData = data.map((event) => ({
+    name: event.title,
+    ticketsSold: event.totalTicketsSold,
   }));
 
   return (
@@ -58,7 +63,10 @@ export function MonthlyView({ data }: { data: EventData[] }) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${totalRevenue.toLocaleString()}
+              {totalRevenue.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+              })}
             </div>
           </CardContent>
         </Card>
@@ -77,12 +85,12 @@ export function MonthlyView({ data }: { data: EventData[] }) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Attendance
+              Total Transactions
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {totalAttendance.toLocaleString()}
+              {totalTransactions.toLocaleString()}
             </div>
           </CardContent>
         </Card>
@@ -129,12 +137,12 @@ export function MonthlyView({ data }: { data: EventData[] }) {
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data}>
+            <BarChart data={ticketsSoldData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="ticketsSold" fill="#8884d8" />
+              <Bar dataKey="ticketsSold" fill="#8884d8" name="Tickets Sold" />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
