@@ -17,9 +17,10 @@ import GenderRadioGroup from "./GenderRadioGroup";
 import { updateUserAction } from "@/redux/slices/userSlices";
 import { Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAppSelector } from "@/redux/hooks";
 
 const GeneralProfile = () => {
-  const user = useSelector((state: RootState) => state.user);
+  const user = useAppSelector((state) => state.user);
   const userId = user.id;
 
   const { mutateAsync: updateUser, isPending } = useUpdateUser();

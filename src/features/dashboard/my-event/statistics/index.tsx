@@ -1,6 +1,6 @@
+// statisticPage.tsx
 "use client";
 
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -16,34 +15,68 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect, useState } from "react";
+import useGetEventStatistics from "@/hooks/api/statistic/useGetEventsStatistics";
 import { YearlyView } from "./YearlyView";
+import { MonthlyView } from "./MonthlyView";
 import { DailyView } from "./DailyView";
 
-import { MonthlyView } from "./MonthlyView";
-import {
-  getEventsByDay,
-  getEventsByMonth,
-  getEventsByYear,
-  mockEventData,
-} from "@/utils/eventData";
-
 const StatisticPage = () => {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  const [selectedDay, setSelectedDay] = useState(new Date().getDate());
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear(),
+  );
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    new Date().getMonth(),
+  );
+  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
 
-  const yearlyData = getEventsByYear(mockEventData, selectedYear);
-  const monthlyData = getEventsByMonth(
-    mockEventData,
-    selectedYear,
-    selectedMonth,
-  );
-  const dailyData = getEventsByDay(
-    mockEventData,
-    selectedYear,
-    selectedMonth,
-    selectedDay,
-  );
+  // Mengambil data untuk tampilan harian
+  const {
+    data: dailyData,
+    isLoading: isLoadingDaily,
+    error: errorDaily,
+  } = useGetEventStatistics({
+    year: selectedYear.toString(),
+    month: (selectedMonth + 1).toString(), // Menyesuaikan bulan ke format 1-12
+    day: selectedDay.toString(),
+  });
+
+  // Mengambil data untuk tampilan bulanan
+  const {
+    data: monthlyData,
+    isLoading: isLoadingMonthly,
+    error: errorMonthly,
+  } = useGetEventStatistics({
+    year: selectedYear.toString(),
+    month: (selectedMonth + 1).toString(),
+  });
+
+  // Mengambil data untuk tampilan tahunan
+  const {
+    data: yearlyData,
+    isLoading: isLoadingYearly,
+    error: errorYearly,
+  } = useGetEventStatistics({
+    year: selectedYear.toString(),
+  });
+
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        const { data } = await useGetEventStatistics({
+          year: selectedYear.toString(),
+          month: (selectedMonth + 1).toString(),
+          day: selectedDay.toString(),
+        });
+        // Lakukan sesuatu dengan data yang diterima
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    fetchStatistics();
+  }, [selectedYear, selectedMonth, selectedDay]);
 
   return (
     <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
@@ -84,7 +117,15 @@ const StatisticPage = () => {
                   ))}
                 </SelectContent>
               </Select>
-              <YearlyView data={yearlyData} />
+              {isLoadingYearly ? (
+                <p>Loading...</p>
+              ) : errorYearly ? (
+                <p>Error: {errorYearly.message}</p>
+              ) : yearlyData ? (
+                <YearlyView data={yearlyData} />
+              ) : (
+                <p>No data available</p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -138,7 +179,15 @@ const StatisticPage = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <MonthlyView data={monthlyData} />
+              {isLoadingMonthly ? (
+                <p>Loading...</p>
+              ) : errorMonthly ? (
+                <p>Error: {errorMonthly.message}</p>
+              ) : monthlyData ? (
+                <MonthlyView data={monthlyData} />
+              ) : (
+                <p>No data available</p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -185,9 +234,7 @@ const StatisticPage = () => {
                   <SelectContent>
                     {[...Array(12)].map((_, i) => (
                       <SelectItem key={i} value={i.toString()}>
-                        {new Date(0, i).toLocaleString("default", {
-                          month: "long",
-                        })}
+                        {i + 1}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -207,7 +254,15 @@ const StatisticPage = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <DailyView data={dailyData} />
+              {isLoadingDaily ? (
+                <p>Loading...</p>
+              ) : errorDaily ? (
+                <p>Error: {errorDaily.message}</p>
+              ) : dailyData ? (
+                <DailyView data={dailyData} />
+              ) : (
+                <p>No data available</p>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
