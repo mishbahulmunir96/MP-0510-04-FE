@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import useCreateTransaction from "@/hooks/api/transaction/useCreateTransaction";
+import useCreateTransaction, { TransactionStatus } from "@/hooks/api/transaction/useCreateTransaction";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
@@ -60,7 +60,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         voucherId: voucherId || null,
         pointsToUse: Number(points),
         couponId: couponId || null,
-        status: "waitingPayment",
+        status: TransactionStatus.WAITING_PAYMENT,
         amount: totalPrice, // Menggunakan total price yang sudah dihitung
       };
 
