@@ -12,6 +12,14 @@ export interface UserState {
   profilePicture: string;
   role: string;
   token: string;
+  referralCode: string;
+  point: number;
+  referrals: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    createdAt: string;
+  }[];
 }
 
 const initialState: UserState = {
@@ -26,6 +34,9 @@ const initialState: UserState = {
   profilePicture: "",
   role: "",
   token: "",
+  referralCode: "",
+  point: 0,
+  referrals: [],
 };
 
 export const userSlice = createSlice({
@@ -44,6 +55,9 @@ export const userSlice = createSlice({
       state.profilePicture = action.payload.profilePicture;
       state.role = action.payload.role;
       state.token = action.payload.token;
+      state.referralCode = action.payload.referralCode;
+      state.point = action.payload.point;
+      state.referrals = action.payload.referrals;
     },
     logoutAction: (state) => {
       state.id = 0;
@@ -57,9 +71,11 @@ export const userSlice = createSlice({
       state.profilePicture = "";
       state.role = "";
       state.token = "";
+      state.referralCode = "";
+      state.point = 0;
+      state.referrals = [];
     },
     updateUserAction: (state, action: PayloadAction<Partial<UserState>>) => {
-      // Memperbarui hanya field yang ada dalam payload
       const {
         id,
         firstName,

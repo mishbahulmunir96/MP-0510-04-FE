@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingScreen from "@/components/LoadingScreen";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +22,7 @@ const EventListPage = () => {
   const { data: events, isLoading, error } = useGetEventsByUser();
   const router = useRouter();
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <LoadingScreen />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (

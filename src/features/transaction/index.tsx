@@ -15,13 +15,13 @@ import { toast } from "react-toastify";
 import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof";
 import { AxiosError } from "axios";
 import { format } from "date-fns";
-import { Loader2 } from "lucide-react";
 
 interface TransactionDetailPageProps {
   transactionId: number;
 }
 
 const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }) => {
+
   const { data, isPending, error, refetch } = useGetTransaction(transactionId);
   const { mutateAsync: uploadProof } = useUploadPaymentProof();
   const [proofFile, setProofFile] = useState<File | null>(null);
@@ -70,6 +70,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     );
+
   }
 
   if (!data) {
@@ -104,7 +105,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(
-          error.response?.data?.message || "Failed to upload payment proof"
+          error.response?.data?.message || "Failed to upload payment proof",
         );
       } else {
         toast.error("An unexpected error occurred.");
@@ -120,21 +121,16 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
           <CardDescription className="text-primary-foreground/80">
             Transaction ID: {data.id}
           </CardDescription>
+
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           <div className="grid gap-4 md:grid-cols-2">
             <InfoItem label="User ID" value={data.userId} />
             <InfoItem label="Event ID" value={data.eventId} />
             <InfoItem label="Number of Tickets" value={data.ticketCount} />
-            <InfoItem
-              label="Total Amount"
-              value={`Rp.${data.amount.toLocaleString()}`}
-            />
+            <InfoItem label="Total Amount" value={`Rp.${data.amount.toLocaleString()}`} />
             <InfoItem label="Payment Status" value={data.status} />
-            <InfoItem
-              label="Created At"
-              value={format(new Date(data.createdAt), "dd MMM yyyy HH:mm")}
-            />
+            <InfoItem label="Created At" value={format(new Date(data.createdAt), "dd MMM yyyy HH:mm")} />
             <InfoItem
               label="Payment Proof"
               value={
@@ -145,6 +141,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
                     rel="noopener noreferrer"
                     className="text-primary hover:underline"
                   >
+
                     View Payment Proof
                   </a>
                 ) : (
@@ -157,6 +154,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
               value={
                 isUploaded ? "Your payment under review" : formatTime(countdown)
               }
+
             />
           </div>
           {!isUploaded && (
@@ -166,6 +164,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
                   htmlFor="proof"
                   className="block text-sm font-medium text-gray-700"
                 >
+
                   Upload Payment Proof
                 </label>
                 <input
@@ -185,6 +184,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
               <Button type="submit" className="w-full">
                 Upload Proof
               </Button>
+
             </form>
           )}
         </CardContent>
@@ -202,6 +202,7 @@ const InfoItem: FC<{ label: string; value: React.ReactNode }> = ({
   label,
   value,
 }) => (
+
   <div className="space-y-1">
     <p className="text-sm font-medium text-gray-500">{label}</p>
     <p className="text-base font-semibold">{value}</p>
@@ -209,3 +210,4 @@ const InfoItem: FC<{ label: string; value: React.ReactNode }> = ({
 );
 
 export default TransactionDetailPage;
+
