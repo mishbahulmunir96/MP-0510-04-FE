@@ -12,7 +12,6 @@ import {
   Coffee,
 } from "lucide-react";
 import { useState } from "react";
-import EventFilter from "./EventFilter";
 
 interface CategoryItem {
   icon: React.ReactNode;
@@ -23,42 +22,42 @@ interface CategoryItem {
 
 const categories: CategoryItem[] = [
   { 
-    icon: <Mic className="h-6 w-6" />, 
+    icon: <Mic className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Music",
     description: "Concerts, festivals, and live performances" 
   },
   { 
-    icon: <PartyPopper className="h-6 w-6" />, 
+    icon: <PartyPopper className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Nightlife",
     description: "Clubs, bars, and night events" 
   },
   { 
-    icon: <Theater className="h-6 w-6" />, 
+    icon: <Theater className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Performing",
     description: "Theater, dance, and visual arts" 
   },
   { 
-    icon: <Calendar className="h-6 w-6" />, 
+    icon: <Calendar className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Holidays",
     description: "Special occasions and celebrations" 
   },
   { 
-    icon: <Heart className="h-6 w-6" />, 
+    icon: <Heart className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Dating",
     description: "Singles events and meetups" 
   },
   { 
-    icon: <Gamepad2 className="h-6 w-6" />, 
+    icon: <Gamepad2 className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Hobbies",
     description: "Gaming, crafts, and leisure activities" 
   },
   { 
-    icon: <Presentation className="h-6 w-6" />, 
+    icon: <Presentation className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Business",
     description: "Networking and professional events" 
   },
   { 
-    icon: <Coffee className="h-6 w-6" />, 
+    icon: <Coffee className="h-5 w-5 sm:h-6 sm:w-6" />, 
     label: "Food & Drink",
     description: "Culinary experiences and tastings" 
   },
@@ -68,11 +67,10 @@ export function EventsNavigation() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   return (
-    <div className="space-y-8 my-8">
-      <div className="px-4">
-        
-        <div className="w-full rounded-xl">
-          <div className="flex gap-4 pb-4 md:gap-6 min-w-max px-2 justify-center">
+    <div className="space-y-4 sm:space-y-8 my-4 sm:my-6">
+      <div className="px-2 sm:px-4">
+        <div className="w-full rounded-xl overflow-x-auto">
+          <div className="flex gap-2 sm:gap-4 md:gap-6 min-w-max px-2 justify-start sm:justify-center py-4">
             {categories.map((category) => {
               const isActive = activeCategory === category.label;
               
@@ -80,11 +78,11 @@ export function EventsNavigation() {
                 <button
                   key={category.label}
                   onClick={() => setActiveCategory(category.label)}
-                  className="group flex flex-col items-center gap-3 min-w-[100px] transition-all duration-300"
+                  className="group flex flex-col items-center gap-2 sm:gap-3 min-w-[80px] sm:min-w-[100px] transition-all duration-300"
                 >
                   <div
                     className={cn(
-                      "relative flex h-24 w-24 items-center justify-center rounded-2xl",
+                      "relative flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-xl sm:rounded-2xl",
                       "transition-all duration-300 hover:scale-105",
                       "bg-gradient-to-br from-white to-gray-50",
                       "border-2 shadow-sm",
@@ -104,8 +102,8 @@ export function EventsNavigation() {
                       {category.icon}
                     </div>
                     
-                    {/* Hover tooltip */}
-                    <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-48 
+                    {/* Hover tooltip - Hidden on mobile */}
+                    <div className="hidden sm:block absolute -bottom-16 left-1/2 -translate-x-1/2 w-48 
                                   opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                       <div className="bg-gray-900 text-white text-xs rounded-lg py-2 px-3">
                         {category.description}
@@ -115,7 +113,7 @@ export function EventsNavigation() {
                   
                   <span
                     className={cn(
-                      "text-sm font-medium text-center transition-colors duration-300",
+                      "text-xs sm:text-sm font-medium text-center transition-colors duration-300",
                       isActive
                         ? "text-blue-500"
                         : "text-gray-600 group-hover:text-gray-900"
@@ -129,9 +127,6 @@ export function EventsNavigation() {
           </div>
         </div>
       </div>
-      <EventFilter/>
     </div>
   );
 }
-
-export default EventsNavigation;
