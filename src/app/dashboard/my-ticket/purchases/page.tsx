@@ -1,5 +1,7 @@
+"use client";
 import DashboardLayout from "@/features/dashboard/DashboardLayout";
 import PurchasesHistoryPage from "@/features/dashboard/my-ticket/purchases";
+import AuthGuard from "@/hoc/AuthGuard";
 import React from "react";
 
 const PurchasesHistory = () => {
@@ -10,4 +12,4 @@ const PurchasesHistory = () => {
   );
 };
 
-export default PurchasesHistory;
+export default AuthGuard(PurchasesHistory);

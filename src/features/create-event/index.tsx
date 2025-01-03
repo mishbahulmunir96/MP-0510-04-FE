@@ -9,18 +9,25 @@ import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { CreateEventSchema } from "./schema";
 import { format } from "date-fns";
-import { CalendarIcon, Upload } from 'lucide-react';
+import { CalendarIcon, Upload } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import AuthGuard from "@/hoc/AuthGuard";
 import { cn } from "@/lib/utils";
 import useCreateEvent from "@/hooks/api/event/useCreateEvent";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), {
   ssr: false,
@@ -106,7 +113,7 @@ const CreateEventPage = () => {
                   value={formik.values.category}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full border rounded-md p-2"
+                  className="w-full rounded-md border p-2"
                 >
                   <option value="" disabled>
                     Select a category
@@ -262,13 +269,19 @@ const CreateEventPage = () => {
                   </Popover>
                   <Input
                     type="time"
-                    value={formik.values.startTime ? format(formik.values.startTime, "HH:mm") : ""}
+                    value={
+                      formik.values.startTime
+                        ? format(formik.values.startTime, "HH:mm")
+                        : ""
+                    }
                     onChange={(e) => {
-                      const [hours, minutes] = e.target.value.split(':');
-                      const newDate = formik.values.startTime ? new Date(formik.values.startTime) : new Date();
+                      const [hours, minutes] = e.target.value.split(":");
+                      const newDate = formik.values.startTime
+                        ? new Date(formik.values.startTime)
+                        : new Date();
                       newDate.setHours(parseInt(hours), parseInt(minutes));
                       formik.setFieldValue("startTime", newDate);
-                     }}
+                    }}
                   />
                 </div>
                 {!!formik.touched.startTime && !!formik.errors.startTime && (
@@ -302,17 +315,25 @@ const CreateEventPage = () => {
                       <Calendar
                         mode="single"
                         selected={formik.values.endTime}
-                        onSelect={(date) => formik.setFieldValue("endTime", date)}
+                        onSelect={(date) =>
+                          formik.setFieldValue("endTime", date)
+                        }
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
                   <Input
                     type="time"
-                    value={formik.values.endTime ? format(formik.values.endTime, "HH:mm") : ""}
+                    value={
+                      formik.values.endTime
+                        ? format(formik.values.endTime, "HH:mm")
+                        : ""
+                    }
                     onChange={(e) => {
-                      const [hours, minutes] = e.target.value.split(':');
-                      const newDate = formik.values.endTime ? new Date(formik.values.endTime) : new Date();
+                      const [hours, minutes] = e.target.value.split(":");
+                      const newDate = formik.values.endTime
+                        ? new Date(formik.values.endTime)
+                        : new Date();
                       newDate.setHours(parseInt(hours), parseInt(minutes));
                       formik.setFieldValue("endTime", newDate);
                     }}
@@ -327,7 +348,10 @@ const CreateEventPage = () => {
             </div>
 
             <div className="pt-6">
-              <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+              <Dialog
+                open={isConfirmDialogOpen}
+                onOpenChange={setIsConfirmDialogOpen}
+              >
                 <DialogTrigger asChild>
                   <Button type="submit" className="w-full" disabled={isPending}>
                     {isPending ? "Processing..." : "Create Event"}
@@ -337,12 +361,21 @@ const CreateEventPage = () => {
                   <DialogHeader>
                     <DialogTitle>Confirm Event Creation</DialogTitle>
                     <DialogDescription>
-                      Are you sure you want to create this event? Please review all details before confirming.
+                      Are you sure you want to create this event? Please review
+                      all details before confirming.
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsConfirmDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={handleConfirmedSubmit} disabled={isPending}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsConfirmDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleConfirmedSubmit}
+                      disabled={isPending}
+                    >
                       {isPending ? "Processing..." : "Confirm"}
                     </Button>
                   </DialogFooter>
@@ -356,5 +389,4 @@ const CreateEventPage = () => {
   );
 };
 
-export default AuthGuard(CreateEventPage);
-
+export default CreateEventPage;
