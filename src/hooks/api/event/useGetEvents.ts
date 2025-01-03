@@ -3,7 +3,11 @@ import { PageableResponse, PaginationQueries } from "@/types/pagination";
 import { useQuery } from "@tanstack/react-query";
 import { Event } from "@/types/event";
 
-interface GetEventsQuery extends PaginationQueries {}
+interface GetEventsQuery extends PaginationQueries {
+  searchQuery?: string; 
+  category?: string; 
+  address?: string;   
+}
 
 const useGetEvents = (queries: GetEventsQuery) => {
   return useQuery({
