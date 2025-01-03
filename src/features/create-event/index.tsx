@@ -9,14 +9,13 @@ import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { CreateEventSchema } from "./schema";
 import { format } from "date-fns";
-import { CalendarIcon, Upload } from 'lucide-react';
+import { CalendarIcon, Upload } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import AuthGuard from "@/hoc/AuthGuard";
 import { cn } from "@/lib/utils";
 import useCreateEvent from "@/hooks/api/event/useCreateEvent";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -136,6 +135,7 @@ const CreateEventPage = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   className="w-full rounded-md border border-gray-300 p-2"
+
                 >
                   <option value="" disabled>Select a category</option>
                   <option value="music">Music</option>
@@ -289,9 +289,14 @@ const CreateEventPage = () => {
                   </Popover>
                   <Input
                     type="time"
-                    value={formik.values.startTime ? format(formik.values.startTime, "HH:mm") : ""}
+                    value={
+                      formik.values.startTime
+                        ? format(formik.values.startTime, "HH:mm")
+                        : ""
+                    }
                     onChange={(e) => {
                       const [hours, minutes] = e.target.value.split(":");
+
                       const newDate = formik.values.startTime ? new Date(formik.values.startTime) : new Date();
                       newDate.setHours(parseInt(hours), parseInt(minutes));
                       formik.setFieldValue("startTime", newDate);
@@ -328,14 +333,20 @@ const CreateEventPage = () => {
                       <Calendar
                         mode="single"
                         selected={formik.values.endTime}
-                        onSelect={(date) => formik.setFieldValue("endTime", date)}
+                        onSelect={(date) =>
+                          formik.setFieldValue("endTime", date)
+                        }
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
                   <Input
                     type="time"
-                    value={formik.values.endTime ? format(formik.values.endTime, "HH:mm") : ""}
+                    value={
+                      formik.values.endTime
+                        ? format(formik.values.endTime, "HH:mm")
+                        : ""
+                    }
                     onChange={(e) => {
                       const [hours, minutes] = e.target.value.split(":");
                       const newDate = formik.values.endTime ? new Date(formik.values.endTime) : new Date();
@@ -352,7 +363,10 @@ const CreateEventPage = () => {
             </div>
 
             <div className="pt-6">
-              <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+              <Dialog
+                open={isConfirmDialogOpen}
+                onOpenChange={setIsConfirmDialogOpen}
+              >
                 <DialogTrigger asChild>
                   <Button type="submit" className="w-full bg-gradient-to-r from-purple-500 to-blue-400 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition duration-300" disabled={isPending}>
                     {isPending ? "Processing..." : "Create Event"}
@@ -362,7 +376,8 @@ const CreateEventPage = () => {
                   <DialogHeader>
                     <DialogTitle>Confirm Event Creation</DialogTitle>
                     <DialogDescription>
-                      Are you sure you want to create this event? Please review all details before confirming.
+                      Are you sure you want to create this event? Please review
+                      all details before confirming.
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
@@ -383,4 +398,4 @@ const CreateEventPage = () => {
   );
 };
 
-export default AuthGuard(CreateEventPage);
+export default CreateEventPage;
