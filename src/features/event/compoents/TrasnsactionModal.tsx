@@ -30,11 +30,11 @@ export default function TransactionModal({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Purchase Tickets</Button>
+        <Button  className="bg-gradient-to-r from-purple-500 to-blue-400 text-white">Purchase Tickets</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Purchase Tickets</DialogTitle>
+          <DialogTitle >Purchase Tickets</DialogTitle>
           <DialogDescription>
             Enter your transaction details below
           </DialogDescription>

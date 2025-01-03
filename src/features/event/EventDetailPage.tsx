@@ -12,6 +12,7 @@ import { FC } from "react";
 import TransactionModal from "./compoents/TrasnsactionModal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import LoadingScreen from "@/components/LoadingScreen";
 
 interface EventDetailProps {
   eventId: number;
@@ -29,7 +30,7 @@ const EventDetailPage: FC<EventDetailProps> = ({ eventId }) => {
   if (isPending) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
+        <LoadingScreen />
       </div>
     );
   }
@@ -127,17 +128,14 @@ const EventDetailPage: FC<EventDetailProps> = ({ eventId }) => {
         >
           <div className="lg:col-span-3">
             <Tabs defaultValue="description" className="w-full">
-              <TabsList className="flex h-16 items-center justify-center rounded-t-lg bg-blue-500 px-8">
-                <TabsTrigger
-                  className="rounded-md px-6 py-2 text-lg font-semibold text-white transition-colors duration-300 hover:bg-blue-600"
-                  value="description"
-                >
-                  DESCRIPTION
+              <TabsList className="flex h-16 items-center justify-start rounded-t-lg bg-transparent">
+                <TabsTrigger value="description">
+                  <p className="text-xl text-black">DESCRIPTION</p>
                 </TabsTrigger>
               </TabsList>
               <TabsContent
                 value="description"
-                className="space-y-4 rounded-b-lg bg-white p-6 shadow-md"
+                className="space-y-6 rounded-b-lg bg-white p-8 shadow-xl transition-all duration-300"
               >
                 <Markdown content={data.content} />
               </TabsContent>
