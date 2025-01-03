@@ -28,7 +28,7 @@ const Navbar = () => {
   if (shouldHideNavbar) return null;
 
   return (
-    <nav className="sticky top-0 z-50 bg-blue-400 shadow-lg">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg">
       <div className="px-4 md:mx-6">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="group flex items-center space-x-2">
