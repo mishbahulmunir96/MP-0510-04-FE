@@ -20,7 +20,6 @@ export interface CreateTransactionPayload {
   voucherId?: number | null; // Opsional
   couponId?: number | null; // Opsional
   pointsToUse?: number; // Opsional
-  status: TransactionStatus; // Gunakan enum untuk status
   amount: number; // Pastikan amount ada juga
   paymentProofUploaded?: boolean; // Menunjukkan apakah bukti pembayaran diunggah
 }
@@ -32,21 +31,14 @@ const useCreateTransaction = () => {
 
   return useMutation({
     mutationFn: async (payload: CreateTransactionPayload) => {
-      // Mengatur status awal berdasarkan apakah bukti pembayaran diunggah
-      const initialStatus = payload.paymentProofUploaded
-        ? TransactionStatus.WAITING_CONFIRMATION
-        : TransactionStatus.WAITING_PAYMENT;
-
-      // Mengirimkan payload ke backend
+      // Mengirimkan payload ke backend tanpa status
       const { data } = await axiosInstance.post(`/transactions`, {
         ...payload,
-        status: initialStatus, // Atur status awal
       });
       return data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      toast.success("Transaksi berhasil dibuat");
       router.push(`/transaction/${data.id}`); // Navigasi ke halaman detail transaksi
     },
     onError: (error: AxiosError<any>) => {

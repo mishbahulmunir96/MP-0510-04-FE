@@ -15,7 +15,6 @@ import { toast } from "react-toastify";
 import useUploadPaymentProof from "@/hooks/api/transaction/useUploadPaymentProof";
 import { AxiosError } from "axios";
 import { format } from "date-fns";
-import { Loader2 } from "lucide-react";
 import LoadingScreen from "@/components/LoadingScreen";
 
 interface TransactionDetailPageProps {
@@ -28,6 +27,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [countdown, setCountdown] = useState<number>(7200);
   const [isUploaded, setIsUploaded] = useState<boolean>(false);
+  const [uploadedProofUrl, setUploadedProofUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (error) {
@@ -52,6 +52,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
   useEffect(() => {
     if (data && data.paymentProof) {
       setIsUploaded(true);
+      setUploadedProofUrl(data.paymentProof);
       setCountdown(0);
     }
   }, [data]);
@@ -98,8 +99,8 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
 
     try {
       await uploadProof(proofData);
-      toast.success("Uploaded payment proof successfully");
       setIsUploaded(true);
+      setUploadedProofUrl(URL.createObjectURL(proofFile));
       setCountdown(0);
       await refetch();
     } catch (error) {
@@ -112,6 +113,9 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
       }
     }
   };
+
+  const isExpired = data.status === "expired";
+  const isWaitingConfirmation = data.status === "waitingConfirmation";
 
   return (
     <div className="container mx-auto p-4">
@@ -133,21 +137,21 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
             <InfoItem
               label="Payment Proof"
               value={
-                data.paymentProof ? (
+                uploadedProofUrl ? ( 
                   <a
-                    href={data.paymentProof}
+                    href={uploadedProofUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary hover:underline"
                   >
-                    View Payment Proof
+                    View Uploaded Payment Proof
                   </a>
                 ) : (
                   "No Payment Proof"
                 )
               }
             />
-            {data.status !== "Cancelled" && (
+            {!isExpired && !isWaitingConfirmation && data.status !== "Cancelled" && (
               <InfoItem
                 label="Time Remaining"
                 value={
@@ -156,7 +160,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
               />
             )}
           </div>
-          {!isUploaded && (
+          {!isUploaded && !isExpired && (
             <form onSubmit={handleUploadProof} className="space-y-4">
               <div className="space-y-2">
                 <label
