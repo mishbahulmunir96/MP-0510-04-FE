@@ -34,11 +34,13 @@ const useCreateTransaction = () => {
       // Mengirimkan payload ke backend tanpa status
       const { data } = await axiosInstance.post(`/transactions`, {
         ...payload,
+
       });
       return data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+
       router.push(`/transaction/${data.id}`); // Navigasi ke halaman detail transaksi
     },
     onError: (error: AxiosError<any>) => {

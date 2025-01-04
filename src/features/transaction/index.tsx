@@ -145,6 +145,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
                     className="text-primary hover:underline"
                   >
                     View Uploaded Payment Proof
+
                   </a>
                 ) : (
                   "No Payment Proof"
@@ -152,6 +153,7 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
               }
             />
             {!isExpired && !isWaitingConfirmation && data.status !== "Cancelled" && (
+
               <InfoItem
                 label="Time Remaining"
                 value={
