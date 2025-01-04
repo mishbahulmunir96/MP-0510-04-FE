@@ -23,7 +23,7 @@ const Footer = () => {
   if (shouldHideFooter) return null;
 
   return (
-    <footer className="bg-blue-400 text-blue-50 py-8 px-4 md:px-6 lg:px-8">
+    <footer className="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-8 px-4 md:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-center">
           <div>

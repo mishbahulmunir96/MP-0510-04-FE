@@ -23,7 +23,6 @@ interface TransactionDetailPageProps {
 }
 
 const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }) => {
-
   const { data, isPending, error, refetch } = useGetTransaction(transactionId);
   const { mutateAsync: uploadProof } = useUploadPaymentProof();
   const [proofFile, setProofFile] = useState<File | null>(null);
@@ -72,7 +71,6 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
         <LoadingScreen />
       </div>
     );
-
   }
 
   if (!data) {
@@ -123,7 +121,6 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
           <CardDescription className="text-primary-foreground/80">
             Transaction ID: {data.id}
           </CardDescription>
-
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           <div className="grid gap-4 md:grid-cols-2">
@@ -143,7 +140,6 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
                     rel="noopener noreferrer"
                     className="text-primary hover:underline"
                   >
-
                     View Payment Proof
                   </a>
                 ) : (
@@ -151,13 +147,14 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
                 )
               }
             />
-            <InfoItem
-              label="Time Remaining"
-              value={
-                isUploaded ? "Your payment under review" : formatTime(countdown)
-              }
-
-            />
+            {data.status !== "Cancelled" && (
+              <InfoItem
+                label="Time Remaining"
+                value={
+                  isUploaded ? "Your payment under review" : formatTime(countdown)
+                }
+              />
+            )}
           </div>
           {!isUploaded && (
             <form onSubmit={handleUploadProof} className="space-y-4">
@@ -166,7 +163,6 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
                   htmlFor="proof"
                   className="block text-sm font-medium text-gray-700"
                 >
-
                   Upload Payment Proof
                 </label>
                 <input
@@ -186,7 +182,6 @@ const TransactionDetailPage: FC<TransactionDetailPageProps> = ({ transactionId }
               <Button type="submit" className="w-full">
                 Upload Proof
               </Button>
-
             </form>
           )}
         </CardContent>
@@ -204,7 +199,6 @@ const InfoItem: FC<{ label: string; value: React.ReactNode }> = ({
   label,
   value,
 }) => (
-
   <div className="space-y-1">
     <p className="text-sm font-medium text-gray-500">{label}</p>
     <p className="text-base font-semibold">{value}</p>
@@ -212,4 +206,3 @@ const InfoItem: FC<{ label: string; value: React.ReactNode }> = ({
 );
 
 export default TransactionDetailPage;
-

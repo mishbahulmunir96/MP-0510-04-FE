@@ -32,19 +32,28 @@ const useCreateTransaction = () => {
 
   return useMutation({
     mutationFn: async (payload: CreateTransactionPayload) => {
-      const { data } = await axiosInstance.post(`/transactions`, payload);
+      // Mengatur status awal berdasarkan apakah bukti pembayaran diunggah
+      const initialStatus = payload.paymentProofUploaded
+        ? TransactionStatus.WAITING_CONFIRMATION
+        : TransactionStatus.WAITING_PAYMENT;
+
+      // Mengirimkan payload ke backend
+      const { data } = await axiosInstance.post(`/transactions`, {
+        ...payload,
+        status: initialStatus, // Atur status awal
+      });
       return data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      toast.success("Transaction Created Successfully");
+      toast.success("Transaksi berhasil dibuat");
       router.push(`/transaction/${data.id}`); // Navigasi ke halaman detail transaksi
     },
     onError: (error: AxiosError<any>) => {
       const errorMessage =
         error.response?.data?.message ||
         error.response?.data ||
-        "An error occurred";
+        "Terjadi kesalahan";
       toast.error(errorMessage);
     },
   });
