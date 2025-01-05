@@ -1,16 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import {
-  Mic,
-  PartyPopper,
-  Theater,
-  Calendar,
-  Heart,
-  Gamepad2,
-  Presentation,
-  Coffee,
-} from "lucide-react";
+import { Mic, PartyPopper, Theater, Calendar, Heart, Gamepad2, Presentation, Coffee } from 'lucide-react';
 import { useState } from "react";
 
 interface CategoryItem {
@@ -84,19 +75,19 @@ export function EventsNavigation() {
                     className={cn(
                       "relative flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-xl sm:rounded-2xl",
                       "transition-all duration-300 hover:scale-105",
-                      "bg-gradient-to-br from-white to-gray-50",
+                      "bg-gradient-to-br from-purple-500 to-blue-500",
                       "border-2 shadow-sm",
                       isActive 
-                        ? "border-blue-500 shadow-blue-100" 
-                        : "border-gray-100 hover:border-blue-200 hover:shadow-md"
+                        ? "border-white shadow-purple-300" 
+                        : "border-transparent hover:border-white hover:shadow-md"
                     )}
                   >
                     <div
                       className={cn(
                         "transition-all duration-300",
                         isActive
-                          ? "text-blue-500 scale-110"
-                          : "text-gray-500 group-hover:text-blue-400"
+                          ? "text-white scale-110"
+                          : "text-purple-100 group-hover:text-white"
                       )}
                     >
                       {category.icon}
@@ -105,7 +96,7 @@ export function EventsNavigation() {
                     {/* Hover tooltip - Hidden on mobile */}
                     <div className="hidden sm:block absolute -bottom-16 left-1/2 -translate-x-1/2 w-48 
                                   opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                      <div className="bg-gray-900 text-white text-xs rounded-lg py-2 px-3">
+                      <div className="bg-white text-purple-800 text-xs rounded-lg py-2 px-3 shadow-lg">
                         {category.description}
                       </div>
                     </div>
@@ -115,8 +106,8 @@ export function EventsNavigation() {
                     className={cn(
                       "text-xs sm:text-sm font-medium text-center transition-colors duration-300",
                       isActive
-                        ? "text-blue-500"
-                        : "text-gray-600 group-hover:text-gray-900"
+                        ? "text-purple-600"
+                        : "text-gray-600 group-hover:text-purple-800"
                     )}
                   >
                     {category.label}
@@ -130,3 +121,4 @@ export function EventsNavigation() {
     </div>
   );
 }
+

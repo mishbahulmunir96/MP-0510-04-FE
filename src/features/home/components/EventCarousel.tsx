@@ -12,7 +12,7 @@ interface ImageType {
 // Data
 const carouselImages: ImageType[] = [
   {
-    src: "/images/event-music.jpg",
+    src: "/images/Voucher.jpg",
     alt: "Music Event"
   },
   {
@@ -20,7 +20,7 @@ const carouselImages: ImageType[] = [
     alt: "Music Festival"
   },
   {
-    src: "/images/indie-fest.webp",
+    src: "/images/Hero-section.jpg",
     alt: "Indie Festival"
   },
   {

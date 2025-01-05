@@ -2,13 +2,12 @@ import useAxios from "@/hooks/useAxios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation"; // Tambahkan import untuk router
+import { useRouter } from "next/navigation";
 
-// Menggunakan enum untuk status
 export enum TransactionStatus {
   PENDING = "pending",
   WAITING_PAYMENT = "waitingPayment",
-  WAITING_CONFIRMATION = "waitingConfirmation", // Tambahkan status baru
+  WAITING_CONFIRMATION = "waitingConfirmation",
   COMPLETED = "completed",
   CANCELLED = "cancelled",
 }
@@ -17,33 +16,32 @@ export interface CreateTransactionPayload {
   userId: number;
   eventId: number;
   ticketCount: number;
-  voucherId?: number | null; // Opsional
-  couponId?: number | null; // Opsional
-  pointsToUse?: number; // Opsional
-  amount: number; // Pastikan amount ada juga
-  paymentProofUploaded?: boolean; // Menunjukkan apakah bukti pembayaran diunggah
+  voucherId?: number | null;
+  couponId?: number | null;
+  pointsUse?: number; // Sesuai dengan service backend
+  paymentProofUploaded?: boolean;
 }
 
 const useCreateTransaction = () => {
   const queryClient = useQueryClient();
   const { axiosInstance } = useAxios();
-  const router = useRouter(); // Menggunakan router untuk navigasi
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (payload: CreateTransactionPayload) => {
-      // Mengirimkan payload ke backend tanpa status
-      const { data } = await axiosInstance.post(`/transactions`, {
-        ...payload,
-
-      });
+      // Mengirimkan payload ke backend
+      const { data } = await axiosInstance.post(`/transactions`, payload);
       return data;
     },
     onSuccess: (data) => {
+      // Invalidasi cache untuk memperbarui data transaksi
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
 
-      router.push(`/transaction/${data.id}`); // Navigasi ke halaman detail transaksi
+      // Navigasi ke halaman detail transaksi
+      router.push(`/transaction/${data.id}`);
     },
     onError: (error: AxiosError<any>) => {
+      // Menangkap pesan error dari response backend
       const errorMessage =
         error.response?.data?.message ||
         error.response?.data ||
