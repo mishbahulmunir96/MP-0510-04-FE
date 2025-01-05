@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FileMinus2, Loader2 } from 'lucide-react';
+import { FileMinus2, Loader2, Filter } from 'lucide-react';
 import PaginationSection from "@/components/PaginationSection";
 import useGetEvents from "@/hooks/api/event/useGetEvents";
 import EventCard from "@/features/event/compoents/EventCard";
@@ -54,7 +54,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
   if (isPending) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <Loader2 className="w-12 h-12 animate-spin text-purple-600" />
       </div>
     );
   }
@@ -62,7 +62,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
   if (!data || !data.data || !data.meta) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
-        <h1 className="text-2xl font-semibold text-gray-600">No events available</h1>
+        <h1 className="text-3xl font-bold text-purple-600">No events available</h1>
       </div>
     );
   }
@@ -74,48 +74,61 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
   );
 
   return (
-    <section className="px-4 max-w-7xl mx-auto">
-      <div className="mb-8 flex flex-col md:flex-row md:space-x-4">
+    <section className="px-4 max-w-full mx-auto py-6 bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-12 flex flex-col md:flex-row md:space-x-4 bg-white p-6 rounded-xl shadow-lg"
+      >
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
-          >
-            {categories.map((cat) => (
-              <option key={cat.value} value={cat.value}>
-                {cat.label}
-              </option>
-            ))}
-          </select>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+          <div className="relative">
+            <select
+              id="category"
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 transition duration-150 ease-in-out appearance-none bg-white"
+            >
+              {categories.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+            <Filter className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
         </div>
         <div className="w-full md:w-1/2">
-          
-          <select
-            id="address"
-            value={selectedAddress}
-            onChange={handleAddressChange}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
-          >
-            {addresses.map((addr) => (
-              <option key={addr.value} value={addr.value}>
-                {addr.label}
-              </option>
-            ))}
-          </select>
+          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+          <div className="relative">
+            <select
+              id="address"
+              value={selectedAddress}
+              onChange={handleAddressChange}
+              className="block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 transition duration-150 ease-in-out appearance-none bg-white"
+            >
+              {addresses.map((addr) => (
+                <option key={addr.value} value={addr.value}>
+                  {addr.label}
+                </option>
+              ))}
+            </select>
+            <Filter className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {!filteredEvents.length ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col h-[30vh] items-center justify-center space-y-4"
+          className="flex flex-col h-[30vh] items-center justify-center space-y-4 bg-white rounded-xl shadow-lg p-8"
         >
-          <FileMinus2 className="w-16 h-16 text-gray-400" />
-          <h1 className="text-xl font-semibold text-gray-600">No matching events found</h1>
+          <FileMinus2 className="w-20 h-20 text-purple-400" />
+          <h1 className="text-2xl font-bold text-purple-600">No matching events found</h1>
+          <p className="text-gray-500">Try adjusting your filters or search query</p>
         </motion.div>
       ) : (
         <>
@@ -123,7 +136,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
           >
             {filteredEvents.map((event, index) => (
               <motion.div
@@ -137,14 +150,19 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
             ))}
           </motion.div>
 
-          <div className="mt-12">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="mt-12"
+          >
             <PaginationSection
               onChangePage={onChangePage}
               page={page}
               take={data.meta.take}
               total={data.meta.total}
             />
-          </div>
+          </motion.div>
         </>
       )}
     </section>
@@ -152,3 +170,4 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
 };
 
 export default EventList;
+

@@ -3,13 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { toast } from "react-toastify";
 import useCreateTransaction, { TransactionStatus } from "@/hooks/api/transaction/useCreateTransaction";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useFormik } from "formik";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
 
 interface TransactionFormProps {
   eventId: number; // ID event yang sedang dibuka
@@ -36,12 +34,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       .required("Number of tickets is required")
       .min(1, "At least 1 ticket is required")
       .typeError("Must be a number"),
-    voucher: Yup.number().nullable().typeError("Voucher ID must be a number"), // Mengizinkan voucherID menjadi number
+    voucher: Yup.number().nullable().typeError("Voucher ID must be a number"),
     points: Yup.number()
       .nullable()
       .min(0, "Points cannot be negative")
       .typeError("Must be a number"),
-    coupon: Yup.number().nullable().typeError("Coupon ID must be a number"), // Mengizinkan couponID menjadi number
+    coupon: Yup.number().nullable().typeError("Coupon ID must be a number"),
   });
 
   const formik = useFormik({
@@ -53,6 +51,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      // Check if more than one option is selected
+      const selectedOptionsCount = [voucherId, points, couponId].filter(Boolean).length;
+
+      if (selectedOptionsCount > 1) {
+        toast.error("Please select only one option: Voucher, Points, or Coupon.");
+        return; // Prevent submission
+      }
+
       const transactionData = {
         userId,
         eventId,
@@ -61,7 +67,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         pointsToUse: Number(points),
         couponId: couponId || null,
         status: TransactionStatus.WAITING_PAYMENT,
-        amount: totalPrice, // Menggunakan total price yang sudah dihitung
+        amount: totalPrice,
       };
 
       try {
@@ -76,9 +82,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
 
   // Menghitung total harga tiket
   useEffect(() => {
-    const numberOfTickets = parseInt(formik.values.tickets) || 0; // Mengambil jumlah tiket
-    setTotalPrice(numberOfTickets * ticketPrice); // Menghitung total harga berdasarkan tiket
-  }, [formik.values.tickets, ticketPrice]); // Perbarui ketika tiket atau harga berubah
+    const numberOfTickets = parseInt(formik.values.tickets) || 0;
+    setTotalPrice(numberOfTickets * ticketPrice);
+  }, [formik.values.tickets, ticketPrice]);
 
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -109,7 +115,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           value={voucherId || ""}
           onChange={(e) =>
             setVoucherId(e.target.value ? parseInt(e.target.value) : null)
-          } // Simpan ID sebagai number
+          }
         />
       </div>
       <div className="space-y-2">
@@ -138,7 +144,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           value={couponId || ""}
           onChange={(e) =>
             setCouponId(e.target.value ? parseInt(e.target.value) : null)
-          } // Simpan ID sebagai number
+          }
         />
       </div>
       <div className="pt-4">

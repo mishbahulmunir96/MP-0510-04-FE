@@ -80,26 +80,6 @@ const CreateEventPage = () => {
     }
   };
 
-  // New handler for availableSeat
-  const handleAvailableSeatChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    if (value >= 0) {
-      formik.setFieldValue("availableSeat", value);
-    } else {
-      formik.setFieldValue("availableSeat", 0); // Optionally set to 0 if negative
-    }
-  };
-
-  // New handler for price
-  const handlePriceChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    if (value >= 0) {
-      formik.setFieldValue("price", value);
-    } else {
-      formik.setFieldValue("price", 0); // Optionally set to 0 if negative
-    }
-  };
-
   return (
     <main className="container mx-auto my-8 max-w-4xl">
       <Card className="shadow-lg">
@@ -110,7 +90,9 @@ const CreateEventPage = () => {
           <form className="space-y-8" onSubmit={formik.handleSubmit}>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="title" className="text-lg font-semibold">Title</Label>
+                <Label htmlFor="title" className="text-lg font-semibold">
+                  Title
+                </Label>
                 <Input
                   id="title"
                   name="title"
@@ -127,7 +109,9 @@ const CreateEventPage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category" className="text-lg font-semibold">Category</Label>
+                <Label htmlFor="category" className="text-lg font-semibold">
+                  Category
+                </Label>
                 <select
                   id="category"
                   name="category"
@@ -135,15 +119,18 @@ const CreateEventPage = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   className="w-full rounded-md border border-gray-300 p-2"
-
                 >
-                  <option value="" disabled>Select a category</option>
+                  <option value="" disabled>
+                    Select a category
+                  </option>
                   <option value="music">Music</option>
                   <option value="sport">Sport</option>
                   <option value="nightlife">Nightlife</option>
                 </select>
                 {!!formik.touched.category && !!formik.errors.category && (
-                  <p className="text-sm text-red-500">{formik.errors.category}</p>
+                  <p className="text-sm text-red-500">
+                    {formik.errors.category}
+                  </p>
                 )}
               </div>
             </div>
@@ -152,8 +139,11 @@ const CreateEventPage = () => {
               <Label className="text-lg font-semibold">Description</Label>
               <RichTextEditor
                 value={formik.values.content}
-                onChange={(value: string) => formik.setFieldValue("content", value)}
-                isError={!!formik.errors.content} label={""}              
+                onChange={(value: string) =>
+                  formik.setFieldValue("content", value)
+                }
+                isError={!!formik.errors.content}
+                label={""}
               />
             </div>
 
@@ -164,7 +154,7 @@ const CreateEventPage = () => {
                   type="button"
                   variant="outline"
                   onClick={() => thumbnailReff.current?.click()}
-                  className="border-dashed border-2 border-gray-300 hover:border-gray-400"
+                  className="border-2 border-dashed border-gray-300 hover:border-gray-400"
                 >
                   <Upload className="mr-2 h-4 w-4" />
                   Upload Image
@@ -199,7 +189,9 @@ const CreateEventPage = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address" className="text-lg font-semibold">Address</Label>
+              <Label htmlFor="address" className="text-lg font-semibold">
+                Address
+              </Label>
               <select
                 id="address"
                 name="address"
@@ -208,7 +200,9 @@ const CreateEventPage = () => {
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border border-gray-300 p-2"
               >
-                <option value="" disabled>Select a city</option>
+                <option value="" disabled>
+                  Select a city
+                </option>
                 <option value="Jakarta">Jakarta</option>
                 <option value="Bandung">Bandung</option>
                 <option value="Yogyakarta">Yogyakarta</option>
@@ -223,17 +217,21 @@ const CreateEventPage = () => {
               <div className="space-y-2">
                 <Label className="text-lg font-semibold">Available Seats</Label>
                 <Input
+                  id="availableSeat"
                   name="availableSeat"
                   type="number"
                   placeholder="Available Seats"
-                  value={formik.values.availableSeat!}
-                  onChange={handleAvailableSeatChange} // Updated handler
+                  value={formik.values.availableSeat}
+                  onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   className="border-gray-300"
                 />
-                {!!formik.touched.availableSeat && !!formik.errors.availableSeat && (
-                  <p className="text-sm text-red-500">{formik.errors.availableSeat}</p>
-                )}
+                {!!formik.touched.availableSeat &&
+                  !!formik.errors.availableSeat && (
+                    <p className="text-sm text-red-500">
+                      {formik.errors.availableSeat}
+                    </p>
+                  )}
               </div>
 
               <div className="space-y-2">
@@ -243,7 +241,7 @@ const CreateEventPage = () => {
                   type="number"
                   placeholder="Price"
                   value={formik.values.price}
-                  onChange={handlePriceChange} // Updated handler
+                  onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   className="border-gray-300"
                 />
@@ -259,7 +257,9 @@ const CreateEventPage = () => {
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="startTime" className="text-lg font-semibold">Start Time</Label>
+                <Label htmlFor="startTime" className="text-lg font-semibold">
+                  Start Time
+                </Label>
                 <div className="flex space-x-2">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -282,7 +282,9 @@ const CreateEventPage = () => {
                       <Calendar
                         mode="single"
                         selected={formik.values.startTime}
-                        onSelect={(date) => formik.setFieldValue("startTime", date)}
+                        onSelect={(date) =>
+                          formik.setFieldValue("startTime", date)
+                        }
                         initialFocus
                       />
                     </PopoverContent>
@@ -297,7 +299,9 @@ const CreateEventPage = () => {
                     onChange={(e) => {
                       const [hours, minutes] = e.target.value.split(":");
 
-                      const newDate = formik.values.startTime ? new Date(formik.values.startTime) : new Date();
+                      const newDate = formik.values.startTime
+                        ? new Date(formik.values.startTime)
+                        : new Date();
                       newDate.setHours(parseInt(hours), parseInt(minutes));
                       formik.setFieldValue("startTime", newDate);
                     }}
@@ -305,12 +309,16 @@ const CreateEventPage = () => {
                   />
                 </div>
                 {!!formik.touched.startTime && !!formik.errors.startTime && (
-                  <p className="text-sm text-red-500">{formik.errors.startTime}</p>
+                  <p className="text-sm text-red-500">
+                    {formik.errors.startTime}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="endTime" className="text-lg font-semibold">End Time</Label>
+                <Label htmlFor="endTime" className="text-lg font-semibold">
+                  End Time
+                </Label>
                 <div className="flex space-x-2">
                   <Popover>
                     <PopoverTrigger asChild>
@@ -349,7 +357,9 @@ const CreateEventPage = () => {
                     }
                     onChange={(e) => {
                       const [hours, minutes] = e.target.value.split(":");
-                      const newDate = formik.values.endTime ? new Date(formik.values.endTime) : new Date();
+                      const newDate = formik.values.endTime
+                        ? new Date(formik.values.endTime)
+                        : new Date();
                       newDate.setHours(parseInt(hours), parseInt(minutes));
                       formik.setFieldValue("endTime", newDate);
                     }}
@@ -357,7 +367,9 @@ const CreateEventPage = () => {
                   />
                 </div>
                 {!!formik.touched.endTime && !!formik.errors.endTime && (
-                  <p className="text-sm text-red-500">{formik.errors.endTime}</p>
+                  <p className="text-sm text-red-500">
+                    {formik.errors.endTime}
+                  </p>
                 )}
               </div>
             </div>
@@ -368,7 +380,11 @@ const CreateEventPage = () => {
                 onOpenChange={setIsConfirmDialogOpen}
               >
                 <DialogTrigger asChild>
-                  <Button type="submit" className="w-full bg-gradient-to-r from-purple-500 to-blue-400 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition duration-300" disabled={isPending}>
+                  <Button
+                    type="submit"
+                    className="w-full rounded-lg bg-gradient-to-r from-purple-500 to-blue-400 py-3 font-semibold text-white shadow-md transition duration-300 hover:shadow-lg"
+                    disabled={isPending}
+                  >
                     {isPending ? "Processing..." : "Create Event"}
                   </Button>
                 </DialogTrigger>
@@ -381,10 +397,17 @@ const CreateEventPage = () => {
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setIsConfirmDialogOpen(false)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsConfirmDialogOpen(false)}
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleConfirmedSubmit} disabled={isPending} className="bg-gradient-to-r from-purple-500 to-blue-400 text-white">
+                    <Button
+                      onClick={handleConfirmedSubmit}
+                      disabled={isPending}
+                      className="bg-gradient-to-r from-purple-500 to-blue-400 text-white"
+                    >
                       {isPending ? "Processing..." : "Confirm"}
                     </Button>
                   </DialogFooter>
