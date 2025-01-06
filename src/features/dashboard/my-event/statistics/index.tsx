@@ -18,9 +18,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import useGetEventStatistics from "@/hooks/api/statistic/useGetEventsStatistics";
-import { YearlyView } from "./YearlyView";
-import { MonthlyView } from "./MonthlyView";
-import { DailyView } from "./DailyView";
+import { YearlyView } from "./components/YearlyView";
+import { MonthlyView } from "./components/MonthlyView";
+import { DailyView } from "./components/DailyView";
 
 const StatisticPage = () => {
   const [selectedYear, setSelectedYear] = useState<number>(

@@ -2,22 +2,21 @@
 
 import InputField from "@/components/InputField";
 import ModalConfirmation from "@/components/ModalConfirmation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import useUpdateUser from "@/hooks/api/user/useUpdateUser";
-import { RootState } from "@/redux/store";
+import { useAppSelector } from "@/redux/hooks";
+import { updateUserAction } from "@/redux/slices/userSlices";
 import { useFormik } from "formik";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { DateInput } from "../../components/DateInput";
-import { updateProfileSchema } from "../schema";
+import { updateProfileSchema } from "./updateProfileSchema";
 import GenderRadioGroup from "./GenderRadioGroup";
-import { updateUserAction } from "@/redux/slices/userSlices";
-import { Loader2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAppSelector } from "@/redux/hooks";
 
 const GeneralProfile = () => {
   const user = useAppSelector((state) => state.user);
@@ -227,30 +226,32 @@ const GeneralProfile = () => {
           </div>
         </div>
         {error && <div className="text-sm text-red-600">{error}</div>}{" "}
-        <Button
-          type="button"
-          disabled={isPending}
-          onClick={() => setIsDialogOpen(true)}
-          className="bg-blue-500 font-medium hover:bg-blue-600"
-        >
-          {isPending ? (
-            <>
-              <Loader2 className="animate-spin" />
-              <span className="ml-2">Please wait</span>
-            </>
-          ) : (
-            "Save Change"
-          )}
-        </Button>
-        <ModalConfirmation
-          isOpen={isDialogOpen}
-          onOpenChange={setIsDialogOpen}
-          title="Are you absolutely sure?"
-          description="This action will save all changes made to your profile."
-          onConfirm={formik.handleSubmit}
-          confirmText="Yes"
-          cancelText="Cancel"
-        />
+        <div>
+          <Button
+            type="button"
+            disabled={isPending}
+            onClick={() => setIsDialogOpen(true)}
+            className="bg-blue-500 font-medium hover:bg-blue-600"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="animate-spin" />
+                <span className="ml-2">Please wait</span>
+              </>
+            ) : (
+              "Save Change"
+            )}
+          </Button>
+          <ModalConfirmation
+            isOpen={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+            title="Are you absolutely sure?"
+            description="This action will save all changes made to your profile."
+            onConfirm={formik.handleSubmit}
+            confirmText="Yes"
+            cancelText="Cancel"
+          />
+        </div>
       </form>
     </main>
   );

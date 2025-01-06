@@ -54,7 +54,7 @@ const useUpdateUser = () => {
     onSuccess: async (data) => {
       toast.success("User updated successfully");
       await queryClient.invalidateQueries({ queryKey: ["users"] });
-      router.push("/");
+      router.push("/dashboard/profile");
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data);

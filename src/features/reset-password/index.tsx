@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import { Loader2 } from "lucide-react";
 import { FC } from "react";
 import { ResetPasswordSchema } from "./schema";
+import LinkHome from "@/components/LinkHome";
 
 interface ResetPasswordPageProps {
   token: string;
@@ -22,14 +23,15 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
       confirmPassword: "",
     },
     validationSchema: ResetPasswordSchema,
-    //
     onSubmit: async (values) => {
       await resetPassword(values);
     },
   });
   return (
     <main className="px-2">
-      <div className="container mx-auto mt-4 flex w-full justify-center">
+      <LinkHome className="text-blue-600 hover:text-blue-700" />
+
+      <div className="container mx-auto mt-20 flex w-full justify-center">
         <Card className="w-[500px] p-6">
           <form onSubmit={formik.handleSubmit}>
             <SignTitle title="Reset Your Password" />
@@ -38,7 +40,7 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
                 htmlFor="password"
                 label="Password"
                 type="password"
-                placeholder="password"
+                placeholder="Password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
                 onBlur={formik.handleBlur}
@@ -55,7 +57,7 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
                 htmlFor="confirmPassword"
                 label="Confirm Password"
                 type="password"
-                placeholder="email"
+                placeholder="Confirm Password"
                 onChange={formik.handleChange}
                 value={formik.values.confirmPassword}
                 onBlur={formik.handleBlur}
@@ -80,7 +82,7 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
                   <p>Please wait</p>
                 </>
               ) : (
-                "save"
+                "Save Password"
               )}
             </Button>
           </form>

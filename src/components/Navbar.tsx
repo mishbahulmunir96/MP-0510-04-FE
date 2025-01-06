@@ -1,28 +1,24 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logoutAction } from "@/redux/slices/userSlices";
+import { Button } from "@/components/ui/button";
+import { useAppSelector } from "@/redux/hooks";
+import { User } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BsCalendar2Event } from "react-icons/bs";
 import { GrCart } from "react-icons/gr";
 import { IoRocketSharp } from "react-icons/io5";
-import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 import AccountDropdown from "./AccountDropdown";
 
 const Navbar = () => {
   const user = useAppSelector((state) => state.user);
   const pathname = usePathname();
 
-  // mengumpetkan navbar saat berada di register dan login
-  const shouldHideNavbar =
-    pathname === "/register" ||
-    pathname === "/login" ||
-    pathname === "/forgot-password" ||
-    pathname === "/reset-password";
+  const hiddenPages = ["/register", "/login", "/forgot-password"];
 
-  // mengumpetkan navbar saat di create event page
+  const shouldHideNavbar =
+    hiddenPages.includes(pathname) || pathname.startsWith("/reset-password");
+
   const shouldHideCreateEvent = pathname === "/create-event";
 
   if (shouldHideNavbar) return null;
