@@ -1,5 +1,4 @@
 import { axiosInstance } from "@/lib/axios";
-import { useAppDispatch } from "@/redux/hooks";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,6 @@ interface ForgotPasswordPayload {
 
 const useForgotPassword = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   return useMutation({
     mutationFn: async (payload: ForgotPasswordPayload) => {

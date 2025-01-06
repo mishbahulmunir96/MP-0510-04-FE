@@ -8,7 +8,6 @@ import {
   Ticket,
   UsersRound,
 } from "lucide-react";
-
 import {
   Collapsible,
   CollapsibleContent,

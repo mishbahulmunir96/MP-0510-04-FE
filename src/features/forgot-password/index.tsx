@@ -18,7 +18,6 @@ const ForgotPasswordPage = () => {
       email: "",
     },
     validationSchema: ForgotPasswordSchema,
-    //
     onSubmit: async (values) => {
       await forgotPassword(values);
     },
