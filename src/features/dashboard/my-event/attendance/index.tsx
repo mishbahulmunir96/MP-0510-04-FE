@@ -96,7 +96,8 @@ const AttendancePage = () => {
               </TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Attendee Name</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
                   <TableHead>Ticket Quantity</TableHead>
                   <TableHead>Total Price Paid</TableHead>
                 </TableRow>
@@ -105,6 +106,7 @@ const AttendancePage = () => {
                 {attendees.map((attendee) => (
                   <TableRow key={attendee.id}>
                     <TableCell>{attendee.name}</TableCell>
+                    <TableCell>{attendee.email}</TableCell>
                     <TableCell>{attendee.ticketCount}</TableCell>
                     <TableCell>
                       {attendee.totalPrice.toLocaleString("id-ID", {

@@ -13,7 +13,6 @@ interface ResetPasswordPayload {
 
 const useResetPassword = (token: string) => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   return useMutation({
     mutationFn: async (payload: ResetPasswordPayload) => {

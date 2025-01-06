@@ -1,15 +1,14 @@
 "use client";
 
 import InputField from "@/components/InputField";
+import LinkHome from "@/components/LinkHome";
+import SignTitle from "@/components/SignTitle";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import useForgotPassword from "@/hooks/api/auth/useForgotPassword";
 import { useFormik } from "formik";
-import { ForgotPasswordSchema } from "./schema";
-import SignTitle from "@/components/SignTitle";
-import Link from "next/link";
-import LinkHome from "@/components/LinkHome";
 import { Loader2 } from "lucide-react";
+import { ForgotPasswordSchema } from "./schema";
 
 const ForgotPasswordPage = () => {
   const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
@@ -25,7 +24,7 @@ const ForgotPasswordPage = () => {
     },
   });
   return (
-    <div className="px-2">
+    <main className="px-2">
       <LinkHome className="text-blue-600 hover:text-blue-700" />
       <div className="container mx-auto mt-20 flex w-full justify-center">
         <Card className="w-[450px] p-6">
@@ -65,7 +64,7 @@ const ForgotPasswordPage = () => {
           </form>
         </Card>
       </div>
-    </div>
+    </main>
   );
 };
 

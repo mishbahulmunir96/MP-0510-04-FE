@@ -3,7 +3,7 @@
 import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
-import { changePasswordSchema } from "../changePasswordSchema";
+import { changePasswordSchema } from "./changePasswordSchema";
 import { useState } from "react";
 import ModalConfirmation from "@/components/ModalConfirmation";
 import { Loader2 } from "lucide-react";
