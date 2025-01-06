@@ -3,13 +3,11 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Types
 interface ImageType {
   src: string;
   alt: string;
 }
 
-// Data
 const carouselImages: ImageType[] = [
   {
     src: "/images/Voucher.jpg",
@@ -20,7 +18,7 @@ const carouselImages: ImageType[] = [
     alt: "Music Festival"
   },
   {
-    src: "/images/Hero-section.jpg",
+    src: "/images/cigarettes.jpg",
     alt: "Indie Festival"
   },
   {
@@ -36,7 +34,6 @@ const carouselImages: ImageType[] = [
 const EventCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Auto-advance slides
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % carouselImages.length);
@@ -55,21 +52,20 @@ const EventCarousel = () => {
 
   return (
     <section className="mt-2 sm:mt-4 px-2 sm:px-4">
-      <div className="w-full bg-white rounded-lg shadow-md">
+      <div className="w-full h-full bg-white rounded-lg shadow-md">
         <div className="p-0">
           <div className="relative overflow-hidden">
-            {/* Carousel Content */}
             <div
               className="flex transition-transform duration-700 ease-in-out"
               style={{ transform: `translateX(-${activeIndex * 100}%)` }}
             >
               {carouselImages.map((image, index) => (
                 <div key={index} className="flex-shrink-0 w-full">
-                  <div className="relative h-[200px] sm:h-[300px] md:h-[350px] w-full">
+                  <div className="relative h-[300px] sm:h-[300px] md:h-[350px] w-full">
                     <img
                       src={image.src}
                       alt={image.alt}
-                      className="absolute inset-0 w-full h-full rounded-lg sm:rounded-xl object-cover"
+                      className="absolute inset-0 w-full h-full rounded-lg sm:rounded-xl object-fill"
                       loading={index === 0 ? "eager" : "lazy"}
                     />
                   </div>
@@ -77,7 +73,6 @@ const EventCarousel = () => {
               ))}
             </div>
 
-            {/* Navigation Buttons */}
             <button
               className="absolute left-2 sm:left-4 top-1/2 z-30 -translate-y-1/2 bg-white/90 p-1.5 sm:p-2 rounded-full shadow-lg cursor-pointer hover:bg-white transition-colors"
               onClick={handlePrevious}
@@ -96,7 +91,6 @@ const EventCarousel = () => {
         </div>
       </div>
 
-      {/* Navigation Dots */}
       <div className="flex justify-center gap-1.5 sm:gap-2 mt-2 sm:mt-4">
         {carouselImages.map((_, index) => (
           <button
