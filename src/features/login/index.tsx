@@ -25,7 +25,6 @@ const LoginPage = () => {
       password: "",
     },
     validationSchema: LoginSchema,
-    //
     onSubmit: async (values) => {
       await login(values);
     },
