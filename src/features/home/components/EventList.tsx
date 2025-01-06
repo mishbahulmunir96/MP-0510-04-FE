@@ -32,7 +32,8 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(category);
   const [selectedAddress, setSelectedLocation] = useState<string | undefined>(address);
   const [page, setPage] = useState<number>(1);
-  const { data, isPending } = useGetEvents({ page, searchQuery, category: selectedCategory, address: selectedAddress });
+  const [take, setTake] = useState<number>(4);
+  const { data, isPending } = useGetEvents({ page, take, searchQuery, category: selectedCategory, address: selectedAddress });
 
   useEffect(() => {
   }, [data, searchQuery, selectedCategory, selectedAddress]);
@@ -74,7 +75,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
   );
 
   return (
-    <section className="px-4 max-w-full mx-auto py-6 bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen">
+    <section className="px-4 max-w-full mx-auto py-6 bg-gradient-to-br from-purple-50 to-blue-50 max-h-screen">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -136,7 +137,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-8 md:grid-cols-2 lg:grid-cols-4"
           >
             {filteredEvents.map((event, index) => (
               <motion.div
