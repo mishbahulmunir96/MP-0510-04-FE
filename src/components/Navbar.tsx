@@ -51,15 +51,17 @@ const Navbar = () => {
                 </Link>
               )}
 
-            <Link href="/my-ticket">
-              <Button
-                variant="ghost"
-                className="text-white hover:bg-white/10 hover:text-white"
-              >
-                <GrCart className="mr-2 h-4 w-4" />
-                My Tickets
-              </Button>
-            </Link>
+            {!!user.id && user.role === "USER" && (
+              <Link href="/my-ticket">
+                <Button
+                  variant="ghost"
+                  className="text-white hover:bg-white/10 hover:text-white"
+                >
+                  <GrCart className="mr-2 h-4 w-4" />
+                  My Tickets
+                </Button>
+              </Link>
+            )}
 
             <Link href="/explore">
               <Button
@@ -102,7 +104,7 @@ const Navbar = () => {
 
       <div className="border-t border-white/10 md:hidden">
         <div className="flex justify-around p-2">
-          {!!user.id && !shouldHideCreateEvent && (
+          {!!user.id && !shouldHideCreateEvent && user.role === "ORGANIZER" && (
             <Link href="/create-event">
               <Button
                 variant="ghost"
@@ -113,15 +115,19 @@ const Navbar = () => {
               </Button>
             </Link>
           )}
-          <Link href="/my-ticket">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-white hover:bg-white/10 hover:text-white"
-            >
-              <GrCart className="h-4 w-4" />
-            </Button>
-          </Link>
+
+          {!!user.id && user.role === "USER" && (
+            <Link href="/my-ticket">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-white hover:bg-white/10 hover:text-white"
+              >
+                <GrCart className="h-4 w-4" />
+              </Button>
+            </Link>
+          )}
+
           <Link href="/explore-event">
             <Button
               variant="ghost"

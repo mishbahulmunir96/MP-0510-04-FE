@@ -7,16 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import useUpdateUser from "@/hooks/api/user/useUpdateUser";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateUserAction } from "@/redux/slices/userSlices";
 import { useFormik } from "formik";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 import { DateInput } from "../../components/DateInput";
-import { updateProfileSchema } from "./updateProfileSchema";
 import GenderRadioGroup from "./GenderRadioGroup";
+import { updateProfileSchema } from "./updateProfileSchema";
 
 const GeneralProfile = () => {
   const user = useAppSelector((state) => state.user);
@@ -27,7 +26,7 @@ const GeneralProfile = () => {
   const profilePictureRef = useRef<HTMLInputElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user-storage");
@@ -55,6 +54,12 @@ const GeneralProfile = () => {
         localStorage.setItem("user-storage", JSON.stringify(updatedUser));
         setIsDialogOpen(false);
         setError("");
+
+        console.log("Updated User in Redux:", updatedUser);
+        console.log(
+          "Updated User in localStorage:",
+          JSON.parse(localStorage.getItem("user-storage") || "{}"),
+        );
       } catch (error) {
         setError("Failed to update profile. Please try again.");
       }

@@ -1,7 +1,6 @@
 "use client";
 
 import LoadingScreen from "@/components/LoadingScreen";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -13,13 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useGetEventsByUser from "@/hooks/api/event/useGetEventsByUser";
+import useGetEventsByOrganizer from "@/hooks/api/event/useGetEventsByOrganizer";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const EventListPage = () => {
-  const { data: events, isLoading, error } = useGetEventsByUser();
+  const { data: events, isLoading, error } = useGetEventsByOrganizer();
   const router = useRouter();
 
   if (isLoading) return <LoadingScreen />;

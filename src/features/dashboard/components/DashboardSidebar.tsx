@@ -1,14 +1,5 @@
 "use client";
 import {
-  CalendarRange,
-  ChevronRight,
-  CircleUserRound,
-  Search,
-  Settings,
-  Ticket,
-  UsersRound,
-} from "lucide-react";
-import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -24,10 +15,16 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { RootState } from "@/redux/store";
+import { useAppSelector } from "@/redux/hooks";
+import {
+  CalendarRange,
+  ChevronRight,
+  CircleUserRound,
+  Ticket,
+  UsersRound,
+} from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const items = [
   {
@@ -58,26 +55,24 @@ const items = [
   },
 
   {
-    title: "Refferals",
+    title: "Referrals",
     url: "/dashboard/refferals",
     icon: UsersRound,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
 const DashboardSidebar = () => {
-  const user = useSelector((state: RootState) => state.user);
+  const user = useAppSelector((state) => state.user);
 
   const [openItem, setOpenItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user.role === "ORGANIZER") {
+      setOpenItem("My Event");
+    } else if (user.role === "USER") {
+      setOpenItem("My Ticket");
+    }
+  }, [user.role]);
   return (
     <Sidebar className="mt-16" collapsible="icon">
       <SidebarContent>
@@ -87,6 +82,13 @@ const DashboardSidebar = () => {
           <SidebarMenu>
             {items.map((item) => {
               if (item.title === "My Event" && user.role === "USER") {
+                return null;
+              }
+
+              if (
+                (item.title === "My Ticket" || item.title === "Referrals") &&
+                user.role === "ORGANIZER"
+              ) {
                 return null;
               }
 
@@ -120,7 +122,7 @@ const DashboardSidebar = () => {
                             {item.submenu.map((subitem) => (
                               <SidebarMenuSubItem key={subitem.title}>
                                 <Link href={subitem.url}>
-                                  <span className="text-sm font-medium text-slate-500">
+                                  <span className="ml-4 text-sm font-medium text-slate-500">
                                     {subitem.title}
                                   </span>
                                 </Link>
