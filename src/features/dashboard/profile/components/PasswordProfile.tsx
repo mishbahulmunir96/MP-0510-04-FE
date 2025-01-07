@@ -36,7 +36,7 @@ const PasswordProfile = () => {
       <div>
         <div>
           <h1 className="my-4 text-xl font-semibold text-slate-800">
-            Password
+            Change Password
           </h1>
         </div>
 

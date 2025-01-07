@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -24,15 +23,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useGetEventsByUser from "@/hooks/api/event/useGetEventsByUser";
 import useGetAttendeesByEvent from "@/hooks/api/attendee/useGetAttendeesByEvent";
+import useGetEventsByOrganizer from "@/hooks/api/event/useGetEventsByOrganizer";
+import { useState } from "react";
 
 const AttendancePage = () => {
   const {
     data: events,
     isLoading: isLoadingEvents,
     error: errorEvents,
-  } = useGetEventsByUser();
+  } = useGetEventsByOrganizer();
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
   const {
