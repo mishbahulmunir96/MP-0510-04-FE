@@ -54,7 +54,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
 
   if (isPending) {
     return (
-      <div className="flex h-[50vh] items-center justify-center">
+      <div className="flex min-h-[50vh] items-center justify-center">
         <Loader2 className="w-12 h-12 animate-spin text-purple-600" />
       </div>
     );
@@ -62,7 +62,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
 
   if (!data || !data.data || !data.meta) {
     return (
-      <div className="flex h-[50vh] items-center justify-center">
+      <div className="flex min-h-[50vh] items-center justify-center">
         <h1 className="text-3xl font-bold text-purple-600">No events available</h1>
       </div>
     );
@@ -75,12 +75,12 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
   );
 
   return (
-    <section className="px-4 max-w-full mx-auto py-6 bg-gradient-to-br from-purple-50 to-blue-50 max-h-screen">
+    <section className="flex flex-col px-4 w-full mx-auto py-6 bg-gradient-to-br from-purple-50 to-blue-50 min-h-0">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-12 flex flex-col md:flex-row md:space-x-4 bg-white p-6 rounded-xl shadow-lg"
+        className="mb-6 flex flex-col md:flex-row md:space-x-4 bg-white p-6 rounded-xl shadow-lg"
       >
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">Category</label>
@@ -125,14 +125,14 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col h-[30vh] items-center justify-center space-y-4 bg-white rounded-xl shadow-lg p-8"
+          className="flex flex-col min-h-[30vh] items-center justify-center space-y-4 bg-white rounded-xl shadow-lg p-8"
         >
           <FileMinus2 className="w-20 h-20 text-purple-400" />
           <h1 className="text-2xl font-bold text-purple-600">No matching events found</h1>
           <p className="text-gray-500">Try adjusting your filters or search query</p>
         </motion.div>
       ) : (
-        <>
+        <div className="flex flex-col flex-grow">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -155,7 +155,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-12"
+            className="mt-6 mb-4"
           >
             <PaginationSection
               onChangePage={onChangePage}
@@ -164,7 +164,7 @@ const EventList = ({ searchQuery, category, address }: EventListProps) => {
               total={data.meta.total}
             />
           </motion.div>
-        </>
+        </div>
       )}
     </section>
   );
