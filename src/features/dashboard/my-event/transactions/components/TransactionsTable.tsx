@@ -1,3 +1,4 @@
+// pages/transactions/components/TransactionsTable.tsx
 "use client";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -266,8 +267,11 @@ const TransactionsTable = ({
                   {transaction.event.title}
                 </p>
                 <p>
-                  <span className="font-medium">Amount:</span> $
-                  {transaction.amount.toFixed(2)}
+                  <span className="font-medium">Amount:</span>{" "}
+                  {transaction.amount.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  })}
                 </p>
               </div>
               <div className="mt-4 space-y-2">

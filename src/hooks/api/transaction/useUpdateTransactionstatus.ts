@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import useAxios from "../../useAxios";
 
 interface UpdateTransactionStatusPayload {
-  transactionId: number; // ID transaksi yang ingin diupdate
+  transactionId: number;
   status: string;
   notes?: string;
 }
