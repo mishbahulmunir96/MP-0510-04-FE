@@ -8,6 +8,7 @@ export interface Event {
   address: string;
   price: number;
   availableSeat: number;
+  totalSeats: number;
   startTime: Date;
   endTime: Date;
   createdAt: Date;

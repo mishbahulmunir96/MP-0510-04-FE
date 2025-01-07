@@ -100,7 +100,14 @@ const EventDetailPage: React.FC<EventDetailProps> = ({ eventId }) => {
                     <MapPinIcon className="h-5 w-5 text-blue-500" />
                     <p className="line-clamp-1">{data.address}</p>
                   </div>
+
+                  <div className="flex items-center gap-3">
+                    <MapPinIcon className="h-5 w-5 text-blue-500" />
+                    <p className="line-clamp-1"> Ticket Available: {""}{data.availableSeat} Tickets</p>
                 </div>
+                </div>
+
+               
 
                 <div className="mt-6">
                   <p className="text-3xl font-bold text-blue-600">

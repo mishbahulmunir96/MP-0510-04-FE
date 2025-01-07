@@ -16,8 +16,8 @@ const Footer = () => {
   if (shouldHideFooter) return null;
 
   return (
-    <footer className="bg-gradient-to-r from-blue-500 to-purple-500 text-white py-8 px-4 md:px-6 lg:px-8 max-h-screen">
-      <div className="container mx-auto max-w-7xl">
+    <footer className="bg-gradient-to-r from-purple-500 to-blue-500 text-white py-8 px-4 md:px-6 lg:px-8 max-h-screen">
+      <div className="container mx-auto max-w-7xl max-h-full">
         <div className="mb-8 grid grid-cols-1 gap-8 text-center md:grid-cols-3">
           <div>
             <h3 className="mb-4 text-xl font-semibold">About Maket</h3>
