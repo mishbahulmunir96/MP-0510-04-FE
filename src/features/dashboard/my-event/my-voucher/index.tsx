@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingScreen from "@/components/LoadingScreen";
+import PaginationSection from "@/components/PaginationSection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,11 +15,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import useGetVouchers from "@/hooks/api/voucher/useGetVouchers";
+import { useAppSelector } from "@/redux/hooks";
+import { Voucher } from "@/types/voucher";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useState } from "react";
 
 const MyVouchersPage = () => {
-  const { data, isLoading, error } = useGetVouchers();
+  const user = useAppSelector((state) => state.user);
+  const [page, setPage] = useState(1);
+  const [take] = useState(10);
+
+  const { data, isLoading, error } = useGetVouchers(user.id, page, take);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   if (isLoading) return <LoadingScreen />;
 
@@ -51,17 +63,22 @@ const MyVouchersPage = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data && data.length > 0 ? (
-                data.map((voucher) => (
+              {data.data && data.data.length > 0 ? (
+                data.data.map((voucher: Voucher) => (
                   <TableRow key={voucher.id}>
                     <TableCell className="font-medium">{voucher.id}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{voucher.voucherCode}</Badge>
                     </TableCell>
-                    <TableCell>{voucher.event?.title}</TableCell>
+                    <TableCell>{voucher.event.title}</TableCell>
                     <TableCell>{voucher.qty}</TableCell>
                     <TableCell>{voucher.usedQty}</TableCell>
-                    <TableCell>Rp. {voucher.value.toFixed(0)}</TableCell>
+                    <TableCell>
+                      {voucher.value.toLocaleString("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                      })}
+                    </TableCell>
                     <TableCell>
                       <span
                         className={
@@ -85,13 +102,21 @@ const MyVouchersPage = () => {
             </TableBody>
           </Table>
         </div>
+        {data && (
+          <PaginationSection
+            page={page}
+            take={take}
+            total={data.meta.total}
+            onChangePage={handlePageChange}
+          />
+        )}
       </div>
 
       <div className="space-y-4 md:hidden">
         {" "}
         {/* Card view for small screens */}
-        {data && data.length > 0 ? (
-          data.map((voucher) => (
+        {data.data && data.data.length > 0 ? (
+          data.data.map((voucher: Voucher) => (
             <Card key={voucher.id}>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">

@@ -3,17 +3,22 @@ import useAxios from "@/hooks/useAxios";
 import { Transaction } from "@/types/transaction";
 import { useQuery } from "@tanstack/react-query";
 
-const useGetTransactionByOrganizer = () => {
+const useGetTransactionByOrganizer = (
+  userId: number,
+  page: number,
+  take: number,
+) => {
   const { axiosInstance } = useAxios();
 
   return useQuery({
-    queryKey: ["TransactionsByOrganizer"],
+    queryKey: ["TransactionsByOrganizer", userId, page],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<Transaction[]>(
-        "/transactions/byOrg",
-      );
+      const { data } = await axiosInstance.get(`/transactions/organizer`, {
+        params: { page, take },
+      });
       return data || [];
     },
+    enabled: !!userId,
   });
 };
 

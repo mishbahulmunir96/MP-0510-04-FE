@@ -7,6 +7,6 @@ export interface Voucher {
   expDate: Date;
   event: {
     id: number;
-    title: string; // Atau atribut lain sesuai model Event
+    title: string;
   };
 }

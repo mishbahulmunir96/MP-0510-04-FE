@@ -1,17 +1,19 @@
 "use client";
 import useAxios from "@/hooks/useAxios";
-import { Voucher } from "@/types/voucher";
 import { useQuery } from "@tanstack/react-query";
 
-const useGetVouchers = () => {
+const useGetVouchers = (userId: number, page: number, take: number) => {
   const { axiosInstance } = useAxios();
 
   return useQuery({
-    queryKey: ["vouchers"],
+    queryKey: ["vouchers", userId, page],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<Voucher[]>("/vouchers");
+      const { data } = await axiosInstance.get(`/vouchers`, {
+        params: { page, take },
+      });
       return data || [];
     },
+    enabled: !!userId,
   });
 };
 
