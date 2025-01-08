@@ -2,14 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/redux/hooks";
-import { Ticket, User, Menu, LogOut, Settings } from 'lucide-react';
+import { Ticket, User, Menu, LogOut, Settings } from "lucide-react";
+
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { BsCalendar2Event } from "react-icons/bs";
 import { GrCart } from "react-icons/gr";
 import { IoRocketSharp } from "react-icons/io5";
 import AccountDropdown from "./AccountDropdown";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+
 import { MobileLogo } from "./ui/mobileLogo";
 
 const Navbar = () => {
@@ -26,28 +28,32 @@ const Navbar = () => {
   // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const nav = document.getElementById('mobile-menu');
+      const nav = document.getElementById("mobile-menu");
+
       if (nav && !nav.contains(event.target as Node)) {
         setMobileMenuOpen(false);
       }
     };
 
     if (mobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+
     };
   }, [mobileMenuOpen]);
 
   const hiddenPages = ["/register", "/login", "/forgot-password"];
-  const shouldHideNavbar = hiddenPages.includes(pathname) || pathname.startsWith("/reset-password");
-  const shouldHideCreateEvent = pathname === "/create-event";
+  const shouldHideNavbar =
+    hiddenPages.includes(pathname) || pathname.startsWith("/reset-password");
+
 
   const handleLogout = () => {
     setMobileMenuOpen(false);
-    router.push('/login');
+    router.push("/login");
+
   };
 
   if (shouldHideNavbar) return null;
@@ -59,8 +65,9 @@ const Navbar = () => {
         className="w-full text-left text-white hover:bg-white/10 hover:text-yellow-300 
                  transition-colors duration-300 flex items-center space-x-3"
       >
-        <Icon className="h-4 w-4 flex-shrink-0" />
-        <span className="flex-1">{children}</span>
+        {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
+        {children && <span className="flex-1">{children}</span>}
+
       </Button>
     </Link>
   );
@@ -83,8 +90,8 @@ const Navbar = () => {
                               transition-all duration-300">
                   MAKÉT
                 </div>
-                <p className="text-xs font-bold tracking-widest text-yellow-300 group-hover:text-yellow-400 
-                          transition-all duration-300 mt-1">
+                <p className="text-xs font-bold tracking-widest text-yellow-300 group-hover:text-yellow-400 transition-all duration-300 mt-1">
+
                   YOUR TICKET TO EXCITEMENT
                 </p>
               </div>
@@ -96,8 +103,8 @@ const Navbar = () => {
             <MobileLogo />
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="flex items-center space-x-6">
+
             {user.id && !shouldHideCreateEvent && user.role === "ORGANIZER" && (
               <NavButton href="/create-event" icon={BsCalendar2Event}>
                 Create Event
@@ -126,9 +133,11 @@ const Navbar = () => {
                   </Button>
                 </Link>
                 <Link href="/login">
-                  <Button variant="secondary" 
-                          className="bg-white text-blue-600 hover:bg-yellow-300 
-                                   hover:text-blue-700 transition-colors duration-300">
+                  <Button
+                    variant="secondary"
+                    className="bg-white text-blue-600 hover:bg-yellow-300 hover:text-blue-700 transition-colors duration-300"
+                  >
+
                     <span className="md:hidden">
                       <User className="h-4 w-4" />
                     </span>
@@ -156,48 +165,67 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div id="mobile-menu" 
-               className="md:hidden fixed inset-x-0 top-16 bg-gradient-to-r from-purple-600 
-                        to-blue-600 shadow-lg animate-in slide-in-from-top duration-300">
+          <div
+            id="mobile-menu"
+            className="md:hidden fixed inset-x-0 top-16 bg-gradient-to-r from-purple-600 to-blue-600 shadow-lg animate-in slide-in-from-top duration-300"
+          >
+
             <div className="px-4 py-3 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
               {user.id && (
                 <>
                   {!shouldHideCreateEvent && user.role === "ORGANIZER" && (
-                    <NavButton href="/create-event" icon={BsCalendar2Event} 
-                              onClick={() => setMobileMenuOpen(false)}>
+                    <NavButton
+                      href="/create-event"
+                      icon={BsCalendar2Event}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+
                       Create Event
                     </NavButton>
                   )}
                   {user.role === "USER" && (
-                    <NavButton href="/my-ticket" icon={GrCart} 
-                              onClick={() => setMobileMenuOpen(false)}>
-                      My Tickets
+                    <NavButton
+                      href="/my-ticket"
+                      icon={GrCart}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+      My Tickets
                     </NavButton>
                   )}
                 </>
               )}
-              
-              <NavButton href="/explore" icon={IoRocketSharp} 
-                        onClick={() => setMobileMenuOpen(false)}>
+
+              <NavButton
+                href="/explore"
+                icon={IoRocketSharp}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+
                 Explore
               </NavButton>
 
               {user.id && (
                 <div className="pt-2 mt-2 border-t border-white/10 space-y-2">
-                  <NavButton href="/profile" icon={User} 
-                            onClick={() => setMobileMenuOpen(false)}>
+                  <NavButton
+                    href="/profile"
+                    icon={User}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Profile
                   </NavButton>
-                  <NavButton href="/settings" icon={Settings} 
-                            onClick={() => setMobileMenuOpen(false)}>
+                  <NavButton
+                    href="/settings"
+                    icon={Settings}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+
                     Settings
                   </NavButton>
                   <Button
                     variant="ghost"
                     onClick={handleLogout}
-                    className="w-full text-left text-white hover:bg-white/10 
-                             hover:text-red-300 transition-colors duration-300 
-                             flex items-center space-x-3"
+                    className="w-full text-left text-white hover:bg-white/10 hover:text-red-300 transition-colors duration-300 flex items-center space-x-3"
+
                   >
                     <LogOut className="h-4 w-4 flex-shrink-0" />
                     <span className="flex-1">Logout</span>
