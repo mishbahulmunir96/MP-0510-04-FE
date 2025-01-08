@@ -1,4 +1,3 @@
-// pages/transactions.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -22,16 +21,21 @@ import Image from "next/image";
 import { useState } from "react";
 import TransactionsTable from "./components/TransactionsTable";
 import { Transaction } from "@/types/transaction";
+import LoadingScreen from "@/components/LoadingScreen";
+import { useAppSelector } from "@/redux/hooks";
+import PaginationSection from "@/components/PaginationSection";
 import useGetTransactionByOrganizer from "@/hooks/api/transaction/useGetTransactionsByOrganizer";
 import useUpdateTransactionStatus from "@/hooks/api/transaction/useUpdateTransactionstatus";
-import LoadingScreen from "@/components/LoadingScreen";
 
 const TransactionsPage = () => {
+  const user = useAppSelector((state) => state.user);
+  const [page, setPage] = useState(1);
+  const [take] = useState(10);
   const {
     data: transactions = [],
     isLoading,
     isError,
-  } = useGetTransactionByOrganizer();
+  } = useGetTransactionByOrganizer(user.id, page, take);
 
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
@@ -47,7 +51,7 @@ const TransactionsPage = () => {
   if (isError) return <div>Error loading transactions</div>;
 
   const filterTransactionsByStatus = (status: string[]) => {
-    return transactions.filter((transaction) =>
+    return transactions.data.filter((transaction: Transaction) =>
       status.includes(transaction.status),
     );
   };
@@ -76,6 +80,10 @@ const TransactionsPage = () => {
     }
   };
 
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="mb-5 text-3xl font-bold">Transaction Management</h1>
@@ -91,7 +99,7 @@ const TransactionsPage = () => {
             <TabsList>
               <TabsTrigger value="pending">Pending</TabsTrigger>
               <TabsTrigger value="approved">Approved</TabsTrigger>
-              <TabsTrigger value="rejected">failed</TabsTrigger>
+              <TabsTrigger value="rejected">Failed</TabsTrigger>
             </TabsList>
             <TabsContent value="pending">
               <TransactionsTable
@@ -136,6 +144,15 @@ const TransactionsPage = () => {
           </Tabs>
         </CardContent>
       </Card>
+      {transactions && (
+        <PaginationSection
+          page={page}
+          take={take}
+          total={transactions.meta.total}
+          onChangePage={handlePageChange}
+        />
+      )}
+
       {selectedTransaction && (
         <Dialog>
           <DialogTrigger asChild>

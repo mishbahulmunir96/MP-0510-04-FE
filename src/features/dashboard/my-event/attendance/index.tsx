@@ -1,5 +1,6 @@
 "use client";
 
+import PaginationSection from "@/components/PaginationSection";
 import {
   Card,
   CardContent,
@@ -25,11 +26,18 @@ import {
 } from "@/components/ui/table";
 import useGetAttendeesByEvent from "@/hooks/api/attendee/useGetAttendeesByEvent";
 import useGetEventsByOrganizer from "@/hooks/api/event/useGetEventsByOrganizer";
+import { useAppSelector } from "@/redux/hooks";
+import { Attendee } from "@/types/attendee";
+import { Event } from "@/types/event";
 import { useState } from "react";
 
 const AttendancePage = () => {
+  const user = useAppSelector((state) => state.user);
+  const [page, setPage] = useState(1);
+  const [take] = useState(10);
+
   const {
-    data: events,
+    data: events = [],
     isLoading: isLoadingEvents,
     error: errorEvents,
   } = useGetEventsByOrganizer();
@@ -39,7 +47,8 @@ const AttendancePage = () => {
     data: attendees,
     isLoading: isLoadingAttendees,
     error: errorAttendees,
-  } = useGetAttendeesByEvent(selectedEventId || 0);
+  } = useGetAttendeesByEvent(selectedEventId || 0, user.id, page, take);
+  console.log("data attend", attendees);
 
   const handleEventChange = (value: string) => {
     setSelectedEventId(Number(value));
@@ -48,9 +57,19 @@ const AttendancePage = () => {
   const selectedEvent = events?.find((event) => event.id === selectedEventId);
 
   const totalTicketsSold =
-    attendees?.reduce((acc, attendee) => acc + attendee.ticketCount, 0) || 0;
+    attendees?.data.reduce(
+      (acc: number, attendee: Attendee) => acc + attendee.ticketCount,
+      0,
+    ) || 0;
   const totalRevenue =
-    attendees?.reduce((acc, attendee) => acc + attendee.totalPrice, 0) || 0;
+    attendees?.data.reduce(
+      (acc: number, attendee: Attendee) => acc + attendee.totalPrice,
+      0,
+    ) || 0;
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -76,7 +95,7 @@ const AttendancePage = () => {
                     Error loading events
                   </SelectItem>
                 ) : (
-                  events?.map((event) => (
+                  events?.map((event: Event) => (
                     <SelectItem key={event.id} value={event.id.toString()}>
                       {event.title}
                     </SelectItem>
@@ -89,7 +108,7 @@ const AttendancePage = () => {
             <p>Loading attendees...</p>
           ) : errorAttendees ? (
             <p>Error loading attendees: {errorAttendees.message}</p>
-          ) : attendees && attendees.length > 0 ? (
+          ) : attendees.data && attendees.data.length > 0 ? (
             <Table>
               <TableCaption>
                 List of attendees for {selectedEvent?.title}
@@ -103,17 +122,12 @@ const AttendancePage = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {attendees.map((attendee) => (
+                {attendees.data.map((attendee: Attendee) => (
                   <TableRow key={attendee.id}>
                     <TableCell>{attendee.name}</TableCell>
                     <TableCell>{attendee.email}</TableCell>
                     <TableCell>{attendee.ticketCount}</TableCell>
-                    <TableCell>
-                      {attendee.totalPrice.toLocaleString("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                      })}
-                    </TableCell>
+                    <TableCell>{attendee.totalPrice}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -124,7 +138,7 @@ const AttendancePage = () => {
           {selectedEvent && (
             <div className="mt-4">
               <p className="font-semibold">Event Summary:</p>
-              <p>Total Attendees: {attendees?.length || 0}</p>
+              <p>Total Attendees: {attendees?.data.length || 0}</p>
               <p>Total Tickets Sold: {totalTicketsSold}</p>
               <p>
                 Total Revenue:{" "}
@@ -137,6 +151,15 @@ const AttendancePage = () => {
           )}
         </CardContent>
       </Card>
+
+      {attendees && (
+        <PaginationSection
+          page={page}
+          take={take}
+          total={attendees.meta.total}
+          onChangePage={handlePageChange}
+        />
+      )}
     </div>
   );
 };
